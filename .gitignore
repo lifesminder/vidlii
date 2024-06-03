@@ -1,0 +1,11 @@
+# Logs
+*.log
+
+# Media files
+/usfi
+
+# Cache
+/cache
+
+# IDE data
+/.idea

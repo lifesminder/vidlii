@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteRule ^user/(.*)/(.*) profile.php?user=$1&page=$2
+RewriteRule ^user/(.*) profile.php?user=$1
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]

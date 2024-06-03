@@ -1,0 +1,12 @@
+[14-Aug-2018 19:26:50 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/remove_suggestion.php on line 1
+[14-Aug-2018 19:28:06 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/remove_suggestion.php on line 1
+[14-Aug-2018 19:28:09 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/remove_suggestion.php on line 1
+[10-Jan-2019 09:21:01 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/remove_suggestion.php on line 1
+[10-Jan-2019 09:21:04 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/remove_suggestion.php on line 1
+[26-Mar-2019 22:11:16 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[26-Mar-2019 22:11:23 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[02-Apr-2019 19:57:47 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[02-Apr-2019 19:57:55 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[22-Apr-2019 20:44:18 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[25-May-2019 17:23:57 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
+[15-Jul-2019 14:07:59 Europe/Berlin] PHP Parse error:  syntax error, unexpected '$_SERVER' (T_VARIABLE) in /home/vidlii/public_html/admin/ajax/dismiss_report.php on line 1
