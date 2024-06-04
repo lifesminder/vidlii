@@ -1,4 +1,5 @@
 <?php
+    require_once "vendor/autoload.php";
     ini_set( 'session.cookie_httponly', 1 );
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
@@ -26,8 +27,13 @@
     // AUTOLOAD CLASSES
     spl_autoload_register(function ($class) { include ROOT_FOLDER."/_includes/_classes/" . $class . ".class.php"; });
     require_once ROOT_FOLDER."/_includes/PHPfunctions.php";
+
+    // initializing environment
+    $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+    $env->load();
     
     // create folders
+    if(!is_dir(ROOT_FOLDER."/cache")) mkdir(ROOT_FOLDER."/cache", 0777, true);
     if(!is_dir(ROOT_FOLDER."/usfi")) {
         mkdir(ROOT_FOLDER."/usfi", 0777, true);
         mkdir(ROOT_FOLDER."/usfi/v/", 0777, true);

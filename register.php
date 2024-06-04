@@ -1,7 +1,12 @@
 <?php
-require_once "_includes/init.php";
-require_once "_includes/_libs/kaptcha_client.php";
-header("Content-Security-Policy: frame-ancestors 'none'");
+	require_once "vendor/autoload.php";
+	require_once "_includes/init.php";
+	require_once "_includes/_libs/kaptcha_client.php";
+	header("Content-Security-Policy: frame-ancestors 'none'");
+
+	// DB INITIALIZER
+	$db = new \Vidlii\Vidlii\Database();
+	
 //REQUIREMENTS / PERMISSIONS
 //- Requires Being Not Logged In
 if ($_USER->logged_in)         { redirect("/"); exit(); }
@@ -101,14 +106,17 @@ if (isset($_POST["submit_register"]) && ctype_alnum($_POST["vl_usernames"])) {
                         $Hash = password_hash($Password, PASSWORD_BCRYPT);
 
                         //CREATE USER
-                        $test = $DB->modify("INSERT INTO users (username,displayname,email,password,reg_date,last_login,birthday,1st_latest_ip,country) VALUES ('$Username',:DISPLAYNAME,:EMAIL,:PASSWORD,NOW(),NOW(),:BIRTHDAY,:IP,:COUNTRY)",
+                        $isAdmin = ($db->query("select count(*) from users")["data"]["count(*)"] > 0) ? 1 : 0;
+                        $test = $DB->modify("INSERT INTO users (username,displayname,email,password,reg_date,last_login,birthday,1st_latest_ip,country, is_admin, is_mod) VALUES ('$Username',:DISPLAYNAME,:EMAIL,:PASSWORD,NOW(),NOW(),:BIRTHDAY,:IP,:COUNTRY, :ISADMIN, :ISMOD)",
                                    [
                                        ":DISPLAYNAME"   => $Username,
                                        ":EMAIL"         => $Email,
                                        ":PASSWORD"      => $Hash,
                                        ":BIRTHDAY"      => $Birthday,
                                        ":IP"            => user_ip(),
-                                       ":COUNTRY"       => $Country
+                                       ":COUNTRY"       => $Country,
+									   ":ISADMIN" => $isAdmin,
+									   ":ISMOD" => $isAdmin
                                    ]);
 
                         $Activation_Link = random_string("ABCDEFGHIJK123456789abcdefghijklmnop", 25);
