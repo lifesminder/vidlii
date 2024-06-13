@@ -1,11 +1,11 @@
 <?php
-	require_once "vendor/autoload.php";
 	require_once "_includes/init.php";
+    require "vendor/autoload.php";
 	require_once "_includes/_libs/kaptcha_client.php";
 	header("Content-Security-Policy: frame-ancestors 'none'");
 
 	// DB INITIALIZER
-	$db = new \Vidlii\Vidlii\Database();
+	$db = new \Vidlii\Vidlii\DB();
 	
 //REQUIREMENTS / PERMISSIONS
 //- Requires Being Not Logged In

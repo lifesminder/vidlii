@@ -1,7 +1,9 @@
 <?php
+    namespace Vidlii\Vidlii;
+    
     include_once $_SERVER["DOCUMENT_ROOT"]."/_includes/init.php";
 
-    class Database {
+    class DB {
         public $RowNum;
         protected $Connection;
 

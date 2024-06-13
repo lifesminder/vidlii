@@ -1,5 +1,5 @@
 <?php
-    require_once "vendor/autoload.php";
+    require_once $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
     ini_set( 'session.cookie_httponly', 1 );
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
