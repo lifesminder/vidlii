@@ -1,6 +1,6 @@
 <?php
     namespace Vidlii\Vidlii;
-    
+
     include_once $_SERVER["DOCUMENT_ROOT"]."/_includes/init.php";
 
     class DB {
@@ -23,13 +23,13 @@
             $data = [];
             if(isset($_ENV["database"]) && $_ENV["database"] != "") {
                 $dsnParser = new \Doctrine\DBAL\Tools\DsnParser();
-                $params = $dsnParser->parse($ENV["database"]);
+                $params = $dsnParser->parse($_ENV["database"]);
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($params);
                 try {
                     $stmt = $conn->prepare($query);
                     if(strtolower(substr($query, 0, strlen("select"))) == "select") {
                         $result = $stmt->executeQuery();
-                        $datas = $result->fetchAll();
+                        $datas = $result->fetchAllAssociative();
                         $data = ["count" => count($datas), "data" => $datas];
                     } else {
                         $result = $stmt->executeStatement();
