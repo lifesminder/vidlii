@@ -1,5 +1,5 @@
 <form action="/channel_version" method="POST">
-    <div style="padding:5px 10px;border:1px solid #cccccc;width:740px;border-radius:5px;overflow:hidden;margin-bottom:15px">
+    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden;margin-bottom:15px">
         <img src="/img/channel10.png" style="float:left;height:85px;margin-right:15px">
         <div style="float:left;width:450px">
         <strong style="display:block;margin:0 0 5px">Channel 1.0</strong>
@@ -12,7 +12,7 @@
             <input class="search_button" type="submit" style="padding:34px 4px" name="switch_1" value="Switch!"<? if ($Info["channel_version"] == 1) : ?> disabled<? else : ?>onclick="return confirm('Are you sure you want to switch? Your current channel colors and settings will be reset!')"<? endif ?>>
         </div>
     </div>
-    <div style="padding:5px 10px;border:1px solid #cccccc;width:740px;border-radius:5px;overflow:hidden;margin-bottom:15px">
+    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden;margin-bottom:15px">
         <img src="/img/channel20.png" style="float:left;height:85px;margin-right:15px">
         <div style="float:left;width:450px">
             <strong style="display:block;margin:0 0 5px">Channel 2.0</strong>
@@ -25,7 +25,7 @@
             <input class="search_button" type="submit" style="padding:34px 4px" name="switch_2" value="Switch!"<? if ($Info["channel_version"] == 2) : ?> disabled<? else : ?>onclick="return confirm('Are you sure you want to switch? Your current channel colors and settings will be reset!')"<? endif ?>>
         </div>
     </div>
-    <div style="padding:5px 10px;border:1px solid #cccccc;width:740px;border-radius:5px;overflow:hidden">
+    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden">
         <img src="/img/nermals_favorite_layout.png" style="float:left;height:85px;margin-right:15px">
         <div style="float:left;width:450px">
             <strong style="display:block;margin:0 0 5px">Cosmic Panda (BETA)</strong>

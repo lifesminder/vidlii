@@ -7,7 +7,9 @@
     <?php
     $Top_text = $DB->execute("SELECT value FROM settings WHERE name = 'top_text'", true)["value"];
     ?>
-    <? if (!empty($Top_text)) : ?><div style="background:#f0f0f0;border-bottom:1px solid #989898;text-align:center;padding:4px 0;margin-bottom:3px"><?= $Top_text ?></div><? endif ?>
+    <? if (!empty($Top_text)) : ?>
+        <div class="top"><?= $Top_text ?></div>
+    <? endif ?>
 
     <div class="wrapper">
 <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>

@@ -3,9 +3,20 @@ require_once "_includes/init.php";
 
 //REQUIREMENTS / PERMISSIONS
 //- Requires Login
-if (!$_USER->logged_in)         { redirect("/login"); exit(); }
+if (!$_USER->logged_in) { redirect("/login"); exit(); }
 
-
+    /*
+        on all versions, we preserve names but no custom styles
+        so, these for comment only
+        ---
+            channel_title = '',
+            channel_tags = '',
+            channel_description = '',
+            website = '',
+            playlists = '',
+            featured_channels = '',
+            featured_title = '',
+    */
 if (isset($_POST["switch_1"])) {
     $DB->modify("UPDATE users SET
             font = '0',
@@ -20,19 +31,13 @@ if (isset($_POST["switch_1"])) {
             c_recent = '1',
             c_custom = '0', 
             c_playlists = '0',
-            playlists = '',
             bg = 'ffffff',
             nav = '89857F',
             h_head = '666666',
             h_head_fnt = 'ffffff',
             h_in = 'eeeeee',
-            channel_title = '',
-            channel_tags = '',
-            channel_description = '',
-            website = '',
             h_in_fnt = '6d6d6d',
             n_head = '666666',
-            featured_channels = '',
             n_head_fnt = 'ffffff',
             n_in = 'ffffff',
             n_in_fnt = '000000',
@@ -50,7 +55,6 @@ if (isset($_POST["switch_1"])) {
             subscriber_d = '0',
             subscription_d = '0',
             featured_d = '1',
-            featured_title = '',
             recent_d = '1',
             channel_d = '1',
             featured_n_url = '',
@@ -75,7 +79,6 @@ if (isset($_POST["switch_2"])) {
             c_subscription = '1',
             c_friend = '1',
             c_featured = '1',
-            featured_title = '',
             c_videos = '1',
             c_favorites = '1',
             c_playlists = '0',
@@ -85,9 +88,6 @@ if (isset($_POST["switch_2"])) {
             c_featured_channels = '0',
             c_recent = '1',
             bg = 'CCCCCC',
-            playlists = '',
-            website = '',
-            featured_channels = '',
             nav = '89857F',
             h_head = '999999',
             h_head_fnt = '0000CC',
@@ -100,9 +100,6 @@ if (isset($_POST["switch_2"])) {
             links = '0000CC',
             b_avatar = '999999',
             connect = '',
-            channel_title = '',
-            channel_tags = '',
-            channel_description = '',
             bg_position = '0',
             bg_repeat = '0',
             bg_fixed = '0',
@@ -140,18 +137,11 @@ if (isset($_POST["switch_3"])) {
             c_featured = '1',
             c_videos = '1',
             c_favorites = '1',
-            channel_title = '',
-            website = '',
-            channel_tags = '',
-            channel_description = '',
             c_playlists = '0',
             c_comments = '1',
             c_featured_channels = '1',
-            featured_channels = '',
             c_recent = '1',
-            featured_title = '',
             bg = 'f9f9f9',
-            playlists = '',
             nav = '',
             h_head = '',
             h_head_fnt = '',

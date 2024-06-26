@@ -10,7 +10,7 @@
 
 //				$this->Connection->setAttribute(PDO::NULL_TO_STRING);
                 if ($Show_Errors||1) { $this->Connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); }
-
+                $this->execute("SET SESSION sql_mode = 'TRADITIONAL'");
                 return true;
             } catch (PDOException $e) {
             	die($e);

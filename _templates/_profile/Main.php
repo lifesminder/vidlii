@@ -70,6 +70,11 @@
 				</div>
 			</div>
 			<? endif ?>
+			<? if ($Profile["a_country"]) : ?>
+				<div style="margin-bottom: 5px">
+					<span>Country: <strong><?= return_country($Profile["country"]) ?></strong></span>
+				</div>
+			<? endif ?>
 		</div>
 	</section>
 	<section>

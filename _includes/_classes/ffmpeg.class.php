@@ -11,13 +11,22 @@
                 $CRF,
                 $HD,
 
-                $FFMPEG     = "/usr/bin/ffmpeg",
-                $FFPROBE    = "/usr/bin/ffprobe";
+                //$FFMPEG     = "/usr/bin/ffmpeg",
+                //$FFPROBE    = "/usr/bin/ffprobe";
 
-                //$FFMPEG     = "C:/ffmpeg/bin/ffmpeg.exe",
-                //$FFPROBE    = "C:/ffmpeg/bin/ffprobe.exe";
+                $FFMPEG     = "C:/Windows/ffmpeg.exe",
+                $FFPROBE    = "C:/Windows/ffprobe.exe";
 
-        public function Get_Length($Echoseconds = NULL){
+		function __construct($location, $output = null) {
+			$this->Location = $location;
+			$this->CRF = 23;
+			$this->Framerate = 30;
+			$this->SampleRate = 44100;
+			$this->AudioBitrate = 44100;
+			if($output != null) $this->Output = $output;
+		}
+		
+        public function Get_Length($Echoseconds = NULL) {
 
             $ffmpegoutput = shell_exec("$this->FFPROBE -i ". $this->Location ." 2>&1");
 
@@ -43,11 +52,12 @@
 		
         public function Get_Info() {
             $ffmpegoutput = shell_exec("$this->FFPROBE -i ". $this->Location ." -v quiet -print_format json -show_format -show_streams 2>&1");
-			$this->Info = json_decode($ffmpegoutput);
+			$this->Info = json_decode($ffmpegoutput, true);
         }
 
 		public function Resize($h_res) {
 			// Set possible resolutions [Width => Height]
+			$vstream = [];
 			$resolutions = [
 				256 => 144,
 				426 => 240,
@@ -56,15 +66,14 @@
 				1280 => 720
 			];
 			
-			foreach($this->Info->streams as $s) {
-				if ($s->codec_type == "video") {
-					$vstream = $s;
+			for($i = 0; $i < count($this->Info["streams"]); $i++) {
+				if($this->Info["streams"][$i]["codec_type"] == "video") {
+					$vstream = $this->Info["streams"][$i];
 					break;
 				}
 			}
 			
-			$vwidth = $vstream->width;
-			$vheight = $vstream->height;
+			$vwidth = $vstream["width"]; $vheight = $vstream["height"];
 			$aspect = $vstream->display_aspect_ratio??($vwidth.":".$vheight);
 			if ($aspect != "0:1") { // Correct resolution based on Aspect Ratio
 				if (strpos($aspect, ":") !== false) {
@@ -120,7 +129,7 @@
             // Using -max_muxing_queue_size 102400 will make sure many files that require a large muxing queue to encode.
             // It's not a silver bullet, but it will fix issues with many files on ffmpeg 4.1.8.
             // Newer versions of ffmpeg don't have this problem.
-			$command = "$this->FFMPEG -i ". $this->Location ." -c:v libx264 -profile:v main -level 3.1 -preset veryfast -s ". $this->Resolution ." -crf ". $this->CRF ." -r ". $this->Framerate ." -pix_fmt yuv420p -b:a ". $this->AudioBitrate ." -ar ". $this->SampleRate ." -strict -1 -movflags +faststart -max_muxing_queue_size 102400 ".$this->Output; // Don't use -c:a, it'll select an aac encoder as the default one for mp4 files
+			$command = "$this->FFMPEG -i ". $this->Location ." -c:v libx264 -profile:v main -level 3.1 -preset veryfast -s ". $this->Resolution ." -crf ". $this->CRF ." -r ". $this->Framerate ." -b:a ". $this->AudioBitrate ." -ar ". $this->SampleRate ." -movflags +faststart -max_muxing_queue_size 102400 ".$this->Output; // Don't use -c:a, it'll select an aac encoder as the default one for mp4 files
 			echo "Convertion started: $command\n\n";
 			exec($command, $output, $success);
 			return ($success == 0 ? true : false);
@@ -136,7 +145,7 @@
 		
         public function Make_Thumbnails($sec, $URL) { // New Method, generates preview images
 			// Take Screenshot
-			$Output = "../usfi/prvw/$URL.temp.jpg";
+			$Output = "usfi/prvw/$URL.temp.jpg";
             shell_exec("$this->FFMPEG -i ". $this->Location ." -an -ss $sec -frames:v 1 $Output");
 			
 			// Make Thumbnails
@@ -151,7 +160,7 @@
 					$HEI = 480;
 				}
 				
-				$Uploader = new upload($Output);
+				$Uploader = new \upload($Output);
 				$Uploader->file_new_name_body = $URL;
 				$Uploader->image_resize = true;
 				$Uploader->file_overwrite          = true;
@@ -163,9 +172,9 @@
 				$Uploader->image_ratio_crop        = true;
 				$Uploader->jpeg_quality            = 65;
 				$Uploader->allowed                 = array('image/jpeg','image/pjpeg','image/png','image/gif','image/bmp','image/x-windows-bmp');
-				$Uploader->process("../usfi/$DIR/");
+				$Uploader->process("usfi/$DIR/");
 				if (!$Uploader->processed) {
-					rename("../usfi/$DIR/".$URL."_.jpg","../usfi/$DIR/$URL.jpg");
+					rename("usfi/$DIR/".$URL."_.jpg","usfi/$DIR/$URL.jpg");
 				}
 			}
 			

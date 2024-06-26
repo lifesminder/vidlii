@@ -11,7 +11,7 @@
 
     define("ADMIN_PASSWORD",    "poops");
 
-    define("DB_HOST",           "localhost");
+    define("DB_HOST",           "MySQL-8.2");
     define("DB_DATABASE",       "vidlii");
     define("DB_USER",           "root");
     define("DB_PASSWORD",       "");
@@ -40,6 +40,7 @@
         mkdir(ROOT_FOLDER."/usfi/thmp/", 0777, true);
         mkdir(ROOT_FOLDER."/usfi/conv/", 0777, true);
         mkdir(ROOT_FOLDER."/usfi/conv_2/", 0777, true);
+        mkdir(ROOT_FOLDER."/usfi/prvw/", 0777, true);
     }
 
     session_start(["cookie_lifetime" => 0, "gc_maxlifetime" => 455800]);

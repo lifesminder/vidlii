@@ -5,7 +5,7 @@
         <a href="/inbox?page=send_message&to=<?= $Profile["displayname"] ?>"><button type="button" class="cosmic_button" style="position: absolute;right:25px;top:20px;height:21px">Message</button></a>
     <? endif ?>
     <div class="cosmic_about"<? if (!$Profile["a_country"] && !$Profile["a_last"]) : ?> style="border:0"<? endif ?>>
-        <h3>About <?= $Profile["displayname"] ?></h3>
+        <h3>About <? if(!empty($Profile["channel_title"])): ?><?= $Profile["channel_title"] ?><? else: ?><?= $Profile["displayname"] ?><? endif ?></h3>
         <div>
             <? if (!empty($Profile["channel_description"])) { echo DoLinks(nl2br(htmlspecialchars($Profile["channel_description"]))); } else { echo "<em>No Description...</em>"; } ?>
         </div>
@@ -18,6 +18,10 @@
     </div>
     <div class="cosmic_more_about">
         <? if (!empty($Profile["country"]) or $Profile["a_last"]) : ?>
+            <div class="cosmic_profile">
+                <div>Joined</div>
+                <div><?= date("M d, Y",strtotime($Profile["reg_date"])) ?></div>
+            </div>
             <? if ($Profile["a_last"]) : ?>
                 <div class="cosmic_profile">
                     <div>Last Login</div>

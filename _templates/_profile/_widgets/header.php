@@ -1,7 +1,7 @@
 <? if ($_THEMES->Header == 1) : ?>
 	<header id="pr_hd" class="pr_hd1">
 		<div class="pr_hd_wrapper">
-			<a href="/"><img src="/<?= $LOGO_VALUE ?>" alt="VidLii" id="hd_vidlii"></a>
+			<a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" id="hd_vidlii"></a>
 			<nav>
 				<ul>
 					<a href="/"><li>Home</li></a><a href="/videos"><li>Videos</li></a><a href="/channels" id="pr_sel"><li>Channels</li></a><a href="/community"><li>Community</li></a>
@@ -73,7 +73,7 @@
 <? else : ?>
     <header class="s_head" style="background: white;margin-top:0;padding: 6px 5px;border-bottom-left-radius: 6px;border-bottom-right-radius: 6px">
         <div style="overflow:hidden">
-            <a href="/"><img src="/<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself."></a>
+            <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself."></a>
             <div class="s_search">
                 <form action="/results" method="GET">
                     <input type="search" name="q" maxlength="256" <? if ($_PAGE->Current_Page !== "login" && $_PAGE->Current_Page !== "register" && !isset($_GET["q"])) : ?>autofocus<? elseif (isset($_GET["q"])) : ?> value="<?= $_GET["q"] ?>"<? endif ?>><input type="submit" value="Search">

@@ -2,7 +2,6 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/_includes/init.php";
 
     if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod) && isset($_SESSION["admin_panel"])) {
-
         function video_thumbnail2($URL,$LENGTH,$Width,$Height,$Title = NULL) {
             if (!empty($LENGTH) || $LENGTH == "0") { $Length = seconds_to_time((int)$LENGTH); } else { $Length = $LENGTH; }
             if (file_exists("../usfi/thmp/$URL.jpg")) { $Thumbnail = "../usfi/thmp/$URL.jpg"; } else { $Thumbnail = "/img/no_th.jpg"; }
@@ -14,12 +13,10 @@
             if (isset($_POST["search_video"])) {
                 $URL = url_parameter($_POST["v"], "v");
                 if (is_string($URL) && ctype_alnum($URL)) {
-
                     $DB->execute("SELECT url FROM videos WHERE url = :URL", true, [":URL" => $URL]);
 
                     if ($DB->RowNum == 1) {
                         redirect("/admin/videos?v=$URL");
-                        exit();
                     } else {
                         notification("This video doesn't exist!", "/admin/videos", "red");
                     }
@@ -61,7 +58,7 @@
                     $ORDER_BY = "ORDER BY (1_star + 2_star + 3_star + 4_star + 5_star) DESC";
                 }
             } else {
-                redirect("/admin/videos"); exit();
+                redirect("/admin/videos");
             }
 
             if(isset($_GET["n"]) && $_GET["n"] <= 512) {
@@ -79,7 +76,7 @@
             }
 
             $Videos = $DB->execute("SELECT * FROM videos $WHERE $ORDER_BY $LIMIT", false, $EXECUTE);
-            if ($DB->RowNum == 0) { notification("No videos could be found!","/admin/videos"); exit(); }
+            if ($DB->RowNum == 0) { notification("No videos could be found!","/admin/videos"); }
 
             $Ratings = $DB->execute("SELECT * FROM video_ratings INNER JOIN videos ON video_ratings.url = videos.url ORDER BY videos.uploaded_on DESC LIMIT 20");
 
@@ -198,12 +195,12 @@
                             }
 
                         }
-                        notification("Video successfully updated!","/admin/videos?v=".$Video["url"],"green"); exit();
+                        notification("Video successfully updated!","/admin/videos?v=".$Video["url"],"green");
                     }
                 }
 
             } else {
-                notification("This video doesn't exist!", "/admin/videos", "red"); exit();
+                notification("This video doesn't exist!", "/admin/videos", "red");
             }
         }
 
@@ -211,7 +208,7 @@
         $Page = "Videos";
         require_once "_templates/admin_structure.php";
     } elseif ($_USER->Is_Mod || $_USER->Is_Admin) {
-        redirect("/admin/login"); die();
+        redirect("/admin/login");
     } else {
         redirect("/");
     }

@@ -76,7 +76,7 @@
 <div id="vtbl">
         <noscript>
             <div id="noscript-player">
-                <video id="noscript-player-video" src="/usfi/v/<?= $URL ?>.<?= $FILENAME ?><?= ($ISHD and $HD_Enabled) ? ".720" : "" ?>.mp4" controls autoplay></video>
+                <video id="noscript-player-video" src="/usfi/v/<?= $URL ?><?= $FILENAME ?><?= ($ISHD and $HD_Enabled) ? ".720" : "" ?>.mp4" controls autoplay></video>
                 <? if($ISHD): ?>
                     <form action="" method="GET" id="noscript-player-hd">
                         <input type="hidden" name="v" value="<?= $_GET["v"] ?>">

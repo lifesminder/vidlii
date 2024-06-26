@@ -155,7 +155,7 @@ if ($Analytics_Page == "Default") {
 
         }
         $a = array_filter($Array);
-        $Average_Rating = array_sum($a)/count($a);
+        $Average_Rating = (count($a) >= 1) ? array_sum($a) / count($a) : 0;
 
     } else {
 

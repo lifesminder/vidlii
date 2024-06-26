@@ -1,7 +1,7 @@
 <? if ($_THEMES->Header == 1) : ?>
 <header class="n_head">
     <div class="pr_hd_wrapper">
-        <a href="/"><img src="/<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii"></a>
+        <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii"></a>
         <nav>
             <ul>
                 <a href="/"<? if ($_PAGE->Page_Type == "Home") : ?> id="pr_sel"<? endif ?>><li>Home</li></a><a href="/videos"<? if ($_PAGE->Page_Type == "Videos") : ?> id="pr_sel"<? endif ?>><li>Videos</li></a><a href="/channels"<? if ($_PAGE->Page_Type == "Channels") : ?> id="pr_sel"<? endif ?>><li>Channels</li></a><a href="/community"<? if ($_PAGE->Page_Type == "Community") : ?> id="pr_sel"<? endif ?>><li>Community</li></a>
@@ -35,7 +35,7 @@
                 <div id="name_nav">
                     <div>
                     <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
-                    <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?><a href="/admin/login">Admin Panel</a><? endif ?>
+                    <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?><a href="/admin/dashboard">Admin Panel</a><? endif ?>
                     <a href="/my_videos">My Videos</a>
                     <a href="/my_favorites">My Favorites</a>
                     <a href="/my_subscriptions">Subscriptions</a>
@@ -62,7 +62,7 @@
 <? else : ?>
 <header class="s_head">
     <div style="overflow:hidden">
-    <a href="/"><img src="/<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself."></a>
+    <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself."></a>
     <div class="s_search">
         <form action="/results" method="GET">
             <input type="search" name="q" maxlength="256" <? if ($_PAGE->Current_Page !== "login" && $_PAGE->Current_Page !== "register" && $_PAGE->Page !== "Send" && !isset($_GET["q"])) : ?>autofocus<? elseif (isset($_GET["q"])) : ?> value="<?= htmlspecialchars($_GET["q"], ENT_QUOTES) ?>"<? endif ?>><input type="submit" value="Search"<? if (strpos($_SERVER['HTTP_USER_AGENT'],"PaleMoon") !== false) : ?> style="padding:3px 7px"<? endif ?>>

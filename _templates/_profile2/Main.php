@@ -248,6 +248,12 @@
                     <div style="float:none"><?= DoLinks(nl2br(htmlspecialchars($Profile["channel_description"]))) ?></div>
                 </div>
                 <? endif ?>
+                <? if (!empty($Profile["about"] && $Profile["about"])) : ?>
+                <div class="pr_inf_sct">
+                    <div style="display: block; width: 100%;">About Me:</div>
+                    <div style="margin-top: 6px; float: left;"><?= DoLinks(nl2br(htmlspecialchars($Profile["about"]))) ?></div>
+                </div>
+                <? endif ?>
                 <? if (!empty($Profile["country"] && $Profile["a_country"])) : ?>
                     <div class="pr_inf_sct">
                         <div>Country:</div>
