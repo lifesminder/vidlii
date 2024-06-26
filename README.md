@@ -5,6 +5,7 @@ This is the source code of VidLii, forked from [original by Evie's upload](https
 * Clone this repo, or download it as an archive,
 * Install environment with PHP/MySQL. On Linux machines you can do it easily, but on Windows it's better to install WAMP environment, such as [XAMPP](https://apachefriends.org) and [OpenPanel](https://ospanel.io),
 * Create database, named as "vidlii" and import `schema.sql` there
+* Edit credentials of DB on `.env` file.
 * You're done! Enjoy!
 
 ## Notes
