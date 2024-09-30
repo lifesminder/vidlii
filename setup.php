@@ -95,8 +95,6 @@
                                         if(isset($_SESSION["password"]) && $_SESSION["password"] != "")
                                             fwrite($file, "password = \"".$_SESSION["password"]."\"\n");
                                         fclose($file);
-                                        session_destroy();
-                                        unset($_SESSION);
                                         header("Location: /");
                                     } else echo "DB wasn't imported correctly. Aborting...";
                                 }

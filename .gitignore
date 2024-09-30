@@ -7,5 +7,6 @@
 # Cache
 /cache
 
-# IDE data
+# Misc
 /.idea
+.env
