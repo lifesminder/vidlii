@@ -3,7 +3,14 @@
     ini_set( 'session.cookie_httponly', 1 );
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
-    //CONSTANTS
+    // if there are no .env file, switch to setup
+    if(!file_exists($_SERVER["DOCUMENT_ROOT"]."/.env")) header("Location: /setup");
+
+    // initializing environment
+    $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+    $env->load();
+	
+    // Constraints
     define("ROOT_FOLDER", $_SERVER["DOCUMENT_ROOT"]);
 
     define("UPLOAD_LIMIT",      1024 * 1024 * 1024 * 2.01);
@@ -11,11 +18,11 @@
 
     define("ADMIN_PASSWORD",    "poops");
 
-    define("DB_HOST",           "MySQL-8.2");
-    define("DB_DATABASE",       "vidlii");
-    define("DB_USER",           "root");
-    define("DB_PASSWORD",       "");
-    define("DB_CHARSET",       "utf8");
+    define("DB_HOST", $_ENV["host"]);
+    define("DB_DATABASE", $_ENV["db"]);
+    define("DB_USER", $_ENV["username"]);
+    define("DB_PASSWORD", (isset($_ENV["password"]) && $_ENV["password"] != "") ? $_ENV["password"] : "");
+    define("DB_CHARSET", "utf8");
 
     define("CSS_FILE",          "/css/m.css?8");
     define("PROFILE_CSS_FILE",  "/css/profile.css?5");
@@ -27,10 +34,6 @@
     // AUTOLOAD CLASSES
     spl_autoload_register(function ($class) { include ROOT_FOLDER."/_includes/_classes/" . $class . ".class.php"; });
     require_once ROOT_FOLDER."/_includes/PHPfunctions.php";
-
-    // initializing environment
-    $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
-    $env->load();
     
     // create folders
     if(!is_dir(ROOT_FOLDER."/cache")) mkdir(ROOT_FOLDER."/cache", 0777, true);

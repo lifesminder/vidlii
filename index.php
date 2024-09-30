@@ -1,6 +1,6 @@
 <?php
-require_once "_includes/init.php";
-
+    require_once "_includes/init.php";
+    
 if (isset($_POST["b"]) && $_POST["b"] == "1") {
 	
 	if ($_USER->logged_in) {
