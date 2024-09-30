@@ -36,10 +36,6 @@
                                             } else echo $conn->error;
                                         } else {
                                             echo "This DB exists";
-                                            /*
-                                            $dbExistanceRow = $dbExistance->fetch_assoc();
-                                            print_r($dbExistanceRow);
-                                            */
                                         }
                                     }
         ?>
@@ -99,6 +95,9 @@
                                         if(isset($_SESSION["password"]) && $_SESSION["password"] != "")
                                             fwrite($file, "password = \"".$_SESSION["password"]."\"\n");
                                         fclose($file);
+                                        session_destroy();
+                                        unset($_SESSION);
+                                        header("Location: /");
                                     } else echo "DB wasn't imported correctly. Aborting...";
                                 }
                             } else {
