@@ -5,6 +5,9 @@
     $router->get("/", function() {
         include_once "indexold.php";
     });
+    $router->get("/setup", function() {
+        include_once "setup.php";
+    });
     $router->get("/(.*)", function($url) {
         require_once "_includes/init.php";
 
