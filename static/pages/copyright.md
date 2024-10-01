@@ -1,11 +1,4 @@
-<style>
-    p {
-        margin: 0 0 4px;
-    }
-    .cgul li {
-        margin-bottom:3px
-    }
-</style>
+
 <h1 class="pg_hd">Copyright</h1>
 <div class="vc_l">
     <div class="vc_cats">

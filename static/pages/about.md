@@ -6,6 +6,7 @@
             <li><a href="/blog">Blog</a></li>
             <li style="font-weight:bold;cursor:default">About Us</li>
             <li><a href="/terms">Terms of Use</a></li>
+            <li><a href="/open-source">Open Source</a></li>
             <li><a href="/privacy">Privacy Policy</a></li>
             <li><a href="/themes">Themes</a></li>
             <li><a href="/contact">Contact</a></li>
@@ -27,5 +28,7 @@
     <h2 style="font-size: 19px; margin-bottom: 5px;">About VidLii</h2>
     <p>Founded in December 2015, VidLii is a consumer media website for people to watch and share original videos worldwide through a Web experience. VidLii allows people to easily upload, tag, and share video clips on <a href="">www.VidLii.com</a> and across the Internet through websites, blogs, and e-mail, as well as to build their own personal video network.</p>
     <p>Everyone can watch videos on VidLii. People can see first-hand accounts of current events, find videos about their hobbies and interests, and discover the quirky and unusual. As more people capture special moments on video, VidLii is empowering them to become the broadcasters of tomorrow.</p>
-    <p>Originally launched by a college student, VidLii was acquired by a new owner in February 2022, and is now hosted on the <a href="https://www.kolyma.org">Kolyma Network</a>.</p>
+    <p>
+        Originally launched by a college student, VidLii was acquired by a new owner in February 2022. After source code share by Evie, VidLii now received a separate instance, being open source and developed by community.
+    </p>
 </div>

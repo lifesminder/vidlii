@@ -1,13 +1,4 @@
-<style>
-    strong {
-        margin: 15px 0 3px;
-        font-size: 19px;
-        display: block;
-    }
-    p {
-        margin: 0 0 4px;
-    }
-</style>
+
 <h1 class="pg_hd">Terms of Service ("Terms")</h1>
 <div class="vc_l">
     <div class="vc_cats">
@@ -16,6 +7,7 @@
             <li><a href="/blog">Blog</a></li>
             <li><a href="/about">About Us</a></li>
             <li style="font-weight:bold;cursor:default">Terms of Use</li>
+            <li><a href="/open-source">Open Source</a></li>
             <li><a href="/privacy">Privacy Policy</a></li>
             <li><a href="/themes">Themes</a></li>
             <li><a href="/contact">Contact</a></li>

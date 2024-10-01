@@ -239,6 +239,13 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
                 0 => __DIR__ . '/..' . '/erusev/parsedown',
             ),
         ),
+        'B' => 
+        array (
+            'Bramus' => 
+            array (
+                0 => __DIR__ . '/..' . '/bramus/router/src',
+            ),
+        ),
     );
 
     public static $classMap = array (

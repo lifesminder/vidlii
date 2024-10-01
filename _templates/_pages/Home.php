@@ -313,7 +313,7 @@
         Choose your favorite theme and make VidLii look the way you want it to look.
     </div>
     <div class="last_5">
-        <strong>Last <? if (!isset($_COOKIE["s"]) || !$_USER->logged_in) : ?>5<? else : ?>10<? endif ?> Users Online</strong>
+        <strong>Last <?php echo (isset($_ENV["show_online_count"]) && (int)$_ENV["show_online_count"] >= 1) ? (int)$_ENV["show_online_count"] : 5; ?> Users Online</strong>
         <? foreach ($Last_Online as $Online) : ?>
             <div>
                 <a href="/user/<?= $Online["displayname"] ?>"><?= $Online["displayname"] ?></a>

@@ -47,21 +47,17 @@
     }
 
     session_start(["cookie_lifetime" => 0, "gc_maxlifetime" => 455800]);
+    if (!isset($_SESSION["sec_actions"])) $_SESSION["sec_actions"] = 0;
+    if (isset($_COOKIE["css"]) && $_COOKIE["css"] == "deleted") setcookie("css", null, -1);
 
-    if (!isset($_SESSION["sec_actions"])) { $_SESSION["sec_actions"] = 0; }
+    // SETUP CLASSES
+    $DB = new Database(false);
+    $_USER = new User(NULL,$DB,true);
+    $_PAGE = new Page();
+    $_GUMP = new GUMP();
+    $_THEMES = new Themes($DB, $_USER);
 
-    if (isset($_COOKIE["css"]) && $_COOKIE["css"] == "deleted") {
-        setcookie("css", null, -1);
-    }
-
-    //SETUP CLASSES
-    $DB         = new Database(false);
-    $_USER      = new User(NULL,$DB,true);
-    $_PAGE      = new Page();
-    $_GUMP      = new GUMP();
-    $_THEMES    = new Themes($DB, $_USER);
-
-    if ($_USER->logged_in && (!isset($_SERVER["HTTP_X_REQUESTED_WITH"]) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')) {
+    if($_USER->logged_in && (!isset($_SERVER["HTTP_X_REQUESTED_WITH"]) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')) {
         require_once ROOT_FOLDER."/_includes/inbox.php";
     }
 

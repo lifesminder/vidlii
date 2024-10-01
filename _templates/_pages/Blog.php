@@ -6,6 +6,7 @@
             <li style="font-weight:bold;cursor:default">Blog</li>
             <li><a href="/about">About Us</a></li>
             <li><a href="/terms">Terms of Use</a></li>
+            <li><a href="/open-source">Open Source</a></li>
             <li><a href="/privacy">Privacy Policy</a></li>
             <li><a href="/themes">Themes</a></li>
             <li><a href="/contact">Contact</a></li>

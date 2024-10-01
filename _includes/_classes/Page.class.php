@@ -5,6 +5,7 @@
                 $Page_Tags,
                 $Page,
                 $Page_Type,
+                $Page_Content,
                 $Show_Search,
                 $Current_Page;
 
@@ -34,6 +35,8 @@
 
             if (isset($Page_Settings["Page"])) { $this->Page = $Page_Settings["Page"]; }
             else { die("Missing Page"); }
+
+            if (isset($Page_Settings["Content"])) $this->Page_Content = $Page_Settings["Content"];
 
             if (isset($Page_Settings["Show_Search"])) { $this->Show_Search = $Page_Settings["Show_Search"]; }
             else { $this->Show_Search = true; }
