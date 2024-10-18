@@ -7,10 +7,12 @@
 	// DB INITIALIZER
 	$db = new \Vidlii\Vidlii\DB();
 	
-//REQUIREMENTS / PERMISSIONS
-//- Requires Being Not Logged In
-if ($_USER->logged_in)         { redirect("/"); exit(); }
-if ($DB->execute("SELECT value FROM settings WHERE name = 'signup'", true)["value"] == 0) { notification("Registrations have been temporarily disabled!.", "/", "red"); exit(); }
+    //REQUIREMENTS / PERMISSIONS
+    //- Requires Being Not Logged In
+    /* Environmental implementations required
+    if ($_USER->logged_in)         { redirect("/"); exit(); }
+    if ($DB->execute("SELECT value FROM settings WHERE name = 'signup'", true)["value"] == 0) { notification("Registrations have been temporarily disabled!.", "/", "red"); exit(); }
+    */
 
 function endsWith($haystack, $needle)
 {

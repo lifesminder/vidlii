@@ -1,8 +1,6 @@
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !(css|js|img|usfi|vlPlayer|jwplayer2)/
-RewriteRule . index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
-#RewriteRule ^user/(.*)/(.*) profile.php?user=$1&page=$2
-#RewriteRule ^user/(.*) profile.php?user=$1
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteRule ^([^\.]+)$ $1.php [NC,L]
+RewriteCond %{REQUEST_URI} !(css|js|img|usfi|vlPlayer|jwplayer2|ajax)/
+RewriteRule . index.php [L]

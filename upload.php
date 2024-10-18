@@ -4,10 +4,11 @@ require_once "_includes/init.php";
 //REQUIREMENTS / PERMISSIONS
 //- Requires Login
 //- Requires Activation
+/*
 if (!$_USER->logged_in)         { redirect("/login"); exit();   }
 if (!$_USER->Is_Activated)    { redirect("/"); exit();        }
 if ($DB->execute("SELECT value FROM settings WHERE name = 'uploader'", true)["value"] == 0) { notification("The uploader has been temporarily disabled!","/"); exit(); }
-
+*/
 
 $Videos_Today = $DB->execute("SELECT COUNT(url) as amount FROM videos WHERE uploaded_by = :USERNAME AND uploaded_on > DATE_SUB(now(), INTERVAL 1 DAY)", true, [":USERNAME" => $_USER->username])["amount"];
 // TODO Move this to a centralized place, preferably in a database setting row

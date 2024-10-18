@@ -97,19 +97,6 @@
                         <label style="position: relative; right: 2.5px;"><input type="checkbox" name="age" <? if (isset($_POST["age"])) : ?>checked<? endif ?> required> <span style="position:relative;bottom:1.5px">I certify I am over 13 years old!</span></label>
                     </td>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td align="center" style="padding-bottom:65px">
-                    	<script src="https://sys.kolyma.org/kaptcha/kaptcha.js"></script>
-                    	<noscript>
-                    		<input type="hidden" name="_KAPTCHA">
-							<input type="hidden" name="_KAPTCHA_NOJS">
-							<iframe src="https://sys.kolyma.org/kaptcha/kaptcha.php?nojs" style="border:none;width:400px;height:150px"></iframe><br>
-							<input type="text" name="_KAPTCHA_KEY" placeholder="Paste here"><br>
-                    	</noscript>
-                    	<!-- div class="g-recaptcha" data-sitekey="6LfTZiQUAAAAADx03HPfPAGYdGP1NuM8LNd9lvUG" style="transform:scale(0.75,0.75);position:absolute;right:25px;bottom:37px"></div -->
-                    </td>
-                </tr>
             </table>
             <div style="text-align: center;margin:8px 0 0 0"><input name="submit_register" class="search_button" onclick="if(document.getElementById('pw1').value !== document.getElementById('pw2').value) { alert('The passwords do not match!'); document.getElementById('pw2').value = ''; document.getElementById('pw1').value = ''; $('#pw1').focus(); check_password(document.forms.userform.password.value); return false; }" id="reg_submit" type="submit" value="Sign Up!"></div>
             </form>

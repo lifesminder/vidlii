@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="/css/m.css">
 </head>
 <body>
+    <header class="n_head">
+        <div class="pr_hd_wrapper">
+            <a href="/">
+                <img src="/img/Vidlii6.png" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii">
+            </a>
+            <nav>
+                <ul><li><a href="#" id="pr_sel">Home</a></li></ul>
+            </nav>
+        </div>
+    </header>
     <div class="wrapper">
         <?php
             require "vendor/autoload.php";
@@ -39,6 +49,10 @@
                                         }
                                     }
         ?>
+        <h2>Set Database Name</h2>
+        <p>
+            Make sure your Database exists and is empty.
+        </p>
             <form action="/setup?step=2" method="post">
                 <input type="text" name="name" placeholder="Database Name"><br>
                 <button type="submit">Next</button>
@@ -119,6 +133,10 @@
                         }
                     }
         ?>
+        <h2>Set Up VidLii Instance</h2>
+        <p>
+            Start configuring VidLii by entering required credentials.
+        </p>
             <form action="/setup" method="post">
                 <input type="text" name="host" placeholder="Database Host"><br>
                 <input type="text" name="username" placeholder="Username"><br>

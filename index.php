@@ -5,10 +5,23 @@
     $router->get("/", function() {
         include_once "indexold.php";
     });
+    $router->post("/setup", function() {
+        include_once "setup.php";
+    });
     $router->get("/setup", function() {
         include_once "setup.php";
     });
-    $router->get("/(.*)", function($url) {
+    $router->mount("/user", function() use($router) {
+        $router->get("/(.*)/(.*)", function($user, $page) {
+            $_GET["user"] = $user; $_GET["page"] = $page;
+            include_once "profile.php";
+        });
+        $router->get("/(.*)", function($user) {
+            $_GET["user"] = $user;
+            include_once "profile.php";
+        });
+    });
+    $router->all("/(.*)", function($url) {
         require_once "_includes/init.php";
 
         $url_chk = strtolower($url);
