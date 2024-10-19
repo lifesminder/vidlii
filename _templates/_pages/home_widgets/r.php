@@ -1,4 +1,4 @@
-<? if ((!$_USER->logged_in && $Recommended_Amount >= 4) || ($_USER->logged_in && $Modules["recommended"] && $Recommended_Amount >= 4)) : ?>
+<? if ($Modules["recommended"] && $Recommended_Amount >= 4) : ?>
 <div class="wdg" id="rec_widget">
     <div>
         <img src="/img/rec.png" alt="Recommended Videos"><span>Recommended Videos</span>

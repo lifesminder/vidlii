@@ -1,4 +1,9 @@
-<? if (isset($_GET["m"]) && $_GET["m"] == "cr") : ?><div style="border: 1.5px solid green;padding:6px;text-align:center;margin-bottom:11px;font-size:14px;font-weight:bold">Your account is now activated!</div><? endif ?>
+<? if (isset($_GET["m"]) && $_GET["m"] == "cr") : ?>
+    <div style="border: 1.5px solid green;padding:6px;text-align:center;margin-bottom:11px;font-size:14px;font-weight:bold">
+        Your account is now activated!
+    </div>
+<? endif ?>
+
 <section class="h_l">
     <? if (!isset($_COOKIE["s"]) || !$_USER->logged_in) : ?>
     <? if ($_USER->logged_in) : ?>
@@ -33,6 +38,19 @@
                     <input style="margin-top: 11px" type="submit" value="Save Changes" name="save_modules">
                 </form>
         </div>
+    <? else: ?>
+    <div id="iyt-login-suggest-box" style="margin-bottom: 10px;">
+        <div class="yt-alert yt-alert-announce yt-rounded" style="height: 85px;">
+            <div class="yt-alert-content" style="height: 85px;">
+                <div class="signup-promo-message" style="margin-bottom: 14px">Join the open source video-sharing community!</div>
+                <div class="signup-promo-links">
+                    <a href="/register" class="yel_btn large"><span class="yt-uix-button-content">Create Account ›</span></a>
+                    <span class="signup-promo-have-account" style="font-weight: normal">Already have an account? </span>
+                    <a href="/login">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <? endif ?>
     <? if ($_USER->logged_in && $Achievements_Amount > 0) : ?>
     <div class="whats_new" id="home_congrats" type="<?= $Achievements[0]["type"] ?>" style="padding-bottom:17px;position:relative">
@@ -242,17 +260,9 @@
             </div>
         </div>
     <? endif ?>
-    <? if (!$_USER->logged_in) : ?>
-    <div class="you_wnt">
-        <div>
-            <strong>Want to customize this homepage?</strong><br>
-            <a href="/login">Sign In</a> or <a href="/register">Sign Up</a> now!
-        </div>
-    </div>
-    <? endif ?>
     <? if ($_USER->logged_in && (isset($_COOKIE["s"]) || $Modules["inbox"])) : ?>
     <div class="wdg">
-        <div style="height:23px">
+        <div>
             <span>Inbox</span>
         </div>
         <div id="inbox_wdg">
@@ -266,7 +276,7 @@
     <? endif ?>
     <? if ($_USER->logged_in && (isset($_COOKIE["s"]) || $Modules["stats"])) : ?>
         <div class="wdg">
-            <div style="height:23px">
+            <div>
                 <span>Channel Statistics</span>
             </div>
             <div id="inbox_wdg" style="padding-bottom:1px">
@@ -279,28 +289,45 @@
         </div>
     <? endif ?>
     <div class="wdg">
-        <div style="height:23px">
+        <div>
             <span>Recommended Channels</span>
         </div>
-        <div>
-            <? $Count = 0 ?>
-            <? foreach ($Recommended_Channels as $Recommended_Channel) : ?>
-            <? $Count++ ?>
-            <div style="<? if ($Count != 3) : ?>padding-bottom:1px;margin-bottom:5px;border-bottom:1px solid #ccc;overflow:hidden<? endif ?>">
-                <div style="float:left;width:19%;margin-right:5%">
+        <div class="recommended-list">
+            <?php
+                if(count($feed["recommended"]["channels"]) > 0) {
+                    for($i = 0; $i < count($feed["recommended"]["channels"]); $i++) {
+                        $Recommended_Channel = $feed["recommended"]["channels"][$i];
+            ?>
+            <div class="recommended-list-item">
+                <div style="margin-right: 0.4rem">
                     <?= user_avatar2($Recommended_Channel["username"], 56, 56, $Recommended_Channel["avatar"]) ?>
                 </div>
-                <div style="float:left; width:76%;position:relative;bottom:2px">
+                <div style="width: 80%">
                     <a href="/user/<?= $Recommended_Channel["displayname"] ?>" style="font-weight:bold;font-size:16px"><?= $Recommended_Channel["displayname"] ?></a>
-                    <div style="margin-top:1px;height:2em;line-height:13px;font-size:13px;overflow:hidden">
-                        <? if (!empty($Recommended_Channel["channel_description"])) : ?><?= $Recommended_Channel["channel_description"] ?><? else : ?><em>No Description...</em><? endif?>
-                    </div>
-                    <div style="margin-top:3px;color:gray;font-size:13px">
-                        <?= number_format($Recommended_Channel["video_views"]) ?> views - <?= number_format($Recommended_Channel["subscribers"]) ?> subscribers
+                    <p>
+                        <? if (!empty($Recommended_Channel["channel_description"])) : ?>
+                            <?php
+                                echo (strlen($Recommended_Channel["channel_description"]) > 48) ? substr($Recommended_Channel["channel_description"], 0, 48)."..." : $Recommended_Channel["channel_description"];
+                            ?>
+                        <? else : ?>
+                            <em>No Description...</em>
+                        <? endif ?>
+                    </p>
+                    <div style="color: #999; margin-top: 4px">
+                        <p>
+                            <?= number_format($Recommended_Channel["video_views"]) ?> views - <?= number_format($Recommended_Channel["subscribers"]) ?> subscribers
+                        </p>
                     </div>
                 </div>
             </div>
-            <? endforeach ?>
+            <?php
+                    }
+                } else {
+            ?>
+            <p>Currently, we don't have any featured channels</p>
+            <?php
+                }
+            ?>
         </div>
     </div>
     <div class="whats_new">
@@ -314,7 +341,7 @@
     </div>
     <div class="last_5">
         <strong>Last <?php echo (isset($_ENV["show_online_count"]) && (int)$_ENV["show_online_count"] >= 1) ? (int)$_ENV["show_online_count"] : 5; ?> Users Online</strong>
-        <? foreach ($Last_Online as $Online) : ?>
+        <? foreach ($feed["last_online"] as $Online) : ?>
             <div>
                 <a href="/user/<?= $Online["displayname"] ?>"><?= $Online["displayname"] ?></a>
                 <span><?= number_format($Online["videos"]) ?> videos</span><span><?= number_format($Online["favorites"]) ?> favorites</span><span><?= number_format($Online["friends"]) ?> friends</span></span>

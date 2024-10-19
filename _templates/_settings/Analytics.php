@@ -195,21 +195,21 @@
     <div style="overflow:hidden;margin-top: 15px">
         <div style="overflow:hidden;float:left;width:32%;margin-right:2%;box-sizing:border-box;border:1px solid #ccc;border-radius: 4px">
 
-            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:30px">
+            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:40px">
                 <div style="position:relative;top:7px;text-align:center;">Views per Day</div>
             </div>
             <div style="float:left;font-size:20px;position:relative;top:10px;left:6px;font-weight:bold;width:39%;text-align:center"><? if ($Views_Per_Day) : ?>~<?= round($Views_Per_Day) ?><? else : ?>/<? endif ?></div>
 
         </div>
         <div style="overflow:hidden;margin-right:2%;float:left;width:32%;box-sizing:border-box;border:1px solid #ccc;border-radius: 4px">
-            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:30px">
+            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:40px">
                 <div style="position:relative;top:7px;text-align:center;">Average Rating</div>
             </div>
             <div style="float:left;font-size:20px;position:relative;top:10px;left:6px;font-weight:bold;width:39%;text-align:center"><? if ($Average_Rating) : ?><?= round($Average_Rating,2) ?> stars<? else : ?>/<? endif ?></div>
 
         </div>
         <div style="overflow:hidden;float:left;width:32%;box-sizing:border-box;border:1px solid #ccc;border-radius: 4px">
-            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:30px">
+            <div style="width:121px;padding:6px;border-right:1px solid #ccc;float:left;height:40px">
                 <div style="position:relative;top:7px;text-align:center;">Subscriber Age</div>
             </div>
 

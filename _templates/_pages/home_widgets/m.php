@@ -1,4 +1,4 @@
-<? if (!$_USER->logged_in || ($_USER->logged_in && $Modules["most_popular"])) : ?>
+<? if ($Modules["most_popular"]) : ?>
 <div class="wdg" id="most_popular">
     <div>
         <img src="/img/pop.png" alt="Most Popular Videos"><span>Most Popular</span>

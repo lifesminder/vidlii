@@ -16,7 +16,8 @@
     "license": "mit",
     "autoload": {
         "psr-4": {
-            "Vidlii\\Vidlii\\": "src/"
+            "Vidlii\\Vidlii\\": "src/",
+            "Vidlii\\Vidlii\\API\\": "src/api/"
         }
     },
     "config": {

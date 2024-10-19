@@ -21,23 +21,23 @@
     </div>
 </div>
 
-<div style="border: 1px solid #d2edff;padding: 10px 10px 10px 25px;overflow:hidden;line-height:24px;font-weight:bold;text-decoration: none;width:95.4%;background:#e7f5fe">
-    <div style="float:left;width:39%;margin-left:1%">
-        My Videos<br>
+<div class="bluebox">
+    <div>
+        <h3>My Videos</h3>
         <a href="/my_videos">Uploaded Videos</a><br>
         <a href="/my_favorites">Favorites</a><br>
         <a href="/my_playlists">Playlists</a><br>
         <a href="/my_subscriptions">Subscriptions</a>
     </div>
-    <div style="float:left;width:42%">
-        My Network<br>
+    <div style="">
+        <h3>My Network</h3>
         <a href="/inbox">Inbox</a><br>
         <a href="/inbox?page=comments">Comments</a><br>
         <a href="/inbox?page=invites">Friend Invites</a><br>
         <a href="/inbox?page=responses">Video Responses</a><br>
     </div>
-    <div style="float:left;width:18%">
-        More<br>
+    <div>
+        <h3>More</h3>
         <a href="/user/<?= $_USER->displayname ?>">Your Channel</a><br>
         <a href="/friends">Your Friends</a><br>
         <a href="/channel_setup">Change Avatar</a><br>

@@ -9,64 +9,38 @@
         exit(0);
     }
 
-    // Last online users
-    $Online_Limit = (isset($_ENV["show_online_count"]) && (int)$_ENV["show_online_count"] >= 1) ? (int)$_ENV["show_online_count"] : 5;
-    $Last_Online = $DB->execute("SELECT users.username, users.displayname, users.videos, users.favorites, users.friends FROM users WHERE users.activated = 1 ORDER BY users.last_login DESC LIMIT $Online_Limit");
-
-//MOST VIEWED OF TODAY
-$Most_Viewed            = new Videos($DB, $_USER);
-$Most_Viewed->ORDER_BY  = "rand()";
-$Most_Viewed->WHERE_C   = " AND videos.featured = 1 AND videos.url <> 'M3O9f9ddh6f' ";
-$Most_Viewed->LIMIT     = 1;
-$Most_Viewed->Blocked   = false;
-$Most_Viewed->Racism    = false;
-$Most_Viewed->get();
-
-$Most_Viewed            = $Most_Viewed->fixed();
-
-$Recommended_Channels = $DB->execute("SELECT username, subscribers, displayname, avatar, channel_description, video_views, (SELECT sum(videos_watched.watchtime) FROM videos_watched INNER JOIN videos ON videos.url = videos_watched.vid WHERE videos.uploaded_by = users.username AND users.displayname NOT LIKE '%moonman%' AND videos_watched.submit_date >= DATE_SUB(CURDATE(), INTERVAL 4 DAY)) as watchtime_amount FROM users WHERE shadowbanned = 0 ORDER BY watchtime_amount DESC LIMIT 9");
-shuffle($Recommended_Channels);
-$Recommended_Channels = array_slice($Recommended_Channels, 0, 3);
-
-$Status     = 2;
-$Autoplay   = false;
-$URL        = $Most_Viewed["url"];
-$FILENAME   = $Most_Viewed["file"];
-$ISHD       = $Most_Viewed["hd"] == 1 ? true : false;
-$Length     = $Most_Viewed["seconds"];
-
-if (isset($_COOKIE["player"])) {
-    $Player = (int)$_COOKIE["player"];
-    if ($Player < 0 || $Player > 3) $Player = 2;
-} else {
-    $Player = 2;
-}
-
-
-if (!isset($_COOKIE["s"]) || !$_USER->logged_in) {
     if ($_USER->logged_in) {
-        $Stats = $DB->execute("SELECT users.friends, users.subscribers, users.videos_watched, users.video_views, users.channel_views, users.subscriptions FROM users WHERE users.username = :USERNAME LIMIT 1", true, [":USERNAME" => $_USER->username]);
-
-        if ($Stats["subscriptions"] > 0) {
-            $Subscription_Videos                        = new Videos($DB, $_USER);
-            $Subscription_Videos->JOIN                  = "INNER JOIN subscriptions ON subscriptions.subscription = videos.uploaded_by";
-            $Subscription_Videos->WHERE_P               = ["subscriptions.subscriber" => $_USER->username];
-			$Subscription_Videos->WHERE_C				= " AND videos.url <> 'OvQv1MiQN0X' ";
-            $Subscription_Videos->LIMIT                 = 8;
-            $Subscription_Videos->ORDER_BY              = "videos.uploaded_on DESC";
-            $Subscription_Videos->Shadowbanned_Users    = false;
-            $Subscription_Videos->get();
-
-            if ($Subscription_Videos::$Videos) {
-                $Subscription_Videos = $Subscription_Videos->fixed();
-            } else {
-                $Subscription_Videos = false;
-            }
+        if (isset($_COOKIE["po"])) {
+            $Position = $_COOKIE["po"];
+            $Position = str_replace("0=", "", str_replace("1=", "", str_replace("2=", "", str_replace("3=", "", str_replace("4=", "", $Position)))));
+            $Position = explode(",", $Position);
+            $Position = array(0 => $Position[0], 1 => $Position[1], 2 => $Position[2], 3 => $Position[3], 4 => $Position[4]);
+        } else {
+            $Position = array(0 => "s", 1 => "r", 2 => "b", 3 => "f", 4 => "m");
         }
+    } else {
+        $Position = array(0 => "r", 1 => "b", 2 => "f", 3 => "m");
     }
 
+    $Status = 2;
+    $Autoplay = false;
+    $URL = $Most_Viewed["url"];
+    $FILENAME = $Most_Viewed["file"];
+    $ISHD = $Most_Viewed["hd"] == 1 ? true : false;
+    $Length = $Most_Viewed["seconds"];
 
-//MODULES
+    if(isset($_COOKIE["player"])) {
+        $Player = (int)$_COOKIE["player"];
+        if($Player < 0 || $Player > 3) $Player = 2;
+    } else {
+        $Player = 2;
+    }
+
+    $feed = new \Vidlii\Vidlii\API\Feed(__dir__);
+    $feed = $feed->index($_GET, $_FILES);
+    
+    
+    //MODULES
     if ($_USER->logged_in) {
         if (isset($_POST["save_modules"])) {
             if (isset($_POST["i_subs"])) {
@@ -108,29 +82,50 @@ if (!isset($_COOKIE["s"]) || !$_USER->logged_in) {
             setcookie("h", "a=$i_subs,b=$i_in,c=$i_rec,d=$i_stat,e=$i_bein,f=$i_feat,g=$i_pop", time() + 60 * 60 * 24 * 128, "/");
             notification("Homepage successfully updated!", "/", "green"); exit();
         }
-
-
-        if (isset($_COOKIE["h"])) {
-            $Modules = explode(",", $_COOKIE["h"]);
-            $Modules = array("subscriptions" => str_replace("a=", "", $Modules[0]), "inbox" => str_replace("b=", "", $Modules[1]), "recommended" => str_replace("c=", "", $Modules[2]), "stats" => str_replace("d=", "", $Modules[3]), "being_watched" => str_replace("e=", "", $Modules[4]), "featured" => str_replace("f=", "", $Modules[5]), "most_popular" => str_replace("g=", "", $Modules[6]));
-        } else {
-            $Modules = array("subscriptions" => true, "recommended" => true, "being_watched" => false, "featured" => true, "most_popular" => true, "inbox" => true, "stats" => false);
-        }
     }
 
-    if ($_USER->logged_in) {
-        if (isset($_COOKIE["po"])) {
-            $Position = $_COOKIE["po"];
-            $Position = str_replace("0=", "", str_replace("1=", "", str_replace("2=", "", str_replace("3=", "", str_replace("4=", "", $Position)))));
-            $Position = explode(",", $Position);
-            $Position = array(0 => $Position[0], 1 => $Position[1], 2 => $Position[2], 3 => $Position[3], 4 => $Position[4]);
-        } else {
-            $Position = array(0 => "s", 1 => "r", 2 => "b", 3 => "f", 4 => "m");
-        }
+
+    if (isset($_COOKIE["h"])) {
+        $Modules = explode(",", $_COOKIE["h"]);
+        $Modules = array("subscriptions" => str_replace("a=", "", $Modules[0]), "inbox" => str_replace("b=", "", $Modules[1]), "recommended" => str_replace("c=", "", $Modules[2]), "stats" => str_replace("d=", "", $Modules[3]), "being_watched" => str_replace("e=", "", $Modules[4]), "featured" => str_replace("f=", "", $Modules[5]), "most_popular" => str_replace("g=", "", $Modules[6]));
     } else {
-        $Position = array(0 => "r", 1 => "b", 2 => "f", 3 => "m");
+        $Modules = array("subscriptions" => true, "recommended" => true, "being_watched" => false, "featured" => true, "most_popular" => true, "inbox" => true, "stats" => false);
     }
 
+    /*
+
+    // MOST VIEWED OF TODAY
+    $Most_Viewed = new Videos($DB, $_USER);
+    $Most_Viewed->ORDER_BY  = "rand()";
+    $Most_Viewed->WHERE_C   = " AND videos.featured = 1 AND videos.url <> 'M3O9f9ddh6f' ";
+    $Most_Viewed->LIMIT     = 1;
+    $Most_Viewed->Blocked   = false;
+    $Most_Viewed->Racism    = false;
+    $Most_Viewed->get();
+    $Most_Viewed = $Most_Viewed->fixed();
+
+
+if (!isset($_COOKIE["s"]) || !$_USER->logged_in) {
+    if ($_USER->logged_in) {
+        $Stats = $db->query("SELECT users.friends, users.subscribers, users.videos_watched, users.video_views, users.channel_views, users.subscriptions FROM users WHERE users.username = :USERNAME LIMIT 1", true, [":USERNAME" => $_USER->username])["data"];
+
+        if ($Stats["subscriptions"] > 0) {
+            $Subscription_Videos                        = new Videos($DB, $_USER);
+            $Subscription_Videos->JOIN                  = "INNER JOIN subscriptions ON subscriptions.subscription = videos.uploaded_by";
+            $Subscription_Videos->WHERE_P               = ["subscriptions.subscriber" => $_USER->username];
+			$Subscription_Videos->WHERE_C				= " AND videos.url <> 'OvQv1MiQN0X' ";
+            $Subscription_Videos->LIMIT                 = 8;
+            $Subscription_Videos->ORDER_BY              = "videos.uploaded_on DESC";
+            $Subscription_Videos->Shadowbanned_Users    = false;
+            $Subscription_Videos->get();
+
+            if ($Subscription_Videos::$Videos) {
+                $Subscription_Videos = $Subscription_Videos->fixed();
+            } else {
+                $Subscription_Videos = false;
+            }
+        }
+    }
 
     //RECENTLY VIEWED
     if (!$_USER->logged_in || ($_USER->logged_in && $Modules["being_watched"])) {
@@ -417,7 +412,7 @@ if (!isset($_COOKIE["s"]) || !$_USER->logged_in) {
     }
 }
 
-
+*/
 $_PAGE->set_variables(array(
     "Page_Title"        => "VidLii - Display Yourself",
     "Page"              => "Home",

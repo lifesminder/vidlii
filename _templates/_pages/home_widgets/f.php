@@ -1,4 +1,4 @@
-<? if (!$_USER->logged_in || ($_USER->logged_in && $Modules["featured"])) : ?>
+<? if ($Modules["featured"]) : ?>
 <div class="wdg" id="ft_widget">
     <div style="background:#dae9fe">
         <a href="/special_videos?c=0&t=v"><img src="/img/ft.png" alt="Featured Videos"><span>Featured Videos</span></a>

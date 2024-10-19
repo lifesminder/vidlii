@@ -1,22 +1,24 @@
 <?php
     require "vendor/autoload.php";
+    error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
     $router = new \Bramus\Router\Router();
-    $router->get("/", function() {
+    $router->all("/", function() {
         include_once "indexold.php";
     });
-    $router->post("/setup", function() {
+    $router->all("/setup", function() {
         include_once "setup.php";
     });
-    $router->get("/setup", function() {
-        include_once "setup.php";
+    $router->all("/api/(.*)", function($query) {
+        $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+        $api->point($query, $_SERVER['REQUEST_METHOD'], ($_SERVER['REQUEST_METHOD'] == "POST") ? $_POST : $_GET, $_FILES);
     });
     $router->mount("/user", function() use($router) {
-        $router->get("/(.*)/(.*)", function($user, $page) {
+        $router->all("/(.*)/(.*)", function($user, $page) {
             $_GET["user"] = $user; $_GET["page"] = $page;
             include_once "profile.php";
         });
-        $router->get("/(.*)", function($user) {
+        $router->all("/(.*)", function($user) {
             $_GET["user"] = $user;
             include_once "profile.php";
         });

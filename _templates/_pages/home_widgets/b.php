@@ -1,4 +1,4 @@
-<? if (!$_USER->logged_in || ($_USER->logged_in && $Modules["being_watched"])) : ?>
+<? if ($Modules["being_watched"]) : ?>
 <div class="wdg" id="be_widget">
     <div>
         <a href="/special_videos?c=0&t=b"><img src="/img/bw.png" alt="Videos Being Watched Now"><span>Videos Being Watched Now</span></a>

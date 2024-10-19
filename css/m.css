@@ -183,7 +183,8 @@ footer strong {
 }
 
 footer {
-    background: #efefef;
+    display: block;
+    background-color: #efefef;
     background: -moz-linear-gradient(top, #efefef 0, #ebece0 100%);
     background: -webkit-linear-gradient(top, #efefef 0, #ebece0 100%);
     background: linear-gradient(to bottom, #efefef 0, #ebece0 100%);
@@ -195,7 +196,7 @@ footer {
 }
 
 footer>div>div {
-    width: 302px;
+    width: auto;
     padding-right: 15px;
     margin-right: 15px;
     float: left;
@@ -576,6 +577,16 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     padding: 4px 15px;
     border: 1px solid #f4c800;
     border-radius: 5px
+} .yel_btn:hover, .yel_btn:focus {
+    border-color: #630;
+    background: #ecc101;
+    background-image: -moz-linear-gradient(top,#fff9c1,#fed81c);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#fff9c1),to(#fed81c));
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#fff9c1,endColorStr=#fed81c)
+} .yel_btn.large {
+    font-size: 1.333em;
+    height: 2em;
+    padding: .5em;
 }
 
 #hd_name,
@@ -1138,7 +1149,7 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     border-top: 1px solid #ccc;
     border-right: 1px solid #ccc;
     border-radius: 8px 8px 0 0;
-    padding: 5px 10px 1.5px
+    padding: 0.3rem 0.6rem;
 }
 
 .wdg>div:first-of-type>a>img,
@@ -1887,10 +1898,12 @@ select {
 .wdg>div:first-of-type>a>span,
 .wdg>div:first-of-type>span {
     font-weight: 700;
-    vertical-align: top;
     position: relative;
+    font-size: 14px;
+}
+.wdg>div:first-of-type>a>span.larger,
+.wdg>div:first-of-type>span.larger {
     font-size: 16px;
-    top: 1px
 }
 
 .ch_l {
@@ -1945,8 +1958,8 @@ select {
 
 .vc_l {
     float: left;
-    width: 200px;
-    margin: 0 20px 0 0
+    width: 190px;
+    padding-right: 20px;
 }
 
 .vc_r {
@@ -2086,7 +2099,7 @@ select {
 }
 
 .settings_menu {
-    width: 200px;
+    width: 190px;
     float: left
 }
 
@@ -2714,7 +2727,7 @@ select {
 
 .last_5>strong {
     display: block;
-    font-size: 16px;
+    font-size: 14px;
     margin: 0 0 1px
 }
 
@@ -3031,4 +3044,54 @@ select {
     margin: 0; padding: 0;
     list-style-type: none;
     overflow: hidden;
+}
+
+.bluebox {
+    display: flex;
+    border: 1px solid #d2edff;
+    padding: 1rem;
+    overflow: hidden;
+    line-height: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: #e7f5fe;
+    justify-content: space-between;
+} .bluebox div {
+    display: inline-block;
+    padding: 0 1rem 0 1rem;
+}
+
+.recommended-list .recommended-list-item {
+    display: flex;
+    padding-bottom: 1px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+} .recommended-list .recommended-list-item:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+} .recommended-list .recommended-list-item p {
+    margin: 0;
+}
+
+.yt-alert {
+    position: relative;
+    margin: 5px 0;
+    padding: 2px 24px 2px 4px;
+    overflow: hidden;
+    zoom: 1;
+    border-radius: 6px;
+}
+.yt-alert .yt-alert-content {
+    font-weight: bold;
+    font-size: 13px;
+    padding: 7px 5px;
+    overflow: hidden;
+}
+.yt-alert-announce, .yt-alert-info, .yt-alert-status {
+    background-color: #cce0f5;
+}
+.signup-promo-message {
+    font-size: 1.5em;
+    margin-bottom: 10px;
 }
