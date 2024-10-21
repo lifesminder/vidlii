@@ -4,13 +4,7 @@
 	if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod) && isset($_SESSION["admin_panel"])) {
 
 		function user_avatar3($User,$Width,$Height,$Avatar,$Extra_Class = "") {
-			if (strpos($Avatar,"u=") !== false) { $Avatar = str_replace("u=","",$Avatar); $Folder = "avt"; } else { $Upload = false; $Folder = "thmp"; }
-			if (empty($Avatar) || !file_exists("../usfi/$Folder/$Avatar.jpg")) {
-				$Avatar = "/img/no.png";
-			} else {
-				$Avatar = "/usfi/$Folder/$Avatar.jpg";
-			}
-			return '<a href="/user/'.$User.'"><img src="'.$Avatar.'" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
+			return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
 		}
 
 
@@ -357,6 +351,12 @@
 						"day"           => "is_day",
 						"month"         => "is_month",
 						"year"          => "is_year",
+						"reg_day" => "is_day",
+						"reg_month" => "is_month",
+						"reg_year" => "is_year",
+						"reg_hour" => "max_len,2",
+						"reg_minute" => "max_len,2",
+						"reg_second" => "max_len,2",
 						"occupation"    => "max_len,128",
 						"schools"       => "max_len,128",
 						"interests"     => "max_len,128",
@@ -381,6 +381,12 @@
 						"day"           => "trim",
 						"month"         => "trim",
 						"year"          => "trim",
+						"reg_day" => "trim",
+						"reg_month" => "trim",
+						"reg_year" => "trim",
+						"reg_hour" => "trim",
+						"reg_minute" => "trim",
+						"reg_second" => "trim",
 						"occupation"    => "trim|NoHTML",
 						"schools"       => "trim|NoHTML",
 						"interests"     => "trim|NoHTML",
@@ -395,54 +401,48 @@
 					$Validation = $_GUMP->run($_POST);
 
 					if ($Validation) {
-						$Day        = (int)$Validation["day"];
-						$Month      = (int)$Validation["month"];
-						$Year       = (int)$Validation["year"];
+						$Day = (int)$Validation["day"];
+						$Month = (int)$Validation["month"];
+						$Year = (int)$Validation["year"];
 						$Birthday   = "$Year-$Month-$Day";
+
+						$RDay = (int)$Validation["reg_day"];
+						$RMonth = (int)$Validation["reg_month"];
+						$RYear = (int)$Validation["reg_year"];
+						$RHour = (int)$Validation["reg_hour"];
+						$RMinute = (int)$Validation["reg_minute"];
+						$RSecond = (int)$Validation["reg_second"];
+						$Joined = "$RYear-$RMonth-$RDay $RHour:$Rminute:$RSecond";
 
 						if ($Validation["channel_type"] >= 0 && $Validation["channel_type"] <= 7) { $Channel_Type = $Validation["channel_type"]; } else { $Channel_Type = 0; }
 						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }
 						if ($Validation["activated"] == 1 || $Validation["activated"] == 2) { $Activated = $Validation["activated"]; } else { $Activated = 0; }
                         if (array_key_exists($Validation["country"],$Countries)) { $Country = $Validation["country"]; } else { $Country = $User_Info["country"]; }
 
-						if (get_age($Birthday) >= 13) {
+							$Display_Name = $Validation["displayname"];
 
-							if (strcasecmp($Validation["displayname"],$User["username"]) !== 0) {
-								$Display_Name = $Validation["displayname"];
+							$Exists1 = $DB->execute("SELECT displayname FROM users WHERE displayname = :DISPLAYNAME", true, [":DISPLAYNAME" =>  $Display_Name]);
+                            $Exists2 = $DB->execute("SELECT displayname FROM users_oldnames WHERE displayname = :DISPLAYNAME", true, [":DISPLAYNAME" =>  $Display_Name]);
 
-								$Exists1 = $DB->execute("SELECT displayname FROM users WHERE displayname = :DISPLAYNAME", true, [":DISPLAYNAME" =>  $Display_Name]);
-                                $Exists2 = $DB->execute("SELECT displayname FROM users_oldnames WHERE displayname = :DISPLAYNAME", true, [":DISPLAYNAME" =>  $Display_Name]);
-
-								if (!$Exists1 && !$Exists2) {
-									$Edit_User->get_profile();
-
-									$DB->modify("INSERT INTO users_oldnames SET displayname = :DNAME, username = :UNAME",
-                                               [
-                                                   ":DNAME" => $Edit_User->Info["displayname"],
-                                                   ":UNAME" => $Edit_User->Info["username"]
-                                               ]);
-
-									$DB->modify("UPDATE users SET displayname = :DNAME WHERE username = :UNAME LIMIT 1",
-                                               [
-                                                   ":DNAME" => $Display_Name,
-                                                   ":UNAME" => $Edit_User->Info["username"]
-                                               ]);
-								}
+							if (!$Exists1 && !$Exists2) {
+								$Edit_User->get_profile();
+								$DB->modify("INSERT INTO users_oldnames SET displayname = :DNAME, username = :UNAME", [
+                                    ":DNAME" => $Edit_User->Info["displayname"],
+                                    ":UNAME" => $Edit_User->Info["username"]
+                                ]);
+								$DB->modify("UPDATE users SET displayname = :DNAME WHERE username = :UNAME LIMIT 1", [
+                                    ":DNAME" => $Display_Name,
+                                    ":UNAME" => $Edit_User->Info["username"]
+                                ]);
 							}
 
-							if (!isset($_POST["partnered"]) || (isset($_POST["partnered"]) && $_POST["partnered"] == 0)) {
-							    $Partnered = 0;
-                            } else {
-							    $Partnered = 1;
-                            }
+							$Partnered = (!isset($_POST["partnered"]) || (isset($_POST["partnered"]) && $_POST["partnered"] == 0)) ? 0 : 1;
 
-
-							$DB->modify("UPDATE users SET partner = :PARTNER, country = :COUNTRY, activated = :ACTIVATED, channel_version = :CHANNEL_VERSION, channel_type = :CHANNEL_TYPE, i_name = :NAME, channel_title = :CHANNEL_TITLE, channel_description = :CHANNEL_DESCRIPTION, channel_tags = :CHANNEL_TAGS, about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS WHERE username = :USERNAME",
-                                       [":PARTNER" => $Partnered, ":COUNTRY" => $Country, ":ACTIVATED" => $Activated, ":CHANNEL_VERSION" => $Channel_Version, ":CHANNEL_TYPE" => $Channel_Type, ":NAME" => $Validation["name"], ":CHANNEL_TITLE" => $Validation["channel_title"], ":CHANNEL_DESCRIPTION" => $Validation["description"], ":CHANNEL_TAGS" => $Validation["tags"], ":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"], ":BIRTHDAY" => $Birthday, ":USERNAME" => $_GET["u"], ":OCCUPATION" => $Validation["occupation"], ":SCHOOLS" => $Validation["schools"], ":INTERESTS" => $Validation["interests"], ":MOVIES" => $Validation["movies"], ":MUSIC" => $Validation["music"], ":BOOKS" => $Validation["books"]]);
+							$DB->modify("UPDATE users SET partner = :PARTNER, country = :COUNTRY, activated = :ACTIVATED, channel_version = :CHANNEL_VERSION, channel_type = :CHANNEL_TYPE, i_name = :NAME, channel_title = :CHANNEL_TITLE, channel_description = :CHANNEL_DESCRIPTION, channel_tags = :CHANNEL_TAGS, about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, reg_date = :JOINED, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS WHERE username = :USERNAME",
+                                       [":PARTNER" => $Partnered, ":COUNTRY" => $Country, ":ACTIVATED" => $Activated, ":CHANNEL_VERSION" => $Channel_Version, ":CHANNEL_TYPE" => $Channel_Type, ":NAME" => $Validation["name"], ":CHANNEL_TITLE" => $Validation["channel_title"], ":CHANNEL_DESCRIPTION" => $Validation["description"], ":CHANNEL_TAGS" => $Validation["tags"], ":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"],
+									   ":BIRTHDAY" => $Birthday, ":JOINED" => $Joined,
+									   ":USERNAME" => $_GET["u"], ":OCCUPATION" => $Validation["occupation"], ":SCHOOLS" => $Validation["schools"], ":INTERESTS" => $Validation["interests"], ":MOVIES" => $Validation["movies"], ":MUSIC" => $Validation["music"], ":BOOKS" => $Validation["books"]]);
 							notification("User successfully updated!", "/admin/users?u=".$_GET["u"], "green"); exit();
-						} else {
-							notification("The user must be at least 13 years old!","/admin/users?u=".$_GET["u"],"red"); exit();
-						}
 					}
 				}
 
@@ -490,6 +490,14 @@
 				$Birth_Year = date("Y",strtotime($Birthday));
 				$Birth_Month = ltrim(date("m",strtotime($Birthday)),0);
 				$Birth_Day = ltrim(date("d",strtotime($Birthday)),0);
+
+				$Joined = $User_Info["reg_date"];
+				$Reg_Year = date("Y",strtotime($Joined));
+				$Reg_Month = ltrim(date("m",strtotime($Joined)),0);
+				$Reg_Day = ltrim(date("d",strtotime($Joined)),0);
+				$Reg_Hour = ltrim(date("h",strtotime($Joined)),0);
+				$Reg_Minute = ltrim(date("m",strtotime($Joined)),0);
+				$Reg_Second = ltrim(date("s",strtotime($Joined)),0);
 			} else {
 				notification("This user doesn't exist!","/admin/users","red");
 			}

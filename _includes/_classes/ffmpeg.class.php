@@ -145,8 +145,8 @@
 		
         public function Make_Thumbnails($sec, $URL) { // New Method, generates preview images
 			// Take Screenshot
-			$Output = "usfi/prvw/$URL.temp.jpg";
-            shell_exec("$this->FFMPEG -i ". $this->Location ." -an -ss $sec -frames:v 1 $Output");
+			$Output = "usfi/prvw/$URL.jpg";
+            shell_exec("$this->FFMPEG -i ". $this->Location ." -an -ss $sec -update true -frames:v 1 -c:v libx264 $Output");
 			
 			// Make Thumbnails
 			for ($i=0; $i < 2; $i++) {
@@ -174,10 +174,8 @@
 				$Uploader->allowed                 = array('image/jpeg','image/pjpeg','image/png','image/gif','image/bmp','image/x-windows-bmp');
 				$Uploader->process("usfi/$DIR/");
 				if (!$Uploader->processed) {
-					rename("usfi/$DIR/".$URL."_.jpg","usfi/$DIR/$URL.jpg");
+					rename("usfi/$DIR/".$URL."_.jpg", "usfi/$DIR/$URL.jpg");
 				}
 			}
-			
-			unlink($Output);
         }
     }

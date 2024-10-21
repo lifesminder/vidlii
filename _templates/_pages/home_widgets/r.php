@@ -8,6 +8,7 @@
             <? endif ?>
         </div>
     </div>
+    <? if ($Recommended_Amount > 0) : ?>
     <div style="padding-bottom:0">
         <? if ($Recommended_Amount >= 4 && $Recommended_Amount < 8) : ?>
             <div class="v_v_bx">
@@ -55,5 +56,11 @@
             </div>
         <? endif ?>
     </div>
+    <? else : ?>
+        <div style="margin-bottom: 10px">
+            <strong style="display:block">You have no subscriptions.</strong>
+            <span style="font-size:12.5px;color:black">There are tons of awesome <a href="/channels" style="font-weight:bold">channels</a> on VidLii to watch and to subscribe to, so that you're always up to date when it comes to their newest videos!</span>
+        </div>
+    <? endif ?>
 </div>
 <? endif ?>

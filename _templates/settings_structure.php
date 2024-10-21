@@ -32,8 +32,8 @@
             <? if ($_USER->Is_Partner) : ?><a href="/partner_settings" <? if ($_PAGE->Page == "Partner") : ?>id="nav_sel"<? endif ?>>Partner Settings</a><? endif ?>
             <a href="/manage_account" <? if ($_PAGE->Page == "Manage" || $_PAGE->Page == "Delete") : ?>id="nav_sel"<? endif ?>>Manage Account</a>
         </div>
-        <div style="float:left;width:810px;-moz-box-sizing: border-box;-ms-box-sizing: border-box;-webkit-box-sizing: border-box;padding-left: 11px;border-left: 1px solid #ccc;border: 1px solid #ccc;border-top: 0;background: #e2e2e2;">
-            <div style="background:white;padding:1px;border-left:1px solid #ccc;padding: 12px 14px <? if ($_PAGE->Page !== "Manage") : ?>11px<? else : ?>8px<? endif ?> 14px">
+        <div class="subpage">
+            <div class="subpage-content">
                 <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_settings/$_PAGE->Page.php" ?>
             </div>
         </div>

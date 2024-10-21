@@ -76,7 +76,7 @@
 <div id="vtbl">
         <noscript>
             <div id="noscript-player">
-                <video id="noscript-player-video" src="/usfi/v/<?= $URL ?><?= $FILENAME ?><?= ($ISHD and $HD_Enabled) ? ".720" : "" ?>.mp4" controls autoplay></video>
+                <video id="noscript-player-video" src="/usfi/v/<?= str_replace("..", ".", $URL) ?>mp4" controls autoplay></video>
                 <? if($ISHD): ?>
                     <form action="" method="GET" id="noscript-player-hd">
                         <input type="hidden" name="v" value="<?= $_GET["v"] ?>">
@@ -107,7 +107,7 @@
 			<? if ($Other_Videos) : ?>
 			<div class="u_sct" style="margin:0 0 10px">
 				<img src="/img/clp00.png">
-				<span class="u_sct_hd" style="font-size: 17px;position:relative;top:1px;left:5px">More From: <?= $Uploader["displayname"] ?></span>
+				<span class="u_sct_hd" style="font-size: 17px;position:relative;top:1px;left:5px">More From Author</span>
 			</div>
 			<div class="w_videos" style="display:none">
 				<div>
@@ -268,7 +268,9 @@
 				<div id="w_l_cnts">
 					<img src="/img/wse.png" id="w_sel" style="left:84px">
 					<div id="w_sh_cnt">
-						<span><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//www.vidlii.com/watch?v=<?= $URL ?>" target="_blank" onclick="playerInstance.pause(true)">Facebook</a></span><span><a href="https://twitter.com/home?status=I%20just%20watched%20this%20awesome%20video%3A%20https%3A//www.vidlii.com/watch?v=<?= $URL ?>" target="_blank" onclick="playerInstance.pause(true)">Twitter</a></span><span><a href="https://www.reddit.com/submit?url=/watch?v=<?= $URL ?>&title=<?= $Title ?>" target="_blank" onclick="playerInstance.pause(true)">Reddit</a></span>
+						<span><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A//www.vidlii.com/watch?v=<?= $URL ?>" target="_blank" onclick="playerInstance.pause(true)">Facebook</a></span>
+						<span><a href="https://x.com/home?status=I%20just%20watched%20this%20awesome%20video%3A%20https%3A//www.vidlii.com/watch?v=<?= $URL ?>" target="_blank" onclick="playerInstance.pause(true)">X (Twitter)</a></span>
+						<span><a href="https://www.reddit.com/submit?url=/watch?v=<?= $URL ?>&title=<?= $Title ?>" target="_blank" onclick="playerInstance.pause(true)">Reddit</a></span>
 					</div>
 					<div id="w_fv_cnt" class="hddn">
 						<? if (!$_USER->logged_in) : ?>
@@ -396,7 +398,7 @@
 								?>
 								<div class="wt_c_sct" id="wt_<?= $Comment["id"] ?>">
 									<div style="background:#cfffc4">
-										<a href="/user/<?= $Comment["displayname"] ?>"><?= $Comment["displayname"] ?></a> <span>(<?= get_time_ago($Comment["date_sent"]) ?>)</span>
+										<a href="/user/<?= $Comment["displayname"] ?>"><?= ($Comment["channel_title"] != "") ? $Comment["channel_title"] : $Comment["displayname"] ?></a> <span>(<?= get_time_ago($Comment["date_sent"]) ?>)</span>
 									</div>
 									<div>
 										<?= user_avatar2($Comment["displayname"],41,41,$Comment["avatar"],"wp_avt") ?>

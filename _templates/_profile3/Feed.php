@@ -81,7 +81,7 @@
                                 <div>
                                     <?= cut_string($Activity["content"],150) ?>
                                     <div style="color:#333"><?= number_format($Activity["views"]) ?> views</div>
-                                    <div><?= no_link_avatar($Profile["displayname"],21,21,$Profile["avatar"]) ?> <a href="/user/<?= $Profile["displayname"] ?>"><?= $Profile["displayname"] ?></a> favorited</div>
+                                    <div><?= no_link_avatar($Profile["displayname"],21,21,$Profile["avatar"]) ?> <a href="/user/<?= $Profile["displayname"] ?>"><? if(!empty($Profile["channel_title"])): ?><?= $Profile["channel_title"] ?><? else: ?><?= $Profile["displayname"] ?><? endif ?></a> favorited</div>
                                 </div>
                             </div>
                         </div>
@@ -152,9 +152,9 @@
             <? foreach ($Channel_Comments as $Channel_Comment) : ?>
                     <div class="cosmic_comment" id="cc_<?= $Channel_Comment["id"] ?>">
                         <div>
-                            <?= no_link_avatar($Channel_Comment["displayname"],26,26,$Channel_Comment["avatar"]) ?>
+                            <?= no_link_avatar($Channel_Comment["displayname"], 30, 30, $Channel_Comment["avatar"]) ?>
                             <div>
-                                <a href="/user/<?= $Channel_Comment["displayname"] ?>"><?= $Channel_Comment["displayname"] ?></a> posted a comment <span><?= get_time_ago($Channel_Comment["date"]) ?></span>
+                                <a href="/user/<?= $Channel_Comment["displayname"] ?>"><? if(!empty($Profile["channel_title"])): ?><?= $Profile["channel_title"] ?><? else: ?><?= $Profile["displayname"] ?><? endif ?></a><span><?= get_time_ago($Channel_Comment["date"]) ?></span>
                             </div>
                         </div>
                         <? if ($_USER->logged_in && ($_USER->username == $Channel_Comment["by_user"] || $Is_OWNER)) : ?><a href="javascript:void(0)" class="cosmic_delete" onclick="delete_comment(<?= $Channel_Comment["id"] ?>)">Delete</a><? endif ?>

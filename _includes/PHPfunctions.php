@@ -390,26 +390,18 @@ function user_avatar($User,$Width,$Height,$Avatar,$Border = "") {
 			$Avatar = "/usfi/thmp/$Avatar.jpg";
 		}
 	}
-	return '<a href="/user/'.$User.'"><img src="'.$Avatar.'" width="'.$Width.'" loading="lazy" height="'.$Height.'" class="avt '.$Border.'" alt="'.$User.'"></a>';
+	return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" loading="lazy" height="'.$Height.'" class="avt '.$Border.'" alt="'.$User.'"></a>';
 }
 
 function user_avatar2($User,$Width,$Height,$Avatar,$Extra_Class = "") {
-	if (strpos($Avatar,"u=") !== false) { $Avatar = str_replace("u=","",$Avatar); $Folder = "avt"; } else { $Upload = false; $Folder = "thmp"; }
-
-	if (empty($Avatar) or !file_exists("usfi/$Folder/$Avatar.jpg")) {
-		$Avatar = "/img/no.png";
-	} else {
-		if ($Folder == "avt") {
-			$Avatar = "/usfi/avt/$Avatar.jpg";
-		} else {
-			$Avatar = "/usfi/thmp/$Avatar.jpg";
-		}
-	}
-	return '<a href="/user/'.$User.'"><img src="'.$Avatar.'" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
+	return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
 }
 
-function get_age($Date) {
-		return date_diff(date_create($Date), date_create('today'))->y;
+	function get_age($Date) {
+		$today = new DateTime();
+  		$diff = $today->diff(new DateTime($Date));
+		echo $diff->y;
+		return $diff->y;
 	}
 
 	function time_ago($time) {

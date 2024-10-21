@@ -1,16 +1,3 @@
-<style>
-    strong {
-        margin: 20px 0 3px;
-        font-size: 19px;
-        display: block;
-    }
-    p {
-        margin: 0 0 4px;
-    }
-    .cgul li {
-        margin-bottom:3px
-    }
-</style>
 <h1 class="pg_hd">VidLii Community Guidelines</h1>
 <div class="vc_l">
     <div class="vc_cats">
@@ -25,5 +12,5 @@
     </div>
 </div>
 <div class="vc_r" style="margin-bottom:0">
-    <?= $Guidelines ?>
+    We don't have guidelines yet.
 </div>

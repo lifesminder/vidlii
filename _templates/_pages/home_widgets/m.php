@@ -1,7 +1,7 @@
 <? if ($Modules["most_popular"]) : ?>
 <div class="wdg" id="most_popular">
     <div>
-        <img src="/img/pop.png" alt="Most Popular Videos"><span>Most Popular</span>
+        <a href="#"><img src="/img/pop.png" alt="Most Popular Videos"><span>Most Popular</span></a>
         <div class="wdg_sel">
             <? if ($_USER->logged_in) : ?>
                 <div class="up1" onclick="move_up('most_popular')"></div><div class="do1" onclick="move_down('most_popular')"></div>

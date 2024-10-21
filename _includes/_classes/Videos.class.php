@@ -190,22 +190,16 @@ class Videos {
             }
 
             if (!isset(static::$Videos[$Video]["uploaded_on"]) || empty(static::$Videos[$Video]["uploaded_on"]) || $Banned_Uploader) {
-                static::$Videos[$Video]["uploaded_on"] = "1997-09-15 14:07:00";
+                static::$Videos[$Video]["uploaded_on"] = "1869-02-15 00:00:01";
             }
 
             if ($Thumbnail) {
-                if ($Can_see && isset(static::$Videos[$Video]["url"]) && !empty(static::$Videos[$Video]["url"]) && !$Banned_Uploader && file_exists(ROOT_FOLDER."/usfi/thmp/".static::$Videos[$Video]["url"].".jpg")) {
-                    $Image = "/usfi/thmp/".static::$Videos[$Video]["url"].".jpg";
-                } else {
-                    $Image = "/img/no_th.jpg";
-                }
+                $url = static::$Videos[$Video]["url"];
+                $Image = "/vi/$url.jpg";
                 static::$Videos[$Video]["thumbnail"] = 'src="'.$Image.'" alt="'.str_replace('"', "", str_replace("'", "", static::$Videos[$Video]["title"])).'" title="'.str_replace('"', "", str_replace("'", "",static::$Videos[$Video]["title"])).'"';
             }
         }
-        if ($this->LIMIT !== 1) {
-            return static::$Videos;
-        } else {
-            return static::$Videos[0];
-        }
+        
+        return ($this->LIMIT !== 1) ? static::$Videos : static::$Videos[0];
     }
 }

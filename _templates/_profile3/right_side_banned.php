@@ -1,6 +1,6 @@
 <div>
     <div class="cosmic_about" style="border:0">
-        <h3>About <?= $Profile["displayname"] ?></h3>
+        <h3>About <? if(!empty($Profile["channel_title"])): ?><?= $Profile["channel_title"] ?><? else: ?><?= $Profile["displayname"] ?><? endif ?></h3>
 	<? if (!$Is_OWNER && $_USER->logged_in) : ?>
     <div style="overflow:hidden;margin:15px 0 0 0">
         <? if ($Is_Blocked || $Has_Blocked) : ?>

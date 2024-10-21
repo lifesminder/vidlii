@@ -4,7 +4,10 @@
         <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii"></a>
         <nav>
             <ul>
-                <a href="/"<? if ($_PAGE->Page_Type == "Home") : ?> id="pr_sel"<? endif ?>><li>Home</li></a><a href="/videos"<? if ($_PAGE->Page_Type == "Videos") : ?> id="pr_sel"<? endif ?>><li>Videos</li></a><a href="/channels"<? if ($_PAGE->Page_Type == "Channels") : ?> id="pr_sel"<? endif ?>><li>Channels</li></a><a href="/community"<? if ($_PAGE->Page_Type == "Community") : ?> id="pr_sel"<? endif ?>><li>Community</li></a>
+                <a href="/"<? if ($_PAGE->Page_Type == "Home") : ?> id="pr_sel"<? endif ?>><li>Home</li></a>
+                <a href="/videos"<? if ($_PAGE->Page_Type == "Videos") : ?> id="pr_sel"<? endif ?>><li>Videos</li></a>
+                <a href="/channels"<? if ($_PAGE->Page_Type == "Channels") : ?> id="pr_sel"<? endif ?>><li>Channels</li></a>
+                <a href="/community"<? if ($_PAGE->Page_Type == "Community") : ?> id="pr_sel"<? endif ?>><li>Community</li></a>
             </ul>
         </nav>
         <nav id="sm_nav">
@@ -96,6 +99,11 @@
                 <div>
                 <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
                 <a href="/inbox">Inbox</a>
+                <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?>
+                <div>
+                    <a href="/admin/login">Admin Panel</a>
+                </div>
+                <? endif ?>
                 </div>
                 <div>
                 <a href="/my_account">Account</a>
@@ -105,15 +113,10 @@
                 <a href="/my_videos">Videos</a>
                 <a href="/friends">Friends</a>
                 </div>
-                <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?>
-                <div style="width:100%">
-                    <a style="width:91%;text-align:center" href="/admin/login">Admin Panel</a>
+                <div>
+                    <a href="/logout" class="sign_out">Sign Out</a>
                 </div>
-                <? endif ?>
             </span>
-            <a href="/logout" class="sign_out">
-               Sign Out
-            </a>
         <? endif ?>
     </div>
 </header>

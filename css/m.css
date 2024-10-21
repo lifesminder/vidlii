@@ -1150,6 +1150,12 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     border-right: 1px solid #ccc;
     border-radius: 8px 8px 0 0;
     padding: 0.3rem 0.6rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+} .wdg>div:first-of-type > a {
+    display: flex;
+    align-items: center;
 }
 
 .wdg>div:first-of-type>a>img,
@@ -1163,6 +1169,23 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
 .wdg>div:first-of-type>a {
     text-decoration: none;
     color: #000
+}
+
+.subpage {
+    float: left;
+    width: 810px;
+    padding-left: 11px;
+    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
+    border-top: 0;
+    background-color: #e2e2e2;
+} .subpage .subpage-content {
+    background-color: #fff;
+    padding: 1px;
+    border-left: 1px solid #ccc;
+    padding: 12px 14px 11px 14px;
+} .subpage .subpage-content h4 {
+    margin: 0.4rem;
 }
 
 #re_box>div {
@@ -1459,7 +1482,6 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     border: 1px solid transparent;
     margin: -10px 13px 0 0;
     padding: 12px 4px 12px 4px;
-    height: 13px;
     color: #555;
     cursor: pointer;
     user-select: none;
@@ -1522,10 +1544,10 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
 #s_toggle2 {
     display: inline-block;
     position: absolute;
-    right: 64px;
+    right: 13px;
     top: 29px;
-    z-index: 2147483647;
-    background: #fff;
+    z-index: 999;
+    background-color: #fff;
     border: 1px solid #999;
     -moz-border-radius-bottomleft: 3px;
     -moz-border-radius-bottomright: 3px;
@@ -1537,6 +1559,7 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     -webkit-box-shadow: 0 0 3px #999;
     box-shadow: 0 0 3px #999;
     width: 200px;
+    padding: 0.5rem 0 0.5rem 0;
 }
 
 #masthead-user-image {
@@ -1588,7 +1611,7 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
 
 #s_toggle a:hover,
 #s_toggle2 a:hover {
-    background: #eaeaea
+    background-color: #eaeaea
 }
 
 .s_center a,
@@ -1808,11 +1831,14 @@ input[type=text],
 input[type=password],
 input[type=email],
 input[type=search],
-input[type=url] {
+input[type=url],
+input[type=number] {
     border: 1px solid #d5d5d5;
     padding: 3px 4px;
     border-radius: 3px;
     outline: 0;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
 }
 
 textarea {
@@ -1820,7 +1846,7 @@ textarea {
     padding: 3px 4px;
     border-radius: 4px;
     outline: 0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     font-size: 13px;
     width: 98.5%;
     resize: vertical;
@@ -1831,7 +1857,8 @@ input[type=text]:hover,
 input[type=password]:hover,
 input[type=email]:hover,
 input[type=search]:hover,
-input[type=url]:hover {
+input[type=url]:hover,
+input[type=number]:hover {
     border: 1px solid #ababab
 }
 
@@ -1840,7 +1867,8 @@ input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus,
 input[type=search]:focus,
-input[type=url]:focus {
+input[type=url]:focus,
+input[type=number]:focus {
     border: 1px solid #9d9efd
 }
 
@@ -1964,8 +1992,8 @@ select {
 
 .vc_r {
     float: left;
-    width: 780px;
-    margin-bottom: 48px
+    width: 81%;
+    margin-bottom: 48px;
 }
 
 .u_sct>img {
@@ -2377,7 +2405,11 @@ select {
 .vc_cats {
     background: #ebece0;
     padding: 7px 0 6px;
-    border: 1px solid #ccc
+    border: 1px solid #ccc;
+}
+.vc_cats .active {
+    font-weight: bold;
+    cursor: default;
 }
 
 .vc_cats>div:first-of-type {
@@ -3072,6 +3104,17 @@ select {
     border-bottom: none;
 } .recommended-list .recommended-list-item p {
     margin: 0;
+} .recommended-list .recommended-list-item .avatar {
+    margin-right: 0.4rem;
+} .recommended-list .recommended-list-item .body {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 13px;
+} .recommended-list .recommended-list-item .body .info {
+    color: #999;
+    margin-top: 2px;
 }
 
 .yt-alert {
@@ -3094,4 +3137,13 @@ select {
 .signup-promo-message {
     font-size: 1.5em;
     margin-bottom: 10px;
+}
+
+.blog-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0 0.5rem 0;
+} .blog-box a {
+    color: #000;
 }

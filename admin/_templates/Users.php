@@ -186,148 +186,165 @@
 		</script>
 	</div>
 	<form action="/admin/users?u=<?= $User_Info["username"] ?>" method="POST">
-	<div style="float:left;width:49%;padding-right:1%">
-		<table cellpadding="4">
-			<tr>
-				<td>Website:</td>
-				<td><input type="url" name="website" value="<?= htmlspecialchars($User_Info["website"]) ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td valign="top">About:</td>
-				<td><textarea name="about" rows="6" style="resize:vertical;width:255px;border-radius:4px;border:1px solid #d5d5d5"><?= $User_Info["about"] ?></textarea></td>
-			</tr>
-			<tr>
-				<td>Channel Type:</td>
-				<td>
-					<select name="channel_type">
-						<option value="0"<? if ($User_Info["channel_type"] == 0) : ?> selected<? endif ?>>Default</option>
-						<option value="1"<? if ($User_Info["channel_type"] == 1) : ?> selected<? endif ?>>Director</option>
-						<option value="2"<? if ($User_Info["channel_type"] == 2) : ?> selected<? endif ?>>Musician</option>
-						<option value="3"<? if ($User_Info["channel_type"] == 3) : ?> selected<? endif ?>>Comedian</option>
-						<option value="4"<? if ($User_Info["channel_type"] == 4) : ?> selected<? endif ?>>Gamer</option>
-						<option value="5"<? if ($User_Info["channel_type"] == 5) : ?> selected<? endif ?>>Reporter</option>
-						<option value="6"<? if ($User_Info["channel_type"] == 6) : ?> selected<? endif ?>>Guru</option>
-						<option value="7" <? if ($User_Info["channel_type"] == 7) : ?> selected<? endif ?>>Animator</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Channel Title:</td>
-				<td><input type="text" name="channel_title" value="<?= $User_Info["channel_title"] ?>" maxlength="80"></td>
-			</tr>
-			<tr>
-				<td valign="top">Channel Description:</td>
-				<td><textarea maxlength="2500" name="description" rows="6" style="resize:vertical;width:255px;border-radius:4px;border:1px solid #d5d5d5"><?= $User_Info["channel_description"] ?></textarea></td>
-			</tr>
-			<tr>
-				<td>Channel Tags:</td>
-				<td><input type="text" maxlength="270" name="tags" value="<?= $User_Info["channel_tags"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Channel Version:</td>
-				<td>
-					<select name="channel_version">
-						<option value="1"<? if ($User_Info["channel_version"] == 1) : ?> selected<? endif ?>>Channel 1.0</option>
-						<option value="2"<? if ($User_Info["channel_version"] == 2) : ?> selected<? endif ?>>Channel 2.0</option>
-                        <option value="3"<? if ($User_Info["channel_version"] == 3) : ?> selected<? endif ?>>Cosmic Panda</option>
-                    </select>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<div style="float:left;width:48%;padding-left:1%;border-left:1px solid #ccc">
-		<table cellpadding="4">
-			<tr>
-				<td><strong>Display Name:</strong></td>
-				<td><input type="text" name="displayname" value="<?= $User_Info["displayname"] ?>" required maxlength="20"></td>
-			</tr>
-			<tr>
-				<td>Name:</td>
-				<td><input type="text" name="name" value="<?= $User_Info["i_name"] ?>" maxlength="64"></td>
-			</tr>
-			<tr>
-				<td>Occupation:</td>
-				<td><input type="text" name="occupation" value="<?= $User_Info["i_occupation"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Schools:</td>
-				<td><input type="text" name="schools" value="<?= $User_Info["i_schools"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Interests:</td>
-				<td><input type="text" name="interests" value="<?= $User_Info["i_interests"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Movies:</td>
-				<td><input type="text" name="movies" value="<?= $User_Info["i_movies"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Music:</td>
-				<td><input type="text" name="music" value="<?= $User_Info["i_music"] ?>" maxlength="128"></td>
-			</tr>
-			<tr>
-				<td>Books:</td>
-				<td><input type="text" name="books" value="<?= $User_Info["i_books"] ?>" maxlength="128"></td>
-			</tr>
-            <tr>
-                <td>Country:</td>
-                <td>
-                    <select name="country" style="width:214px">
-                        <? foreach ($Countries as $Country => $Name) : ?>
-                            <option value="<?= $Country ?>"<? if ($Country == $User_Info["country"]) : ?>selected<? endif ?>><?= $Name ?></option>
-                        <? endforeach ?>
-                    </select>
-                </td>
-            </tr>
-			<tr>
-				<td>Birthday:</td>
-				<td>
-					<select name="month">
-						<? foreach($Months as $item => $value) : ?>
-							<option value="<?= $value ?>"<? if ($value == $Birth_Month) : ?> selected<? endif ?>><?= $item ?></option>
-						<?php endforeach ?>
-					</select>
-					<select name="day">
-						<? for ($x = 1; $x <= 31; $x++) : ?>
-							<option value="<?= $x ?>"<? if ($x == $Birth_Day) : ?> selected<? endif ?>><?= $x ?></option>
-						<? endfor ?>
-					</select>
-					<select name="year">
-						<? for($x = date("Y");$x >= 1910;$x--) : ?>
-							<option value="<?= $x ?>"<? if ($x == $Birth_Year) : ?> selected<? endif ?>><?= $x ?></option>
-						<? endfor ?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Activated:</td>
-				<td>
-					<select name="activated">
-						<option value="0"<? if ($User_Info["activated"] == 0) : ?> selected<? endif ?>>False</option>
-						<option value="1"<? if ($User_Info["activated"] == 1) : ?> selected<? endif ?>>True</option>
-					</select>
-				</td>
-			</tr>
-            <? if ($User_Info["partner"] == 1) : ?>
-                <tr>
-                    <td>Partnered:</td>
-                    <td>
-                        <select name="partnered">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </td>
-                </tr>
-            <? endif ?>
-			<tr>
-				<td>Strikes:</td>
-				<td><b style="<?=$User_Info["strikes"] == 1 ? "color:orange" : ($User_Info["strikes"] >= 2 ? "color:red" : "")?>"><?=$User_Info["strikes"]?></b></td>
-			</tr>
-		</table>
-	</div>
-	<div style="clear:both"></div>
-	<div style="text-align:center;margin-top:17px">
-		<input type="submit" value="Save User Changes" name="save_user" style="padding: 5px 20px">
-	</div>
+		<div style="display: flex; justify-content: space-between">
+			<div style="padding-right:1%">
+			<table cellpadding="4">
+				<tr>
+					<td>Website:</td>
+					<td><input type="url" name="website" value="<?= htmlspecialchars($User_Info["website"]) ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td valign="top">About:</td>
+					<td><textarea name="about" rows="6"><?= $User_Info["about"] ?></textarea></td>
+				</tr>
+				<tr>
+					<td>Channel Type:</td>
+					<td>
+						<select name="channel_type">
+							<option value="0"<? if ($User_Info["channel_type"] == 0) : ?> selected<? endif ?>>Default</option>
+							<option value="1"<? if ($User_Info["channel_type"] == 1) : ?> selected<? endif ?>>Director</option>
+							<option value="2"<? if ($User_Info["channel_type"] == 2) : ?> selected<? endif ?>>Musician</option>
+							<option value="3"<? if ($User_Info["channel_type"] == 3) : ?> selected<? endif ?>>Comedian</option>
+							<option value="4"<? if ($User_Info["channel_type"] == 4) : ?> selected<? endif ?>>Gamer</option>
+							<option value="5"<? if ($User_Info["channel_type"] == 5) : ?> selected<? endif ?>>Reporter</option>
+							<option value="6"<? if ($User_Info["channel_type"] == 6) : ?> selected<? endif ?>>Guru</option>
+							<option value="7" <? if ($User_Info["channel_type"] == 7) : ?> selected<? endif ?>>Animator</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Channel Title:</td>
+					<td><input type="text" name="channel_title" value="<?= $User_Info["channel_title"] ?>" maxlength="80"></td>
+				</tr>
+				<tr>
+					<td valign="top">Channel Description:</td>
+					<td><textarea maxlength="2500" name="description" rows="6"><?= $User_Info["channel_description"] ?></textarea></td>
+				</tr>
+				<tr>
+					<td>Channel Tags:</td>
+					<td><input type="text" maxlength="270" name="tags" value="<?= $User_Info["channel_tags"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Channel Version:</td>
+					<td>
+						<select name="channel_version">
+							<option value="1"<? if ($User_Info["channel_version"] == 1) : ?> selected<? endif ?>>Channel 1.0</option>
+							<option value="2"<? if ($User_Info["channel_version"] == 2) : ?> selected<? endif ?>>Channel 2.0</option>
+							<option value="3"<? if ($User_Info["channel_version"] == 3) : ?> selected<? endif ?>>Cosmic Panda</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding-left:1%;border-left:1px solid #ccc">
+			<table cellpadding="4">
+				<tr>
+					<td><strong>Display Name:</strong></td>
+					<td><input type="text" name="displayname" value="<?= $User_Info["displayname"] ?>" required maxlength="20"></td>
+				</tr>
+				<tr>
+					<td>Name:</td>
+					<td><input type="text" name="name" value="<?= $User_Info["i_name"] ?>" maxlength="64"></td>
+				</tr>
+				<tr>
+					<td>Occupation:</td>
+					<td><input type="text" name="occupation" value="<?= $User_Info["i_occupation"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Schools:</td>
+					<td><input type="text" name="schools" value="<?= $User_Info["i_schools"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Interests:</td>
+					<td><input type="text" name="interests" value="<?= $User_Info["i_interests"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Movies:</td>
+					<td><input type="text" name="movies" value="<?= $User_Info["i_movies"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Music:</td>
+					<td><input type="text" name="music" value="<?= $User_Info["i_music"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Books:</td>
+					<td><input type="text" name="books" value="<?= $User_Info["i_books"] ?>" maxlength="128"></td>
+				</tr>
+				<tr>
+					<td>Country:</td>
+					<td>
+						<select name="country" style="width:214px">
+							<? foreach ($Countries as $Country => $Name) : ?>
+								<option value="<?= $Country ?>"<? if ($Country == $User_Info["country"]) : ?>selected<? endif ?>><?= $Name ?></option>
+							<? endforeach ?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Birthday:</td>
+					<td>
+						<select name="month">
+							<? foreach($Months as $item => $value) : ?>
+								<option value="<?= $value ?>"<? if ($value == $Birth_Month) : ?> selected<? endif ?>><?= $item ?></option>
+							<?php endforeach ?>
+						</select>
+						<select name="day">
+							<? for ($x = 1; $x <= 31; $x++) : ?>
+								<option value="<?= $x ?>"<? if ($x == $Birth_Day) : ?> selected<? endif ?>><?= $x ?></option>
+							<? endfor ?>
+						</select>
+						<input type="number" name="year" id="year" value="<?= $Birth_Year ?>" style="width: 60px" required>
+					</td>
+				</tr>
+				<tr>
+					<td>Joined:</td>
+					<td>
+						<select name="reg_month">
+							<? foreach($Months as $item => $value) : ?>
+								<option value="<?= $value ?>"<? if ($value == $Reg_Month) : ?> selected<? endif ?>><?= $item ?></option>
+							<?php endforeach ?>
+						</select>
+						<select name="reg_day">
+							<? for ($x = 1; $x <= 31; $x++) : ?>
+								<option value="<?= $x ?>"<? if ($x == $Reg_Day) : ?> selected<? endif ?>><?= $x ?></option>
+							<? endfor ?>
+						</select>
+						<input type="number" name="reg_year" id="reg_year" value="<?= $Reg_Year ?>" style="width: 60px" required>
+						<span>at</span>
+						<input type="number" name="reg_hour" id="reg_hour" value="<?= $Reg_Hour ?>" style="width: 40px" required>
+						<input type="number" name="reg_minute" id="reg_minute" value="<?= $Reg_Minute ?>" style="width: 40px" required>
+						<input type="number" name="reg_second" id="reg_second" value="<?= $Reg_Second ?>" style="width: 40px" required>
+					</td>
+				</tr>
+				<tr>
+					<td>Activated:</td>
+					<td>
+						<select name="activated">
+							<option value="0"<? if ($User_Info["activated"] == 0) : ?> selected<? endif ?>>False</option>
+							<option value="1"<? if ($User_Info["activated"] == 1) : ?> selected<? endif ?>>True</option>
+						</select>
+					</td>
+				</tr>
+				<? if ($User_Info["partner"] == 1) : ?>
+					<tr>
+						<td>Partnered:</td>
+						<td>
+							<select name="partnered">
+								<option value="1">Yes</option>
+								<option value="0">No</option>
+							</select>
+						</td>
+					</tr>
+				<? endif ?>
+				<tr>
+					<td>Strikes:</td>
+					<td><b style="<?=$User_Info["strikes"] == 1 ? "color:orange" : ($User_Info["strikes"] >= 2 ? "color:red" : "")?>"><?=$User_Info["strikes"]?></b></td>
+				</tr>
+			</table>
+		</div>
+		</div>
+		<div style="text-align:center;margin-top:17px">
+			<input type="submit" value="Save User Changes" name="save_user" style="padding: 5px 20px">
+		</div>
 	</form>
 <? endif ?>

@@ -43,28 +43,25 @@
                 $ffmpeg->Get_Info();
                 $ffmpeg->Make_Thumbnails(3, $x);
                 
-                if(file_exists(__dir__."/usfi/prvw/$id.file.jpg")) {
-                    $_thumb = base64_encode(file_get_contents(__dir__."/usfi/prvw/$id.file.jpg"));
-                    $updateThumb = db("update videos set thumbnail = '$_thumb' where url = '$id'");
-                    if($updateThumb["status"] == 0) {
-                        @unlink(__dir__."/usfi/prvw/$id.file.jpg"); @unlink(__dir__."/usfi/thmp/$id.file.jpg");
-                        echo "Thumbnail Updated! Next...\n\n";
-                        $makeConverting = db("update videos set status = 1 where url = '$id'");
-                        if($makeConverting["status"] == 0) {
-                            $ffmpeg->Resize(480); $ffmpeg->Convert();
-                            if(file_exists(__dir__."/usfi/v/$id.mp4")) {
-                                foreach(glob(__dir__."/usfi/conv/$id*") as $f) {
-                                    unlink($f);
-                                }
-                                $deleteConverting = db("update videos set status = 2 where url = '$id'");
-                                if($deleteConverting["status"] == 0) {
-                                    $deleteConvertingTotally = db("delete from converting where uri = '$id'");
-                                    rename(__dir__."/usfi/v/$id.mp4", __dir__."/usfi/v/$id..mp4");
-                                } else echo "ERROR!: ".$makeConverting["message"]."\n";
-                            } else echo "ERROR!: File Doesn't exists\n";
-                        } else echo "ERROR!: ".$makeConverting["message"]."\n";
-                    } else echo "ERROR!: ".$updateThumb["message"]."\n";
-                }
+                $_thumb = base64_encode(file_get_contents("usfi/prvw/$id.file.jpg"));
+                $updateThumb = db("UPDATE videos set thumbnail = '$_thumb' where url = '$id'");
+                if($updateThumb["status"] == 0) {
+                    @unlink("usfi/prvw/$id.file.jpg"); @unlink("usfi/thmp/$id.file.jpg");
+                    echo "Thumbnail Updated! Next...\n\n";
+                    $makeConverting = db("update videos set status = 1 where url = '$id'");
+                    if($makeConverting["status"] == 0) {
+                        $ffmpeg->Resize(480); $ffmpeg->Convert();
+                        if(file_exists("usfi/v/$id.mp4")) {
+                            foreach(glob("usfi/conv/$id*") as $f) {
+                                unlink($f);
+                            }
+                            $deleteConverting = db("update videos set status = 2 where url = '$id'");
+                            if($deleteConverting["status"] == 0) {
+                                $deleteConvertingTotally = db("delete from converting where uri = '$id'");
+                            } else echo "ERROR!: ".$makeConverting["message"]."\n";
+                        } else echo "ERROR!: File Doesn't exists\n";
+                    } else echo "ERROR!: ".$makeConverting["message"]."\n";
+                } else echo "ERROR!: ".$updateThumb["message"]."\n";
             }
         }
     } else echo "Nothing to do. Exiting...\n";

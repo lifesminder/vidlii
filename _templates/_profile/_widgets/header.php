@@ -101,30 +101,31 @@
                 </a>
             <? else : ?>
                 <div id="s_username" onclick="$('#s_toggle').toggleClass('hddn'); $('#s_username').toggleClass('s_username_clicked')">
-                    <?= $_USER->displayname ?>
+                    <img src="/img/no.png" alt="<?= $_USER->displayname ?>" style="width: 24px; height: 24px; margin: -3px 2px 0 0; display: inline-block;">
+                    <?= ($_USER->channel_title != "") ? $_USER->channel_title : $_USER->displayname ?>
                 </div>
                 <span id="s_toggle" class="hddn">
-                <div>
-                <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
-                <a href="/inbox">Inbox</a>
-                </div>
-                <div>
-                <a href="/my_account">Account</a>
-                <a href="/my_subscriptions">Subscriptions</a>
-                </div>
-                <div>
-                <a href="/my_videos">Videos</a>
-                <a href="/friends">Friends</a>
-                </div>
+                    <div>
+                    <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
+                    <a href="/inbox">Inbox</a>
                     <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?>
-                        <div style="width:100%">
-                    <a style="width:91%;text-align:center" href="/admin/login">Admin Panel</a>
-                </div>
+                    <div>
+                        <a href="/admin/login">Admin Panel</a>
+                    </div>
                     <? endif ?>
-            </span>
-                <a href="/logout" class="sign_out">
-                    Sign Out
-                </a>
+                    </div>
+                    <div>
+                    <a href="/my_account">Account</a>
+                    <a href="/my_subscriptions">Subscriptions</a>
+                    </div>
+                    <div>
+                    <a href="/my_videos">Videos</a>
+                    <a href="/friends">Friends</a>
+                    </div>
+                    <div>
+                        <a href="/logout" class="sign_out">Sign Out</a>
+                    </div>
+                </span>
             <? endif ?>
         </div>
     </header>

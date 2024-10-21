@@ -127,7 +127,7 @@
 		<strong>Write Blog Post</strong>
 		<form action="/admin/dashboard" method="POST">
 			<input style="margin-bottom:5px;width:250px" type="text" name="blog_title" maxlength="256" required placeholder="Blog Post Title"><br>
-			<textarea name="blog_post" maxlength="50000" placeholder="Blog Post" required style="width:450px;border-radius:5px;margin-bottom:4px;border:1px solid #d5d5d5" rows="8"></textarea><br>
+			<textarea name="blog_post" maxlength="50000" placeholder="Blog Post" required rows="8"></textarea><br>
 			<input type="submit" value="Submit Blog Post" name="submit_blog">
 		</form>
 	</div>

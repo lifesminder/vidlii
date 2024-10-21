@@ -1,5 +1,7 @@
 <?php
-require_once "_includes/init.php";
+    require_once "_includes/init.php";
+
+    $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
 
 //REQUIREMENTS / PERMISSIONS
 //- Requires Login
@@ -90,19 +92,7 @@ if (isset($_POST["update_privacy"])) {
 
 //GET INFO
 $Info = $_USER->get_profile();
-
-if (strpos($Info["avatar"],"u=") !== false) {
-    $Is_Uploaded_Avatar = true;
-    $Avatar_FURL        = str_replace("u=", "", $Info["avatar"]);
-} else {
-    $Is_Uploaded_Avatar = false;
-}
-
-if (!empty($Info["avatar"])) {
-    $Avatar = "/watch?v=".$Info["avatar"];
-} else {
-    $Avatar = "";
-}
+$Is_Uploaded_Avatar = (bool)($api->db("SELECT IF(avatar IS NULL or avatar = '', 'empty', avatar) as avatar from users where username = '".$_USER->username."'")["data"]["avatar"] != "empty");
 
 if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {
     $_GUMP->validation_rules(array(
@@ -116,48 +106,34 @@ if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {
     $Validation = $_GUMP->run($_POST);
 
     if ($Validation) {
+        $user = $_USER->username;
         if (!empty($_FILES["avatar_upload"]["name"])) {
-            $URL = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",11);
-            $Uploader                          = new upload($_FILES["avatar_upload"]);
-            $Uploader->file_new_name_body      = $URL;
-            $Uploader->image_resize            = true;
-            $Uploader->file_overwrite          = true;
-            $Uploader->image_x                 = 150;
-            $Uploader->image_y                 = 150;
-            $Uploader->image_background_color  = '#000000';
-            $Uploader->image_convert           = 'jpg';
-            $Uploader->image_ratio_fill        = false;
-			/* Why would you set a file size limit? We're already resizing to a 150x150 JPG */
-//            $Uploader->file_max_size           = 750000;
-            $Uploader->jpeg_quality            = 55;
-            $Uploader->allowed                 = array('image/jpeg','image/pjpeg','image/png','image/gif','image/bmp','image/x-windows-bmp');
-            $Uploader->process("usfi/avt/");
-            if ($Uploader->processed) {
-                if (file_exists("usfi/avt/$Avatar_FURL.jpg")) {
-                    unlink("usfi/avt/$Avatar_FURL.jpg");
+            /*
+                NEW Avatar uploading logic, which includes getting rid of `usfi` save and placing it into DB instead.
+                Avatar will be fetched via CDN newer modules.
+            */
+            $imgsize = getimagesize($_FILES["avatar_upload"]["tmp_name"]);
+            if($imgsize) {
+                $avatar = base64_encode(file_get_contents($_FILES["avatar_upload"]["tmp_name"]));
+                $upload = $api->db("UPDATE users SET avatar = '$avatar' WHERE username = '$user'");
+                if($upload["status"] == 1) {
+                    notification("Avatar have been updated!", "/channel_setup", "green");
+                } else {
+                    notification($upload["message"], "/channel_setup", "red");
                 }
-                $DB->modify("UPDATE users SET avatar = :AVATAR WHERE username = :USERNAME",
-                           [
-                               ":AVATAR"    => "u=".$URL,
-                               ":USERNAME"  => $_USER->username
-                           ]);
-                redirect("/channel_setup"); exit();
+            } else {
+                notification("You must use a valid image", "/channel_setup", "red");
+                exit();
             }
         } elseif (isset($_POST["delete_avatar"])) {
-            if (file_exists("usfi/avt/$Avatar_FURL.jpg")) {
-                unlink("usfi/avt/$Avatar_FURL.jpg");
-            }
-            $DB->modify("UPDATE users SET avatar = :AVATAR WHERE username = :USERNAME",
-                       [
-                           ":AVATAR"    => "",
-                           ":USERNAME"  => $_USER->username
-                       ]);
-            redirect("/channel_setup"); exit();
+            $upload = $api->db("UPDATE users SET avatar = NULL WHERE username = '$user'");
+            if($upload["status"] == 1) notification("Avatar have been removed!", "/channel_setup", "red");
+            else notification($upload["message"], "/channel_setup", "red");
         } elseif (isset($_POST["v_url"]) && !file_exists("usfi/avt/$Avatar_FURL.jpg")) {
             if (!empty($Validation["v_url"])) {
                 if (strpos($Validation["v_url"], "watch") !== false) {
-                    $URL    = url_parameter($Validation["v_url"], "v");
-                    $Video  = new Video($URL, $DB);
+                    $URL = url_parameter($Validation["v_url"], "v");
+                    $Video = new Video($URL, $DB);
                     if ($Video->exists()) {
                         $Video->get_info();
                         if ($Video->Info["uploaded_by"] === $_USER->username) {
@@ -204,11 +180,13 @@ if (isset($_POST["Apply_Filter"]) && $_POST["filter_type"] !== "0") {
     $Uploader->process("usfi/avt/");
 
     unlink("usfi/avt/$Avatar_FURL.jpg");
+    /*
     $DB->modify("UPDATE users SET avatar = :AVATAR WHERE username = :USERNAME",
                [
                    ":AVATAR"    => "u=".$URL,
                    ":USERNAME"  => $_USER->username
                ]);
+    */
     redirect("/channel_setup");
 
 

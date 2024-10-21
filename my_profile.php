@@ -46,17 +46,13 @@ if (isset($_POST["update_info"])) {
         $Country = $Validation["country"];
         $Birthday = "$Year-$Month-$Day";
 
-        if(get_age($Birthday) >= 13) {
-			$age = $_POST["show_age"] ? 1 : 0;
-			$country = $_POST["show_country"] ? 1 : 0;
-			$signin = $_POST["show_signin"] ? 1 : 0;
+		$age = $_POST["show_age"] ? 1 : 0;
+		$country = $_POST["show_country"] ? 1 : 0;
+		$signin = $_POST["show_signin"] ? 1 : 0;
 			
-            $DB->modify("UPDATE users SET about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, country = :COUNTRY, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS, a_age = :AGE, a_country = :ACOUNTRY, a_last = :SIGNIN WHERE username = :USERNAME",
+        $DB->modify("UPDATE users SET about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, country = :COUNTRY, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS, a_age = :AGE, a_country = :ACOUNTRY, a_last = :SIGNIN WHERE username = :USERNAME",
                        [":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"], ":BIRTHDAY" => $Birthday, ":COUNTRY" => $Country, ":USERNAME" => $_USER->username, ":OCCUPATION" => $Validation["occupation"], ":SCHOOLS" => $Validation["schools"], ":INTERESTS" => $Validation["interests"], ":MOVIES" => $Validation["movies"], ":MUSIC" => $Validation["music"], ":BOOKS" => $Validation["books"], ":AGE" => $age, ":ACOUNTRY" => $country, ":SIGNIN" => $signin]);
-            notification("Profile successfully updated!","/my_profile","green"); exit();
-        } else {
-            notification("You must be at least 13 years old to use VidLii!","/my_profile","red"); exit();
-        }
+         notification("Profile successfully updated!","/my_profile","green"); exit();
     }
 }
 

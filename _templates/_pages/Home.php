@@ -288,48 +288,44 @@
             </div>
         </div>
     <? endif ?>
+    <?php
+        if(count($feed["recommended"]["channels"]) > 0) {
+    ?>
     <div class="wdg">
         <div>
             <span>Recommended Channels</span>
         </div>
         <div class="recommended-list">
             <?php
-                if(count($feed["recommended"]["channels"]) > 0) {
-                    for($i = 0; $i < count($feed["recommended"]["channels"]); $i++) {
-                        $Recommended_Channel = $feed["recommended"]["channels"][$i];
+                for($i = 0; $i < count($feed["recommended"]["channels"]); $i++) {
+                    $Recommended_Channel = $feed["recommended"]["channels"][$i];
             ?>
             <div class="recommended-list-item">
-                <div style="margin-right: 0.4rem">
+                <div class="avatar">
                     <?= user_avatar2($Recommended_Channel["username"], 56, 56, $Recommended_Channel["avatar"]) ?>
                 </div>
-                <div style="width: 80%">
-                    <a href="/user/<?= $Recommended_Channel["displayname"] ?>" style="font-weight:bold;font-size:16px"><?= $Recommended_Channel["displayname"] ?></a>
-                    <p>
-                        <? if (!empty($Recommended_Channel["channel_description"])) : ?>
+                <div class="body">
+                    <a href="/user/<?= $Recommended_Channel["displayname"] ?>" style="font-weight:bold;font-size:16px"><?= ($Recommended_Channel["channel_title"] != "") ? $Recommended_Channel["channel_title"] : $Recommended_Channel["displayname"] ?></a>
+                    <? if (!empty($Recommended_Channel["channel_description"])) : ?>
+                        <p>
                             <?php
                                 echo (strlen($Recommended_Channel["channel_description"]) > 48) ? substr($Recommended_Channel["channel_description"], 0, 48)."..." : $Recommended_Channel["channel_description"];
                             ?>
-                        <? else : ?>
-                            <em>No Description...</em>
-                        <? endif ?>
-                    </p>
-                    <div style="color: #999; margin-top: 4px">
+                        </p>
+                    <? endif ?>
+                    <div class="info">
                         <p>
-                            <?= number_format($Recommended_Channel["video_views"]) ?> views - <?= number_format($Recommended_Channel["subscribers"]) ?> subscribers
+                            <?= number_format($Recommended_Channel["video_views"]) ?> views · <?= number_format($Recommended_Channel["subscribers"]) ?> subscribers
                         </p>
                     </div>
                 </div>
             </div>
             <?php
-                    }
-                } else {
-            ?>
-            <p>Currently, we don't have any featured channels</p>
-            <?php
                 }
             ?>
         </div>
     </div>
+    <?php } ?>
     <div class="whats_new">
         <strong>What's New</strong>
         <a href="/<? if ($_USER->logged_in) : ?>channel_version<? else : ?>login<? endif ?>">Cosmic Panda</a>
@@ -339,6 +335,7 @@
         <a href="/themes">Themes</a>
         Choose your favorite theme and make VidLii look the way you want it to look.
     </div>
+    <? if(!empty($feed["last_online"])): ?>
     <div class="last_5">
         <strong>Last <?php echo (isset($_ENV["show_online_count"]) && (int)$_ENV["show_online_count"] >= 1) ? (int)$_ENV["show_online_count"] : 5; ?> Users Online</strong>
         <? foreach ($feed["last_online"] as $Online) : ?>
@@ -348,5 +345,6 @@
             </div>
         <? endforeach ?>
     </div>
+    <? endif ?>
 </aside>
 <div class="cl"></div>

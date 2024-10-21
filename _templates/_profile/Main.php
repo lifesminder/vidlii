@@ -79,7 +79,7 @@
 	</section>
 	<section>
 		<div class="prbx_hd nm_hd">
-			<? if (empty($Profile["connect"])) : ?>Connect with <?= $Profile["displayname"] ?><? else : ?><?= $Profile["connect"] ?><? endif ?>
+			<? if (empty($Profile["connect"])) : ?>Connect with <?= ($Profile["channel_title"] != "") ? $Profile["channel_title"] : $Profile["displayname"] ?><? else : ?><?= $Profile["connect"] ?><? endif ?>
 		</div>
 		<div class="prbx_in nm_in">
 			<table class="connect" width="100%">
@@ -121,7 +121,11 @@
 				</tr>
 				</tbody>
 			</table>
-			<div class="connect_lnk"><a href="/user/<?= $Profile["displayname"] ?>">/user/<?= $Profile["displayname"] ?></a></div>
+			<div class="connect_lnk" style="display: flex; justify-content: center">
+				<a href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/user/".$Profile["displayname"]; ?>">
+					<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/user/".$Profile["displayname"]; ?>
+				</a>
+			</div>
 		</div>
 	</section>
     <? foreach (explode(",",$Profile["modules_vertical_l"]) as $Module_l) : ?>
@@ -158,7 +162,7 @@
 </div>
 <div class="pr_r">
 	<? if (isset($Featured_Video) && $Profile["c_featured"] && $Featured_Video["status"] == 2) : ?>
-		<div style="width:640px; height:360px; margin-bottom:18px;">
+		<div style="width:640px; height:480px;">
 			<?php
 				$URL = $Featured_Video["url"];
 				$FILENAME = $Featured_Video["file"];

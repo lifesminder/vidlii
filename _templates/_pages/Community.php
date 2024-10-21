@@ -1,6 +1,6 @@
 <div class="h_l">
     <div class="wdg" style="margin-bottom: 6px">
-        <div style="height:23px;border-bottom:1px solid #ccc"> <? if (!isset($_GET["v"])) : ?><span>Randomly Selected Video</span><? elseif ($_GET["v"] == "l") : ?><span>Latest Uploaded Video</span><? elseif ($_GET["v"] == "b") : ?><span>Being Watched Right Now</span><? endif ?>
+        <div style="border-bottom:1px solid #ccc"> <? if (!isset($_GET["v"])) : ?><span>Randomly Selected Video</span><? elseif ($_GET["v"] == "l") : ?><span>Latest Uploaded Video</span><? elseif ($_GET["v"] == "b") : ?><span>Being Watched Right Now</span><? endif ?>
             <div class="wdg_sel" style="font-size: 13px;position:relative;top:2.5px">
                 <? if (!isset($_GET["v"])) : ?><strong>Random</strong><? else : ?><a href="/community">Random</a><? endif ?> |
                 <? if (isset($_GET["v"]) && $_GET["v"] == "l") : ?><strong>Latest</strong><? else : ?><a href="/community?v=l">Latest</a><? endif ?> |
@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="wdg">
-        <div style="height:23px;background:#fbaa9d"><span>Recently Favorited Videos</span></div>
+        <div style="background:#fbaa9d"><span>Recently Favorited Videos</span></div>
         <div>
             <div class="v_v_bx">
                 <? foreach ($Favorites as $Favorite) : ?>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="wdg">
-        <div style="height:23px;background:#fbea9f"><span>Feature Suggestions</span></div>
+        <div style="background:#fbea9f"><span>Feature Suggestions</span></div>
         <div>
             <? if ($_USER->logged_in) : ?>
             <div style="padding-bottom:11px;margin-bottom:4px;border-bottom:1px solid #ccc">
@@ -108,7 +108,7 @@
 <a class="twitter-timeline" data-height="600" data-dnt="true" href="https://twitter.com/VidLii">Tweets by VidLii</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 	<? if (1 == 2) : ?>
     <div class="wdg">
-        <div style="height:23px;background:#d4c9fb"><span>Current #1 in Contest</span></div>
+        <div style="background:#d4c9fb"><span>Current #1 in Contest</span></div>
         <div style="text-align: center">
             <a href="/watch?v=<?= $Contest["url"] ?>" style="display:block;font-size:17px;margin-bottom:3px;font-weight:bold"><?= $Contest["title"] ?></a>
             <?= video_thumbnail($Contest["url"],"",175,115) ?><br>
@@ -117,7 +117,7 @@
     </div>
     <? endif ?>
     <div class="wdg">
-        <div style="height:23px;background:#bafbc7"><span>Recent Comments</span></div>
+        <div style="background:#bafbc7"><span>Recent Comments</span></div>
         <div id="recent_comments">
             <? foreach ($Comments as $Comment) : ?>
                 <div>
