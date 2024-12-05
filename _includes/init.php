@@ -4,8 +4,13 @@
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
     // initializing environment
-    $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
-    $env->load();
+    if(file_exists($_SERVER["DOCUMENT_ROOT"]."/.env")) {
+        $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+        $env->load();
+    } else {
+        header("Location: /setup");
+        exit(0);
+    }
 	
     // Constraints
     define("ROOT_FOLDER", $_SERVER["DOCUMENT_ROOT"]);
