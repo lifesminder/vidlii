@@ -90,7 +90,7 @@
                 <? endif; ?>
             </div>
         </noscript>
-		<div id="vtbl_pl" style="display: none">
+		<div id="vtbl_pl">
 			<? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/player.php"; ?>
 		</div><? if ($Status == 2) : ?><div id="vtbl_desc">
 			<? if ($Size == 1) : ?><script>expandPlayer();</script><? endif ?>

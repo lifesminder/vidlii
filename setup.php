@@ -60,8 +60,6 @@
         <?php
                                     exit(0);
                                 }
-                            } else {
-                                header("Location: /setup");
                             }
                             break;
                         }
@@ -112,8 +110,6 @@
                                         header("Location: /");
                                     } else echo "DB wasn't imported correctly. Aborting...";
                                 }
-                            } else {
-                                header("Location: /setup");
                             }
                             break;
                         }

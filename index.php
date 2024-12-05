@@ -6,6 +6,11 @@
     $router->all("/", function() {
         include_once "indexold.php";
     });
+    $router->all("/setup", function() {
+        if(!file_exists($_SERVER["DOCUMENT_ROOT"]."/.env")) {
+            include_once "setup.php";
+        } else header("Location: /");
+    });
     $router->mount("/vi", function() use($router) {
         $router->get("/ava/(.*).jpg", function($id) {
             $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]);

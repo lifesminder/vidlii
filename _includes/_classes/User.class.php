@@ -18,7 +18,7 @@
         protected $DB;
 
 
-        function __construct($ID = NULL, Database $Database, $re = NULL) {
+        function __construct($ID = NULL, \Vidlii\Vidlii\DB $Database, $re = NULL) {
 			
 			if (!isset($_SESSION["token"])) $_SESSION["token"] = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 11);
 

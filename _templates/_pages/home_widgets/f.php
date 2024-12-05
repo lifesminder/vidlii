@@ -10,15 +10,15 @@
     </div>
     <div>
         <div class="v_v_bx">
-            <? foreach ($Featured_Videos as $Video) : ?>
+            <? foreach ($feed["featured_videos"]["data"] as $Video) : ?>
                 <div>
                     <div class="th">
                         <div class="th_t"><?= $Video["length"] ?></div>
-                        <a href="/watch?v=<?= $Video["url"] ?>"><img class="vid_th" <?= $Video["thumbnail"] ?> width="140" height="88"></a>
+                        <a href="/watch?v=<?= $Video["url"] ?>"><img class="vid_th" src="/vi/<?= $Video["url"] ?>.jpg" width="140" height="88"></a>
                     </div>
                     <a href="/watch?v=<?= $Video["url"] ?>" class="ba"><?= $Video["title"] ?></a>
                     <div class="vw s"><?= number_format($Video["views"]) ?> views</div>
-                    <a href="/user/<?= $Video["displayname"] ?>" class="ch_l s"><?= $Video["displayname"] ?></a>
+                    <a href="/user/<?= $Video["uploaded_by"] ?>" class="ch_l s"><?= $Video["uploaded_by"] ?></a>
                     <div class="s_r"><?= show_ratings($Video,14,13) ?></div>
                 </div>
             <? endforeach ?>

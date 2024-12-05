@@ -47,16 +47,16 @@
 			try {
             	$Query = $this->Connection->prepare($SQL);
             	$Query->execute($Execute);
-            } catch (Exception $e) {die($e);}
+            } catch (\Exception $e) {die($e);}
 
             $this->RowNum = $Query->rowCount();
 
             if ($this->RowNum == 0) {
                 return [];
             } elseif ($Single) {
-                return @$Query->fetch(PDO::FETCH_ASSOC);
+                return @$Query->fetch(\PDO::FETCH_ASSOC);
             } else {
-                return @$Query->fetchAll(PDO::FETCH_ASSOC);
+                return @$Query->fetchAll(\PDO::FETCH_ASSOC);
             }
         }
 
@@ -76,7 +76,7 @@
             try {
             	$Query = $this->Connection->prepare($SQL);
             	$Query->execute($Execute);
-            } catch (Exception $e) {die($e);}
+            } catch (\Exception $e) {die($e);}
 
             $this->RowNum = $Query->rowCount();
 

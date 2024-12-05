@@ -329,11 +329,11 @@
     <div class="whats_new">
         <strong>What's New</strong>
         <a href="/<? if ($_USER->logged_in) : ?>channel_version<? else : ?>login<? endif ?>">Cosmic Panda</a>
-        The famous 2012 YouTube Channel Layout is now finally on VidLii. Unlike YouTube we won't force it though!
+        Say hello to the old and good 2012 Layout of YouTube! It clearly resembles it as far as possible ;)
         <a href="/">Awards</a>
-        See how you compare to other channels this week / this month.
+        See how you compare to other channels this week, or this month, or this decade.
         <a href="/themes">Themes</a>
-        Choose your favorite theme and make VidLii look the way you want it to look.
+        Customize your layout of VidLii and make it yours!
     </div>
     <? if(!empty($feed["last_online"])): ?>
     <div class="last_5">

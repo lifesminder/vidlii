@@ -400,7 +400,6 @@ function user_avatar2($User,$Width,$Height,$Avatar,$Extra_Class = "") {
 	function get_age($Date) {
 		$today = new DateTime();
   		$diff = $today->diff(new DateTime($Date));
-		echo $diff->y;
 		return $diff->y;
 	}
 

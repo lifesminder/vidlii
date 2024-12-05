@@ -3,9 +3,6 @@
     ini_set( 'session.cookie_httponly', 1 );
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
-    // if there are no .env file, switch to setup
-    if(!file_exists($_SERVER["DOCUMENT_ROOT"]."/.env")) header("Location: /setup");
-
     // initializing environment
     $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
     $env->load();
@@ -51,7 +48,7 @@
     if (isset($_COOKIE["css"]) && $_COOKIE["css"] == "deleted") setcookie("css", null, -1);
 
     // SETUP CLASSES
-    $DB = new Database(false);
+    $DB = new \Vidlii\Vidlii\DB(false);
     $_USER = new User(NULL,$DB,true);
     $_PAGE = new Page();
     $_GUMP = new GUMP();

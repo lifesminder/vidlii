@@ -28,7 +28,7 @@ class Videos {
                     $_LANG;
 
 
-    function __construct(Database $DB, User $_USER) {
+    function __construct(\Vidlii\Vidlii\DB $DB, User $_USER) {
         $this->DB       = $DB;
         $this->_USER    = $_USER;
     }

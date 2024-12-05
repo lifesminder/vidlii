@@ -7,7 +7,7 @@ class Themes {
             $_USER;
 
 
-    public function __construct(Database $DB, User $_USER) {
+    public function __construct(\Vidlii\Vidlii\DB $DB, User $_USER) {
 
 
         $this->DB       = $DB;

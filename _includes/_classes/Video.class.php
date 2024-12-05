@@ -5,7 +5,7 @@
 
         protected $DB;
 
-        function __construct(string $URL, Database $DB) {
+        function __construct(string $URL, \Vidlii\Vidlii\DB $DB) {
             $this->URL = $URL;
             $this->DB  = $DB;
         }

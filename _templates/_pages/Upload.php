@@ -65,7 +65,7 @@
 	<div class="you_wnt" id="upload_select_box" style="overflow:hidden;display:none">
 		<div style="text-align:left;overflow:hidden">
 			<div id="vurl" style="display:none"></div>
-			<div style="background:white;border:1px solid #ccc;padding: 15px;width:603px;float:left;margin:5px;border-radius:8px" id="video_uploader">
+			<div style="background-color: #fff;border:1px solid #ccc;padding: 15px;margin:5px;border-radius:8px" id="video_uploader">
 				<div id="video_title_header" style="font-weight:bold;margin-bottom:10px"></div>
 				<div id="video_progress" style="margin-bottom:5px">
 					<div id="video_progress_in">0%</div>

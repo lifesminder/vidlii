@@ -1,5 +1,5 @@
 <?php
-    error_reporting(E_ALL & ~E_DEPRECATED & ~E_WARNING);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_WARNING & ~E_NOTICE);
     require "vendor/autoload.php";
     require "_includes/_classes/upload.class.php";
     require "_includes/_classes/ffmpeg.class.php";
@@ -31,38 +31,67 @@
         } else $data = ["status" => -1, "message" => "Connection node is missing"];
         return $data;
     }
+
+    $bin_path = (PHP_OS == "WINNT") ? "bin/win" : "bin/linux";
+    if(PHP_OS == "WINNT") {
+        $config = [
+            'ffmpeg.binaries' => "$bin_path/ffmpeg.exe",
+            'ffprobe.binaries' => "$bin_path/ffprobe.exe"
+        ];
+    } else {
+        $config = [
+            'ffmpeg.binaries' => "$bin_path/ffmpeg",
+            'ffprobe.binaries' => "$bin_path/ffprobe"
+        ];
+    }
+    $config += [
+        'timeout' => 12000,
+        'ffmpeg.threads' => 12
+    ];
+    $ffmpeg = \FFMpeg\FFMpeg::create($config);
+    $ffprobe = \FFMpeg\FFProbe::create();
     
     $preConvs = scandir("usfi/conv");
-    if(count($preConvs) >= 3) {
-        foreach($preConvs as $x) {
-            if($x == '.' || $x == '..') continue;
-            else {
-                $id = explode(".", $x)[0];
-                echo "[$id]\n";
-                $ffmpeg = new \ffmpeg("usfi/conv/$x", "usfi/v/$id.mp4");
-                $ffmpeg->Get_Info();
-                $ffmpeg->Make_Thumbnails(3, $x);
-                
-                $_thumb = base64_encode(file_get_contents("usfi/prvw/$id.file.jpg"));
-                $updateThumb = db("UPDATE videos set thumbnail = '$_thumb' where url = '$id'");
-                if($updateThumb["status"] == 0) {
-                    @unlink("usfi/prvw/$id.file.jpg"); @unlink("usfi/thmp/$id.file.jpg");
-                    echo "Thumbnail Updated! Next...\n\n";
-                    $makeConverting = db("update videos set status = 1 where url = '$id'");
-                    if($makeConverting["status"] == 0) {
-                        $ffmpeg->Resize(480); $ffmpeg->Convert();
-                        if(file_exists("usfi/v/$id.mp4")) {
-                            foreach(glob("usfi/conv/$id*") as $f) {
-                                unlink($f);
-                            }
-                            $deleteConverting = db("update videos set status = 2 where url = '$id'");
-                            if($deleteConverting["status"] == 0) {
-                                $deleteConvertingTotally = db("delete from converting where uri = '$id'");
-                            } else echo "ERROR!: ".$makeConverting["message"]."\n";
-                        } else echo "ERROR!: File Doesn't exists\n";
-                    } else echo "ERROR!: ".$makeConverting["message"]."\n";
-                } else echo "ERROR!: ".$updateThumb["message"]."\n";
+    for($i = 2; $i < count($preConvs); $i++) {
+        $id = $preConvs[$i];
+        if(end(explode(".", $id)) == "file") {
+            $id = explode(".", $id)[0];
+            $full_path = "usfi/conv/$id";
+            $video = $ffmpeg->open($full_path.".file"); 
+            $duration = floor($ffprobe->format($full_path.".file")->get('duration'));
+
+            if(!file_exists($full_path.".jpg")) {
+                // 1: Generating a good thumbnail
+                echo "[$id] Generating thumbnail...\n";
+                $frame = $video->frame(FFMpeg\Coordinate\TimeCode::fromSeconds(rand(0, $duration)));
+                $frame->save("usfi/conv/$id.jpg");
+            }
+            if(!file_exists($full_path.".mp4")) {
+                // 2: Converting to MP4 (soon for "partners" will be a HD too)
+                $mark_as_converting = db("UPDATE videos set length = $duration, status = 1 where url = '$id'");
+                $format = new \FFMpeg\Format\Video\X264();
+                $format->on("progress", function($video, $format, $percentage) {
+                    global $id;
+                    echo "\r[$id] Converting ($percentage%)";
+                });
+                $video->filters()->resize(new \FFMpeg\Coordinate\Dimension(854, 480))->synchronize();
+                $video->save($format, "usfi/conv/$id.mp4");
+                echo "\n";
             }
         }
-    } else echo "Nothing to do. Exiting...\n";
+
+        // 3: Finalizing (there should be an alternative way to hold videos)
+        if(file_exists("usfi/conv/$id.mp4")) {
+            rename("usfi/conv/$id.mp4", "usfi/v/$id.mp4");
+            @unlink("usfi/conv/$id.file");
+        }
+        // 3.1: Uploading thumbnail to DB
+        $id = explode(".", $id)[0];
+        $thumbnail = base64_encode(file_get_contents("usfi/conv/$id.jpg"));
+        $update_thumb = db("UPDATE videos set thumbnail = '$thumbnail' where url = '$id'");
+        if($update_thumb["status"] >= 0) unlink("usfi/conv/$id.jpg");
+        // 3.2: Updating status
+        $mark_as_complete = db("UPDATE videos set status = 2 where url = '$id'");
+        $delete_from_converting = db("DELETE from converting where url = '$id'");
+    }
 ?>
