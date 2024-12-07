@@ -3,6 +3,9 @@
     <head>
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_head/profile_head.php" ?>
         <script src="/js/main.js"></script>
+        <? if($Profile["snow"]): ?>
+        <script src="/js/snowstorm.js"></script>
+        <? endif ?>
     </head>
     <style>
         @keyframes blinker {
@@ -120,7 +123,6 @@
         }
         <? endif ?>
     </style>
-    <? if ($Profile["snow"]) : ?><script src="https://cdnjs.cloudflare.com/ajax/libs/Snowstorm/20131208/snowstorm.js"></script><? endif ?>
     <script>
         var trans1 = <?= 100 - $Profile["n_trans"] ?>;
         var trans2 = <?= 100 - $Profile["h_trans"] ?>;

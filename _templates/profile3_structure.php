@@ -3,6 +3,9 @@
     <head>
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_head/profile_head.php" ?>
         <script src="/js/main.js"></script>
+        <? if($Profile["snow"]): ?>
+        <script src="/js/snowstorm.js"></script>
+        <? endif ?>
     </head>
     <style>
         body {
@@ -12,7 +15,6 @@
             <? if ($Has_Background) : ?>background-image: url("<?= $Background ?>");<? endif ?>background-color: #<?= $Profile["bg"] ?>; <? if ($Profile["bg_fixed"] == 1) : ?>background-attachment: fixed<? endif ?>; background-position: <? if ($Profile["bg_position"] == 1) : ?>top<? elseif ($Profile["bg_position"] == 2) : ?>center<? elseif ($Profile["bg_position"] == 3) : ?>bottom<? endif ?>; background-repeat: <? if ($Profile["bg_repeat"] == 1) : ?>no-repeat<? elseif ($Profile["bg_repeat"] == 2) : ?>repeat<? elseif ($Profile["bg_repeat"] == 3) : ?>repeat-x<? elseif ($Profile["bg_repeat"] == 4) : ?>repeat-y<? endif ?>; background-size: <? if ($Profile["bg_stretch"] == 0) : ?>auto<? else : ?>cover<? endif ?>
         }
     </style>
-    <? if ($Profile["snow"]) : ?><script src="https://cdnjs.cloudflare.com/ajax/libs/Snowstorm/20131208/snowstorm.js"></script><? endif ?>
     <body>
         <? if ($Profile["mondo"]) : ?><canvas class="snow" height="100%" style="width:100%;z-index:1000000;position:fixed;height:100vh !important;pointer-events:none"></canvas>
         <script src="/js/let_it_mondo.js"></script>

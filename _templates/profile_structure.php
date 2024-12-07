@@ -3,6 +3,9 @@
     <head>
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_head/profile_head.php" ?>
         <script src="/js/main.js"></script>
+        <? if($Profile["snow"]): ?>
+        <script src="/js/snowstorm.js"></script>
+        <? endif ?>
         <style>
             @keyframes blinker {
                 50% {
@@ -32,7 +35,6 @@
             .bottom_wrapper, .pr_lks {  font-family: <? if ($Profile["font"] == 1) : ?>Georgia, Arial<? elseif ($Profile["font"] == 2) : ?>"Times New Roman", Arial<? elseif ($Profile["font"] == 3) : ?>"Comic Sans MS", Arial<? elseif ($Profile["font"] == 4) : ?>Impact, Arial<? elseif ($Profile["font"] == 5) : ?>Tahoma, Arial<? elseif ($Profile["font"] == 6) : ?>"Courier New", Arial<? endif ?>  }
             <? endif ?>
         </style>
-        <? if ($Profile["snow"]) : ?><script src="https://cdnjs.cloudflare.com/ajax/libs/Snowstorm/20131208/snowstorm.js"></script><? endif ?>
     </head>
     <body>
         <? if ($Profile["mondo"]) : ?><canvas class="snow" height="100%" style="width:100%;z-index:1000000;position:fixed;height:100vh !important;pointer-events:none"></canvas>

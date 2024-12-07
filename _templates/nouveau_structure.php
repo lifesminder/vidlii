@@ -36,6 +36,9 @@
         }
     }
 ?>
+    <? if($Profile["snow"]): ?>
+    <script src="/js/snowstorm.js"></script>
+    <? endif ?>
     <style>
         .wrapper {
             width: 100%;

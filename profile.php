@@ -11,7 +11,7 @@ if (isset($_GET["user"])) {
 	if (!$Exist) {
 		$Channel_Owner = $DB->execute("SELECT u.displayname FROM users_oldnames r, users u WHERE r.displayname = :USERNAME AND u.username = r.username LIMIT 1", true, [":USERNAME" => $_GET["user"]]);
 		if ($DB->RowNum > 0) {
-			header("Location: ".str_replace($_GET["user"], $Channel_Owner["displayname"], $_SERVER[REQUEST_URI]));
+			header("Location: /user/".$Channel_Owner["displayname"]);
 			exit;
 		}
 	}

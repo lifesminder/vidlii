@@ -6,6 +6,7 @@
         margin-bottom:3px
     }
 </style>
+
 <h1 class="pg_hd">Developers</h1>
 <div class="vc_l">
     <div class="vc_cats">
@@ -31,115 +32,47 @@
         <span class="u_sct_hd">User Data</span>
     </div>
     <div style="display:none">
-        <div style="margin-bottom:3px;padding-bottom:3px">Example Call: <a href="/api?ty=user&ta=VidLii">/api?ty=user&ta=VidLii</a></div>
-        <div style="border:1px solid #dddddd;padding:5px;margin-bottom:4px">
-            <strong style="display:block">Output:</strong>
-            <pre style="margin:0">
-{
-    "r":"success",
-    "username":"VidLii",
-    "registered":"2017-05-23 02:15:12",
-    "last_login":false,
-    "videos_watched":"1764",
-    "channel_views":"2762",
-    "video_views":"366",
-    "videos":"2",
-    "subscribers":false,
-    "subscriptions":"19",
-    "friends":"71",
-    "channel_comments":"197",
-    "featured_channels":false,
-    "partnered":"1",
-    "channel_version":"2",
-    "country":false,
-    "title":"",
-    "description":"",
-    "tags":"",
-    "avatar":"/usfi/avt/qBXfvJKwfJ1.jpg"
-}</pre>
+        <div style="margin-bottom:3px;padding-bottom:3px" id="user_output">
+            Example Call: <b>/api/user?u=</b><input type="text" id="user_argument" value="VidLii" required>
+            <button id="user_runner">Run</button>
         </div>
-        <strong>Important:</strong> Getting the result: "false" means that this user has hidden this value from his / her channel.<br>
+        <div id="user_output_block"></div>
     </div>
     <div class="u_sct" style="border-bottom:1px solid #ccc;padding-bottom:6px;margin-top:15px">
         <img src="/img/clp00.png">
         <span class="u_sct_hd">Video Data</span>
     </div>
     <div style="display:none">
-        <div style="margin-bottom:3px;padding-bottom:3px">Example Call: <a href="/api?ty=video&ta=xsc2P_KnbWI">/api?ty=video&ta=xsc2P_KnbWI</a></div>
-        <div style="border:1px solid #dddddd;padding:5px;margin-bottom:4px">
-            <strong style="display:block">Output:</strong>
-            <pre style="margin:0">
-{
-    r: "success"
-    url: "EjdZOfJNwJE"
-    title: "Vidlii."
-    description: "the first time i'm doing any unironic editing for something with my new editing software."
-    tags: "Vidlii, Vlare, formidable, Redexec, HeXa, Thebestbrosgamershow, bestbrosgamershow, Killsabyte, edray1416, edray, WACV, CL21, Craftinglord21, jreviews, jaycommitsmassmurder"
-    category: "Film & Animation"
-    upload_date: "2019-03-27 23:15:34"
-    upload_by: "JTVLive"
-    duration: "42"
-    ranking_views: "40"
-    display_views: "68"
-    watchtime_minutes: "52"
-    comment_num: "2"
-    response_num: "5"
-    favorite_num: "2"
-    featured: "1"
-    ratings: "0,0,0,0,3"
-    ads_enabled: "1"
-}</pre>
+        <div style="margin-bottom:3px;padding-bottom:3px" id="video_output">
+            Example Call: <b>/api/video?id=</b><input type="text" id="video_argument" value="BgGiE_u0i8o">
+            <button id="video_runner">Run</button>
         </div>
-        <strong>Optional Parameters:</strong><br>
-        "&o=comments" returns the comments instead<br>
-        "&o=responses" returns the video responses instead<br>
-        "&limit=16,0" sets the amount and offset of returned comments/video responses (Default is "16, Offset 0")
-    </div>
-    <div class="u_sct" style="border-bottom:1px solid #ccc;padding-bottom:6px;margin-top:15px">
-        <img src="/img/clp00.png">
-        <span class="u_sct_hd">VidLii Data</span>
-    </div>
-    <div style="display:none">
-        <div style="margin-bottom:3px;padding-bottom:3px">Example Call: <a href="/api?ty=Vidlii&ta=featured">/api?ty=Vidlii&ta=featured</a></div>
-        <div style="border:1px solid #dddddd;padding:5px;margin-bottom:4px">
-            <strong style="display:block">Output:</strong>
-            <pre style="margin:0">
-{
-    "0":{
-        "url":"xVngY44FiWX",
-        "title":"Sonic the hedgehog music: green hill zone",
-        "views":"6",
-        "upload_by":"thatonecoolguy",
-        "upload_date":"2017-08-14 00:00:00"
-    },
-    "1":{
-        "url":"thKTgErNMnT",
-        "title":"Howto Revert to Classic Google Layout (Chrome & Firefox)",
-        "views":"93",
-        "upload_by":"11ryanc",
-        "upload_date":"2017-08-12 21:14:10"
-    },
-    "2":{
-        "url":"8h1e2t8l1xV",
-        "title":"Vidlii Time Capsule - Submit Vidlii Screenshots and Videos!",
-        "views":"147",
-        "upload_by":"AM",
-        "upload_date":"2017-08-11 01:14:40"
-    },
-    "3":{
-        "url":"QU10coLMwyg",
-        "title":"Test Animation (inspired By Alan Becker)",
-        "views":"151",
-        "upload_by":"NermalCat79",
-        "upload_date":"2017-08-06 18:10:48"
-     }
-}</pre>
-        </div>
-        <strong>Possible Targets (&ta=):</strong><br>
-        "featured": Returns the 16 most recent featured videos<br>
-        "search": Returns the 16 most relevant results according to what you searched for. (&o=)<br>
-        "watched": Returns the 16 most recently watched videos.<br>
-        "new": Return the 16 most recently uploaded videos. Set (&o=) to a username and it will return this users most recent videos.
-
+        <div id="video_output_block"></div>
     </div>
 </div>
+
+<script>
+    function hooker(path, output) {
+        if(path != null || path != "") {
+            fetch(path).then(resp => { return resp.json() }).then(data => {
+                let response = JSON.stringify(data, null, 3);
+                document.getElementById(output).style.display = "block";
+                document.getElementById(output).style.border = "1px solid #ccc";
+                document.getElementById(output).style.borderRadius = "4px";
+                document.getElementById(output).style.padding = "6px";
+                document.getElementById(output).innerHTML = `<b>Output:</b><pre style="margin: 6px 0; padding: 12px; border-radius: 6px; background-color: #f0f0f0">${response}</pre>`;
+            });
+        } else {
+            alert("Enter valid path!");
+        }
+    }
+
+    document.getElementById("user_runner").addEventListener("click", function(e) {
+        e.preventDefault();
+        hooker(`/api/user?u=${document.getElementById("user_argument").value}`, "user_output_block");
+    });
+    document.getElementById("video_runner").addEventListener("click", function(e) {
+        e.preventDefault();
+        hooker(`/api/video?id=${document.getElementById("video_argument").value}`, "video_output_block");
+    });
+</script>
