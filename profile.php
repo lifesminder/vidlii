@@ -1,12 +1,8 @@
 <?php
-require_once "_includes/init.php";
+    require_once "_includes/init.php";
 
-if (strtoupper($_GET["user"]) == "WUFF") {
-	notification("Wuff is working hard, so piss off and let him work!","/","red");
-} else {
-$profiles_enabled = $DB->execute("SELECT value FROM settings WHERE name = 'channels'", true)["value"] ?? 1;
-if ($profiles_enabled == 0) { notification("Channels have been temporarily disabled!","/"); exit(); }
-
+    $profiles_enabled = $DB->execute("SELECT value FROM settings WHERE name = 'channels'", true)["value"] ?? 1;
+    if ($profiles_enabled == 0) { notification("Channels have been temporarily disabled!","/"); exit(); }
 
 if (isset($_GET["user"])) {
     $Channel_Owner = $DB->execute("SELECT username FROM users WHERE displayname = :USERNAME LIMIT 1", true, [":USERNAME" => $_GET["user"]]);
@@ -21,20 +17,23 @@ if (isset($_GET["user"])) {
 	}
 	
     if ($Exist) {
-		$Channel_Owner  = $Channel_Owner["username"];
-        $OWNER          = new User($Channel_Owner,$DB);
+		$Channel_Owner = $Channel_Owner["username"];
+        $OWNER = new User($Channel_Owner,$DB);
 
-        $Profile        = $OWNER->get_profile();
+        $Profile = $OWNER->get_profile();
         $OWNER_USERNAME = clean($Profile["username"]);
 
+        if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+            require_once "_templates/nouveau_structure.php";
+            exit();
+        } else {
 
-        $Videos_Amount                      = new Videos($DB, $_USER);
-        $Videos_Amount->WHERE_P             = ["uploaded_by" => $Profile["username"]];
-        $Videos_Amount->ORDER_BY            = "uploaded_on DESC";
-        $Videos_Amount->Shadowbanned_Users  = true;
-        $Videos_Amount->Count               = true;
-        $Profile["videos"]                  = $Videos_Amount->get();
-
+        $Videos_Amount = new Videos($DB, $_USER);
+        $Videos_Amount->WHERE_P = ["uploaded_by" => $Profile["username"]];
+        $Videos_Amount->ORDER_BY = "uploaded_on DESC";
+        $Videos_Amount->Shadowbanned_Users = true;
+        $Videos_Amount->Count = true;
+        $Profile["videos"] = $Videos_Amount->get();
 
         $Favorites_Amount                     = new Videos($DB, $_USER);
         $Favorites_Amount->JOIN               = "RIGHT JOIN video_favorites ON video_favorites.url = videos.url";
@@ -46,7 +45,6 @@ if (isset($_GET["user"])) {
         $Favorites_Amount->Count              = true;
         $Favorites_Amount->Count_Column       = "video_favorites.url";
         $Profile["favorites"]                 = $Favorites_Amount->get();
-
 
         if ($Profile["channel_version"] == 1 && $Profile["banned"] == 0) {
             if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
@@ -573,9 +571,6 @@ if (isset($_GET["user"])) {
 			}
 
             require_once "_templates/profile_structure.php";
-
-
-
 
         } elseif ($Profile["channel_version"] == 2 && $Profile["banned"] == 0) {
             //CHANNEL 2.0
@@ -2244,10 +2239,10 @@ if (isset($_GET["user"])) {
 				notification("This user has voluntarily terminated their own account!","/","red");
 			}
         }
+        }
     } else {
         notification("User not found!","/","red");
     }
 } else {
     redirect("/");
-}
 }

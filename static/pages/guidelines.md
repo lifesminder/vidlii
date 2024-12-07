@@ -1,3 +1,4 @@
+; Community Guidelines
 <h1 class="pg_hd">VidLii Community Guidelines</h1>
 <div class="vc_l">
     <div class="vc_cats">

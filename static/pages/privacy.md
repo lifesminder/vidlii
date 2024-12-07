@@ -1,4 +1,4 @@
-
+; Privacy Policy
 <h1 class="pg_hd">Privacy Policy</h1>
 <div class="vc_l">
     <div class="vc_cats">

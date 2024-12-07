@@ -195,7 +195,7 @@ class Videos {
 
             if ($Thumbnail) {
                 $url = static::$Videos[$Video]["url"];
-                $Image = "/vi/$url.jpg";
+                $Image = "/vi/$url/default.jpg";
                 static::$Videos[$Video]["thumbnail"] = 'src="'.$Image.'" alt="'.str_replace('"', "", str_replace("'", "", static::$Videos[$Video]["title"])).'" title="'.str_replace('"', "", str_replace("'", "",static::$Videos[$Video]["title"])).'"';
             }
         }

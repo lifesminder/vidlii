@@ -70,17 +70,17 @@ function get_video_info(e) {
                     instance: jwplayer("vlplayer"),
                     duration: t.length,
                     videoUrl: "/watch?v=" + e,
-                    src: "/usfi/v/" + e + "." + t.file + ".mp4",
-                    hdsrc: 1 == t.hd ? "/usfi/v/" + e + "." + t.file + ".720.mp4" : null,
+                    src: "/usfi/v/" + e + ".mp4",
+                    hdsrc: 1 == t.hd ? "/usfi/v/" + e + ".mp4" : null,
                     startinhd: "1" == getCookie("vlphd"),
-                    preview: "/usfi/thmp/" + e + ".jpg",
+                    preview: "/vi/" + e + "/default.jpg",
                     autoplay: !0
                 });
             } else {
                 window.vlp.change({
                     src: "/usfi/v/" + e + "." + t.file + ".mp4",
                     hdsrc: 1 == t.hd ? "/usfi/v/" + e + "." + t.file + ".720.mp4" : null,
-                    preview: "/usfi/thmp/" + e + ".jpg",
+                    preview: "/vi/" + e + "/hqdefault.jpg",
                     duration: t.length,
                     videoUrl: "/watch?v=" + e,
                     autoplay: !0

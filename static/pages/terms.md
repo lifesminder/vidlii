@@ -1,4 +1,4 @@
-
+; Terms of Service
 <h1 class="pg_hd">Terms of Service ("Terms")</h1>
 <div class="vc_l">
     <div class="vc_cats">

@@ -63,6 +63,101 @@
     </div>
 </header>
 <? else : ?>
+    <?php
+        if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+    ?>
+    <div id="content">
+        <!-- begin masthead -->
+        <div id="masthead" class="" dir="ltr" style="height: 50px">
+            <a id="logo-container" href="/" title="VidLii home">
+                <img id="logo" src="https://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="VidLii home">
+            </a>
+            <div id="masthead-user-bar-container">
+                <div id="masthead-user-bar">
+                    <div id="masthead-user">
+                        <div id="masthead-user-display">
+                            <? if (!$_USER->logged_in) : ?>
+                            <a class="start" href="/register">Create Account</a>
+                            <span class="masthead-link-separator">|</span>
+                            <a class="end" href="/login">Sign In</a>
+                            <? else: ?>
+                            <a href="#" id="s_username">
+                                <?= $_USER->displayname ?>
+                            </a>
+                            <span id="s_toggle" class="hddn">
+                                <div>
+                                <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
+                                <a href="/inbox">Inbox</a>
+                                <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?>
+                                <div>
+                                    <a href="/admin/login">Admin Panel</a>
+                                </div>
+                                <? endif ?>
+                                </div>
+                                <div>
+                                <a href="/my_account">Account</a>
+                                <a href="/my_subscriptions">Subscriptions</a>
+                                </div>
+                                <div>
+                                <a href="/my_videos">Videos</a>
+                                <a href="/friends">Friends</a>
+                                </div>
+                                <div>
+                                    <a href="/logout" class="sign_out">Sign Out</a>
+                                </div>
+                            </span>
+                            <? endif ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="masthead-search-bar-container">
+                <div id="masthead-search-bar">
+                    <div id="masthead-nav">
+                        <a href="/videos">Browse</a>
+                        <span class="masthead-link-separator">|</span>
+                        <a id="masthead-upload-link" class="" data-upsell="upload" href="/upload">Upload</a>
+                    </div>
+                    <form id="masthead-search" class="search-form consolidated-form" action="/results" onsubmit="if (_gel('masthead-search-term').value == '') return false;">
+                        <button class="search-btn-compontent search-button yt-uix-button yt-uix-button-default" onclick="if (_gel('masthead-search-term').value == '') return false; _gel('masthead-search').submit(); return false;;return true;" type="submit" id="search-btn" dir="ltr" tabindex="2" role="button">
+                            <span class="yt-uix-button-content">Search </span>
+                        </button>
+                        <div id="masthead-search-terms" class="masthead-search-terms-border" dir="ltr">
+                            <label>
+                                <input id="masthead-search-term" autocomplete="off" class="search-term" name="search_query" value="" type="text" tabindex="1" onkeyup="goog.i18n.bidi.setDirAttribute(event,this)" title="Search" dir="ltr" spellcheck="false" style="outline: none;">
+                            </label>
+                        </div>
+                        <input type="hidden" name="oq">
+                        <input type="hidden" name="gs_l">
+                    </form>
+                </div>
+            </div>
+            <? if($_USER->logged_in): ?>
+            <div class="nouveau-acc-panel">
+                <ul>
+                    <li><a href="/user/<?= $_USER->displayname ?>">My Channel</a></li>
+                    <li><a href="/my_account">My Account</a></li>
+                    <li><a href="/friends">My Friends</a></li>
+                    <li><a href="/inbox">My Inbox</a></li>
+                </ul>
+                <ul>
+                    <li><a href="/my_videos">My Videos</a></li>
+                    <li><a href="/my_playlists">My Playlists</a></li>
+                    <li><a href="/my_subscriptions">My Subscriptions</a></li>
+                </ul>
+                <ul>
+                    <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?>
+                    <li><a href="/admin/login">Admin Panel</a></li>
+                    <? endif ?>
+                    <li><a href="/logout" class="sign_out">Sign Out</a></li>
+                </ul>
+            </div>
+            <? endif ?>
+        </div>
+    </div>
+    <?php
+        } else {
+    ?>
 <header class="s_head">
     <div style="overflow:hidden">
     <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself."></a>
@@ -120,4 +215,7 @@
         <? endif ?>
     </div>
 </header>
+    <?php
+        } 
+    ?>
 <? endif ?>

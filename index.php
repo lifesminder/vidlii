@@ -16,6 +16,15 @@
             $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]);
             $cdn->avatar($id, $_GET);
         });
+        $router->get("/(.*)/(.*).jpg", function($id, $type) {
+            $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]); $params = [];
+            switch(strtolower($type)) {
+                case "maxdefault": $params["percent"] = 1.0; break;
+                case "hqdefault": default: $params["percent"] = 0.5; break;
+                case "sqdefault": $params["percent"] = 0.25; break;
+            }
+            $cdn->thumbnail($id, $params);
+        });
         $router->get("/(.*).jpg", function($id) {
             $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]);
             $cdn->thumbnail($id, $_GET);
@@ -80,18 +89,37 @@
             } else header("Location: /login?next=user");
         });
     });
+    $router->get("/logout", function() {
+        require_once "_includes/init.php";
+        if(!$_USER->logged_in) {
+            redirect("/");
+        }
+        $_USER->logout();
+        redirect((isset($_GET["next"]) && $_GET["next"] != "") ? "/".$_GET["next"] : previous_page());
+    });
     $router->all("/(.*)", function($url) {
         require_once "_includes/init.php";
 
         $url_chk = strtolower($url);
         $static_page = "static/pages/$url.md";
         $system_page = "$url.php";
+        $profile_page = (bool)$DB->query("SELECT count(*) from users where username = '".explode("/", $url)[0]."' or displayname = '".explode("/", $url)[0]."'")["data"][0]["count(*)"];
         
-        if(file_exists($static_page)) {
+        if($profile_page) {
+            $_GET["user"] = $url;
+            include_once "profile.php";
+        } else if(file_exists($static_page)) {
             $content = file_get_contents($static_page);
+            $title = preg_split('#\r?\n#', ltrim($content), 2)[0];
+            if($title[0] == ';' || $title[0] == '#') {
+                if($title[0] == ';') $content = preg_replace('/^.+\n/', '', $content);
+                $title = substr($title, 1, strlen($title));
+            } else {
+                $title = "Static";
+            }
 
             $_PAGE->set_variables(array(
-                "Page_Title" => "Static Page - VidLii",
+                "Page_Title" => "$title - VidLii",
                 "Page" => "Static",
                 "Content" => $content,
                 "Page_Type" => "Static"

@@ -1,0 +1,145 @@
+<div id="page" class="branded-page channel">
+    <div id="content-container">
+        <div id="content">
+            {%if owner%}
+            <div class="hddn">
+                Edit your channel
+            </div>
+            {%endif%}
+            <div id="branded-page-default-bg" class="ytg-base">
+                <div id="branded-page-body-container" class="ytg-base clearfix enable-fancy-subscribe-button">
+                    <div id="branded-page-header-container" class="ytg-wide">
+                        <div id="branded-page-header" class="ytg-wide">
+                            <div id="channel-header-main">
+                                <div class="upper-section clearfix">
+                                    <a href="/user/{{profile.displayname}}">
+                                        <span class="profile-thumb">
+                                            <span class="centering-wrap">
+                                                <img src="/vi/ava/{{profile.displayname}}.jpg" alt="{{profile.displayname}}" width="60">
+                                                <span class="vertical-align"></span>
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <div class="upper-left-section">
+                                        <h1>{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}'s Channel{%endif%}</h1>
+                                    </div>
+                                    <div class="upper-left-section">
+                                        {%if owner == true%}
+                                        <button class="yt-uix-button yt-uix-button-primary" style="margin: -5px 0 -5px 10px" onclick="$('.cosmic_edit').toggleClass('hddn')">
+                                            Edit Channel
+                                        </button>
+                                        {%else%}
+                                        <div class="yt-subscription-button-hovercard yt-uix-hovercard">
+                                            <span class="yt-uix-button-context-light yt-uix-button-subscription-container">
+                                                <button class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip">
+                                                    <span class="yt-uix-button-icon-wrapper">
+                                                        <img class="yt-uix-button-icon yt-uix-button-icon-subscribe" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                                                        <span class="yt-valign-trick"></span>
+                                                    </span>
+                                                    <span class="yt-uix-button-content">
+                                                        <span class="subscribe-label">Subscribe</span>
+                                                        <span class="subscribed-label">Subscribed</span>
+                                                        <span class="unsubscribe-label">Unsubscribe</span>
+                                                    </span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                    <div class="upper-right-section">
+                                        <div class="header-stats">
+                                            <div class="stat-entry">
+                                                <span class="stat-value">{{profile.subscribers}}</span>
+                                                <span class="stat-name">subscribers</span>
+                                            </div>
+                                        </div>
+                                        <div class="header-stats">
+                                            <div class="stat-entry">
+                                                <span class="stat-value">{{profile.video_views}}</span>
+                                                <span class="stat-name">video views</span>
+                                            </div>
+                                        </div>
+                                        <span class="valign-shim"></span>
+                                    </div>
+                                </div>
+                                <div class="channel-horizontal-menu clearfix">
+                                    <ul>
+                                        <li{%if page == "featured" or page == "index"%} class="selected"{%endif%}>
+                                            <a href="/user/{{profile.displayname}}/featured" class="gh-tab-100">Featured</a>
+                                        </li>
+                                        <li{%if page == "feed"%} class="selected"{%endif%}>
+                                            <a href="/user/{{profile.displayname}}/feed" class="gh-tab-101">Feed</a>
+                                        </li>
+                                        {%if video_count > 0%}
+                                        <li{%if page == "videos"%} class="selected"{%endif%}>
+                                            <a href="/user/{{profile.displayname}}/videos" class="gh-tab-102">Videos</a>
+                                        </li>
+                                        {%endif%}
+                                    </ul>
+                                    <form id="channel-search" action="#">
+                                        <input name="query" type="text" autocomplete="off" class="search-field label-input-label" style="height: 24px;" maxlength="100" placeholder="Search Channel" value="">
+                                        <button class="search-btn" type="submit">
+                                            <span class="search-btn-content">Search</span>
+                                        </button>
+                                        <a class="search-dismiss-btn" href="#">
+                                            <span class="search-btn-content">Clear</span>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="branded-page-body">
+                        <div class="channel-tab-content selected {%if two_columns == true%}channel-layout-two-column channel-tab-feed-content{%else%}channel-layout-full-width{%endif%}">
+                            <div class="tab-content-body">
+                                {%if two_columns == true%}<div class="primary-pane">{%endif%}
+                                {%block body%}{%endblock%}
+                                {%if two_columns == true%}
+                                </div>
+                                <div class="secondary-pane">
+                                    <div class="user-profile channel-module yt-uix-c3-module-container">
+                                        <div class="module-view profile-view-module">
+                                            <h2>About {%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</h2>
+                                            <div class="section first">
+                                                <div class="user-profile-item profile-description">
+                                                    <p>{%if profile.channel_description != ""%}{{profile.channel_description}}{%endif%}</p>
+                                                </div>
+                                                <hr class="yt-horizontal-rule">
+                                            </div>
+                                            <div class="section created-by-section">
+                                                <div class="user-profile-item">
+                                                    by
+                                                    <span class="yt-user-name" dir="ltr">{{profile.displayname}}</span>
+                                                </div>
+                                                <div class="user-profile-item">
+                                                    <h5>Latest Activity</h5>
+                                                    <span class="value">{{profile.last_login|date("M d, Y")}}</span>
+                                                </div>
+                                                <div class="user-profile-item">
+                                                    <h5>Date Joined</h5>
+                                                    <span class="value">{{profile.reg_date|date("M d, Y")}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="section">
+                                                <div class="user-profile-item">
+                                                    <h5>Age</h5>
+                                                    <span class="value">{{profile.age}}</span>
+                                                </div>
+                                                <div class="user-profile-item">
+                                                    <h5>Country</h5>
+                                                    <span class="value">{{profile.country}}</span>
+                                                </div>
+                                                <hr class="yt-horizontal-rule">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {%endif%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

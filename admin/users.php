@@ -1,7 +1,7 @@
 <?php
 	require_once $_SERVER['DOCUMENT_ROOT']."/_includes/init.php";
 
-	if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod) && isset($_SESSION["admin_panel"])) {
+	if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
 
 		function user_avatar3($User,$Width,$Height,$Avatar,$Extra_Class = "") {
 			return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';

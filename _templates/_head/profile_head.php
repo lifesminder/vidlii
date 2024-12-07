@@ -50,12 +50,18 @@ $.ajax({type: "POST",url: "/ajax/deto"});
 <meta name="msapplication-tap-highlight" content="no">
 <meta name="theme-color" content="#<?= $Profile["h_head"] ?>">
 
+<?php
+	if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+?>
+<link rel="stylesheet" type="text/css" href="<?= CSS_FILE ?>">
+<?php } else { ?>
 <? if ($Profile["channel_version"] == 1 || $Profile["channel_version"] == 2) : ?>
 <link rel="stylesheet" type="text/css" href="<?= CSS_FILE ?>">
 <link rel="stylesheet" type="text/css" href="<?= PROFILE_CSS_FILE ?>">
 <? else : ?>
 <link rel="stylesheet" type="text/css" href="<?= COSMIC_CSS_FILE ?>">
 <? endif ?>
+<?php } ?>
 
 <? $_THEMES->load_themes() ?>
 

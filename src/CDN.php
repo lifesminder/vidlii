@@ -15,11 +15,19 @@
             header("Content-Type: image/jpeg");
             header("Cache-Control: no-cache");
             $im = imagecreatefromstring($photo);
+
             if($im == false) {
                 $photo = file_get_contents($_SERVER["DOCUMENT_ROOT"]."/img/no_th.jpg");
                 $im = imagecreatefromstring($photo);
             }
-            imagejpeg($im, NULL, (isset($params["q"]) && (int)$params["q"] >= 0 && (int)$params["q"] <= 100) ? (int)$params["q"] : 80);
+            $width = imagesx($im); $height = imagesy($im);
+            $percent = ((isset($params["percent"]) && $params["percent"] != "") && (double)$params["percent"] >= 0.0 && (double)$params["percent"] <= 1.0) ? (double)$params["percent"] : 0.5;
+            $width_n = $width * $percent; $height_n = $height * $percent;
+            $im_n = imagecreatetruecolor($width_n, $height_n);
+            imagecopyresized($im_n, $im, 0, 0, 0, 0, $width_n, $height_n, $width, $height);
+            imagejpeg($im_n, NULL, (isset($params["q"]) && (int)$params["q"] >= 0 && (int)$params["q"] <= 100) ? (int)$params["q"] : 80);
+            imagedestroy($im_n);
+            
             imagedestroy($im);
         }
         

@@ -1,0 +1,89 @@
+{% extends "nouveau/3/base.html" %}
+
+{% block body %}
+    <div class="channels-featured-video channel-module yt-uix-c3-module-container has-visible-edge">
+        <div class="module-view featured-video-view-module">
+            <div class="channels-video-player player-root">
+                Player Here
+            </div>
+            <div class="channels-featured-video-details yt-tile-visible clearfix">
+                <h3 class="title">
+                    <a href="#" class="yt-uix-session-link">Video Title</a>
+                    <div class="view-count-and-actions">
+                        <div class="view-count">
+                            <span class="count">?</span>
+                            views
+                        </div>
+                    </div>
+                </h3>
+                <p class="channels-featured-video-metadata">
+                    <span>by {{profile.displayname}}</span>
+                    <span class="created-date">2 days ago</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    {%if videos.count > 0%}
+    <div class="single-playlist channel-module yt-uix-c3-module-container">
+        <div class="module-view single-playlist-view-module">
+            <div class="blogger-playall">
+                <a class="yt-playall-link yt-playall-link-default yt-uix-sessionlink" href="#" data-sessionlink="feature=plcp">
+                    <img class="small-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                    Play all
+                </a>
+            </div>
+            <div class="playlist-info">
+                <h2>Uploaded Videos</h2>
+                <span class="blogger-video-count">1-{{videos.count}} of {{video_count}}</span>
+                <div class="yt-horizontal-rule">
+                    <span class="first"></span>
+                    <span class="second"></span>
+                    <span class="third"></span>
+                </div>
+            </div>
+            <ul class="gh-single-playlist">
+                {%for video in videos.data%}
+                <li class="blogger-video">
+                    <div class="video yt-tile-visible">
+                        <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" data-sessionlink="feature=plcp">
+                            <span class="ux-thumb-wrap contains-addto">
+                                <span class="video-thumb ux-thumb yt-thumb-default-288">
+                                    <span class="yt-thumb-clip">
+                                        <span class="yt-thumb-clip-inner">
+                                            <img src="/vi/{{video.url}}/sqdefault.jpg" alt="Thumbnail" width="288">
+                                            <span class="vertical-align"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="video-time">{{video.length}}</span>
+                                <button onclick=";return false;" title="Watch Later" type="button" class="addto-button video-actions addto-watch-later-button-sign-in yt-uix-button yt-uix-button-default yt-uix-button-short yt-uix-tooltip" data-button-menu-id="shared-addto-watch-later-login" data-video-ids="6BnUoTyATLo" role="button">
+                                    <span class="yt-uix-button-content">
+                                        <img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="Watch Later">
+                                    </span>
+                                    <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                                </button>
+                            </span>
+                            <span class="video-item-content">
+                                <span class="video-overview">
+                                    <span class="title video-title" title="{{video.title}}">{{video.title}}</span>
+                                </span>
+                                <span class="video-details">
+                                    <span class="yt-user-name video-owner" dir="ltr">{{profile.displayname}}</span>
+                                    <span class="video-view-count">{{video.displayviews}} view{%if video.displayviews != 1%}s{%endif%}</span>
+                                    <span class="video-time-published">{{video.uploaded_on}}</span>
+                                    {%if video.description != ""%}
+                                    <span class="video-item-description">
+                                        {{video.description}}
+                                    </span>
+                                    {%endif%}
+                                </span>
+                            </span>
+                        </a>
+                    </div>
+                </li>
+                {%endfor%}
+            </ul>
+        </div>
+    </div>
+    {%endif%}
+{% endblock %}

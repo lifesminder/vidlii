@@ -371,31 +371,27 @@ function email_domain($Email) {
 	return substr(strrchr($Email, "@"), 1);
 }
 
-function video_thumbnail($URL,$LENGTH,$Width,$Height,$Title = NULL) {
-	if (!empty($LENGTH) || $LENGTH == "0") { $Length = seconds_to_time((int)$LENGTH); } else { $Length = $LENGTH; }
-	if (file_exists("usfi/thmp/$URL.jpg")) { $Thumbnail = "/usfi/thmp/$URL.jpg"; } else { $Thumbnail = "/img/no_th.jpg"; }
+	function video_thumbnail($URL, $LENGTH, $Width, $Height, $Title = null) {
+		$Length = (!empty($LENGTH) || $LENGTH == "0") ? seconds_to_time((int)$LENGTH) : $LENGTH;
+		$Thumbnail = "/vi/$URL/default.jpg";
 
-	return '<div class="th"><div class="th_t">'.$Length.'</div><a href="/watch?v='.$URL.'"><img class="vid_th" loading="lazy" src="'.$Thumbnail.'" width="'.$Width.'" height="'.$Height.'"></a></div>';
-}
-
-function user_avatar($User,$Width,$Height,$Avatar,$Border = "") {
-	if (strpos($Avatar,"u=") !== false) { $Avatar = str_replace("u=","",$Avatar); $Folder = "avt"; } else { $Upload = false; $Folder = "thmp"; }
-
-	if (empty($Avatar) or !file_exists("usfi/$Folder/$Avatar.jpg")) {
-		$Avatar = "/img/no_avatar.png";
-	} else {
-		if ($Folder == "avt") {
-			$Avatar = "/usfi/avt/$Avatar.jpg";
-		} else {
-			$Avatar = "/usfi/thmp/$Avatar.jpg";
-		}
+		return '<div class="th">
+					<div class="th_t">'.$Length.'</div>
+					<a href="/watch?v='.$URL.'">
+						<img class="vid_th" loading="lazy" src="'.$Thumbnail.'" width="'.$Width.'" height="'.$Height.'">
+					</a>
+				</div>';
 	}
-	return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" loading="lazy" height="'.$Height.'" class="avt '.$Border.'" alt="'.$User.'"></a>';
-}
 
-function user_avatar2($User,$Width,$Height,$Avatar,$Extra_Class = "") {
-	return '<a href="/user/'.$User.'"><img src="/vi/ava/'.$User.'.jpg" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
-}
+	function user_avatar($User,$Width,$Height,$Avatar,$Border = "") {
+		$Avatar = "/vi/ava/$User.jpg";
+		return '<a href="/user/'.$User.'"><img src="'.$Avatar.'" width="'.$Width.'" loading="lazy" height="'.$Height.'" class="avt '.$Border.'" alt="'.$User.'"></a>';
+	}
+
+	function user_avatar2($User,$Width,$Height,$Avatar,$Extra_Class = "") {
+		$Avatar = "/vi/ava/$User.jpg";
+		return '<a href="/user/'.$User.'"><img src="'.$Avatar.'" width="'.$Width.'" height="'.$Height.'" class="avt2 '.$Extra_Class.'" alt="'.$User.'"></a>';
+	}
 
 	function get_age($Date) {
 		$today = new DateTime();
@@ -464,7 +460,7 @@ function colourBrightness($hex, $percent) {
 }
 
 
-function cut_string($text,$length) {
+	function cut_string($text,$length) {
 		if (strlen($text) > $length) {
 			return substr($text,0,$length)."...";
 		} else {
@@ -472,28 +468,20 @@ function cut_string($text,$length) {
 		}
 	}
 
-function subscribe_button2($For,$Blocked = false) {
-	global $_USER;
-	if ($_USER->logged_in && $Blocked == false) {
-		if ($_USER->Is_Activated) {
-			if ($_USER->username !== $For) {
-				if ($_USER->is_subscribed_to($For)) {
-					return '<a href="javascript:void(0)" class="yel_btn sub_button" user="'.$For.'">Unsubscribe</a>';
-				} else {
-					return '<a href="javascript:void(0)" class="yel_btn sub_button" user="'.$For.'">Subscribe</a>';
-				}
+	function subscribe_button2($For, $Blocked = false) {
+		$api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+		$session = $api->session($_COOKIE["session"]);
+		$is_subscribed = $api->db("SELECT count(*) from subscriptions where subscriber = '".$session["user"]["username"]."' and subscription = '$For'")["data"]["count(*)"];
+		if($session["session"] != -1) {
+			if($is_subscribed) {
+				return '<a href="javascript:void(0)" class="yel_btn sub_button" user="'.$For.'" id="sub">Unsubscribe</a>';
 			} else {
-				return '<a href="javascript:void(0)" class="yel_btn" onclick="alert('."'No need to subscribe to yourself!'".')">Subscribe</a>';
+				return '<a href="javascript:void(0)" class="yel_btn sub_button" user="'.$For.'" id="sub">Subscribe</a>';
 			}
 		} else {
-			return '<a href="javascript:void(0)" class="yel_btn" onclick="alert('."'Please click the activation link we sent via email to subscribe!'".')">Subscribe</a>';
+			return '<a href="javascript:void(0)" class="yel_btn sub_button" user="'.$For.'" id="sub">Subscribe</a>';
 		}
-	} elseif (!$_USER->logged_in) {
-		return '<a href="javascript:void(0)" class="yel_btn" onclick="alert('."'You must be logged in to subscribe!'".')">Subscribe</a>';
-	} else {
-		return '<a href="javascript:void(0)" class="yel_btn" onclick="alert('."'You cannot interact with this user!'".')">Subscribe</a>';
 	}
-}
 
 function limit_text($text, $length) {
 	$length = abs((int)$length);

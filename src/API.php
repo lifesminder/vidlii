@@ -75,5 +75,17 @@
             header("X-Frame-Options: Deny");
             echo json_encode($data);
         }
+
+        function session($token) {
+            $session = $this->db("SELECT session, user, ip, authorized, remembered from sessions where session = '$token'");
+            if($session["count"] == 1) {
+                $session = $session["data"];
+                $session["user"] = $this->db("SELECT username, displayname from users where id = ".$session["user"]);
+                if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
+            } else {
+                $session = ["session" => -1, "user" => ["username" => "Guest", "displayname" => "Guest"]];
+            }
+            return $session;
+        }
     }
 ?>

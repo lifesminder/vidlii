@@ -1,7 +1,7 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT']."/_includes/init.php";
 
-    if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod) && isset($_SESSION["admin_panel"])) {
+    if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
         function video_thumbnail2($URL,$LENGTH,$Width,$Height,$Title = NULL) {
             if (!empty($LENGTH) || $LENGTH == "0") { $Length = seconds_to_time((int)$LENGTH); } else { $Length = $LENGTH; }
             if (file_exists("../usfi/thmp/$URL.jpg")) { $Thumbnail = "../usfi/thmp/$URL.jpg"; } else { $Thumbnail = "/img/no_th.jpg"; }

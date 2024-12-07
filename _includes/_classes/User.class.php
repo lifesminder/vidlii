@@ -17,7 +17,6 @@
 
         protected $DB;
 
-
         function __construct($ID = NULL, \Vidlii\Vidlii\DB $Database, $re = NULL) {
 			
 			if (!isset($_SESSION["token"])) $_SESSION["token"] = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 11);
@@ -200,29 +199,31 @@
 
         //LOG THE MAIN USER IN
         public function login($Remember = true): bool {
-
-
             if (!$this->logged_in && isset($this->username) && !empty($this->username)) {
-
                 $this->logged_in = true;
 
-                $IP_Address = user_ip();
-                $Browser    = browser_name();
-
-
-                $Info = $this->DB->execute("SELECT 1st_latest_ip AS first_latest_ip, displayname FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
-
+                $IP_Address = user_ip(); $Browser = browser_name();
+                $Info = $this->DB->execute("SELECT id, 1st_latest_ip AS first_latest_ip, displayname, is_admin, is_mod FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
 
                 $_SESSION["username"] = (string)$this->username;
                 session_regenerate_id();
 
-                if ($this->username != "VidLii") {
-                $this->DB->modify("UPDATE users SET last_login = NOW(), 1st_latest_ip = :FIRST_IP, 2nd_latest_ip = :SECOND_IP WHERE username = :UID AND banned = 0",
-                                 [
-                                     ":UID"         => $this->username,
-                                     ":FIRST_IP"    => $IP_Address,
-                                     ":SECOND_IP"   => $Info["first_lastest_ip"]
-                                 ]);
+                // Sessionizing! Soon on an official class
+                $session = hash("sha256", random_bytes(6));
+                $authorize = $this->DB->query("INSERT into sessions (session, user, ip, remembered, browser) values ('$session', '".$Info["id"]."', '".$IP_Address."', ".($Remember ? 1: 0).", '".$Browser."')");
+                if($authorize["status"] >= 0) {
+                    setcookie("session", $session, time() + 90 * 60 * 24 * 100, "/", null, null, true);
+                } else {
+                    print_r($authorize);
+                    exit(0);
+                }
+
+                if($Info["is_admin"] || $Info["is_mod"]) {
+                    $this->DB->modify("UPDATE users SET last_login = NOW(), 1st_latest_ip = :FIRST_IP, 2nd_latest_ip = :SECOND_IP WHERE username = :UID AND banned = 0", [
+                        ":UID" => $this->username,
+                        ":FIRST_IP" => $IP_Address,
+                        ":SECOND_IP" => $Info["first_lastest_ip"]
+                    ]);
                 }
 
                 if ($Remember) {
@@ -235,13 +236,10 @@
                                      ]);
                     setcookie("re", $Code, time() + 90 * 60 * 24 * 100, "/", null, null, true);
                 }
+
                 return true;
-
             }
-
             return false;
-
-
         }
 
         public function logout(): bool {

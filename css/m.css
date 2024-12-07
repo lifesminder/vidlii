@@ -3147,3 +3147,7 @@ select {
 } .blog-box a {
     color: #000;
 }
+
+.pr_tp_btm.grid {
+    width: 1011px;
+}

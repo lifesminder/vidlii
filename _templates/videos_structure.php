@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
     <head>
-<? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_head/main_head.php" ?>
+        <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_head/main_head.php" ?>
+        <script src="/js/main.js"></script>
     </head>
     <body>
     <?php

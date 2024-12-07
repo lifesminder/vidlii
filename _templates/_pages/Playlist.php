@@ -1,5 +1,5 @@
 <div style="margin-bottom:14px;padding-bottom:7px;border-bottom:1px solid #ccc;overflow:hidden">
-    <img src="/vi/<?= $Playlist["thumbnail"] ?>.jpg" style="display: block;float: left;width: 227px;height:137px;border: 5px double #ccc;">
+    <img src="/vi/<?= $Playlist["thumbnail"] ?>/sqdefault.jpg" style="display: block;float: left;width: 227px;height:137px;border: 5px double #ccc;">
     <div style="float:left;margin-left: 8px;position:relative;bottom:1.5px;width:481px;height:147px;padding-right:60px;margin-right:14px;border-right:1px solid #ccc">
         <a href="/playlist?p=<?= $Playlist["purl"] ?>" style="font-weight:bold;font-size:20px;display:block;margin-bottom:4px;"><?= $Playlist["title"] ?></a>
         <div>

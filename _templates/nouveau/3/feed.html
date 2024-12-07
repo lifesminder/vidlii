@@ -1,0 +1,121 @@
+{% extends "nouveau/3/base.html" %}
+
+{% block body %}
+    <div class="channel-activity-feeds" data-module-id="10500">
+        <div class="activity-feeds-container">
+            <div class="activity-feeds-header ytg-box" style="height: 40px;">
+                <ul>
+                    <li class="user-feed-filter{%if filter == 2%} selected{%endif%}">
+                        <a href="/user/{{profile.displayname}}/feed?filter=2">Activity</a>
+                    </li>
+                    <li class="user-feed-filter{%if filter == 1%} selected{%endif%}">
+                        <a href="/user/{{profile.displayname}}/feed?filter=1">Comments</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="activity-feed">
+                <div class="yt-horizontal-rule channel-section-hr">
+                    <span class="first"></span>
+                    <span class="second"></span>
+                    <span class="third"></span>
+                </div>
+                <div class="feed-list-container">
+                {%if filter == 2%}
+                    {%if bulletins.count > 0%}
+                    <div class="feed-item-list">
+                        {%for bulletin in bulletins.data%}
+                        <div>
+                            <div class="feed-item-container yt-uix-expander yt-uix-expander-collapsed">
+                                <div class="feed-item-outer">
+                                    <div class="feed-item-main">
+                                        <div class="feed-item-thumb">
+                                            <span class="feed-item-author">
+                                                <a href="/user/{{profile.displayname}}" class="yt-user-photo">
+                                                    <span class="video-thumb ux-thumb yt-thumb-square-46">
+                                                        <span class="yt-thumb-clip">
+                                                            <span class="yt-thumb-clip-inner">
+                                                                <img src="/vi/ava/{{profile.displayname}}.jpg" alt="Thumbnail" data-thumb="/vi/ava/{{profile.displayname}}.jpg" width="46" data-group-key="thumb-group-15">
+                                                                <span class="vertical-align"></span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="feed-item-time">
+                                            {{bulletin.date}}
+                                        </div>
+                                        <div class="feed-item-content">
+                                            <div class="feed-item-actions-line user">
+                                                <div class="feed-item-attribution feed-avatar-first">
+                                                    <span class="feed-item-owner">
+                                                        <a href="/user/{{profile.displayname}}" class="yt-user-name">{{profile.displayname}}</a>
+                                                    </span>
+                                                    posted:
+                                                </div>
+                                                <div class="feed-item-target">
+                                                    <p>
+                                                        {{bulletin.content|raw}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                    </div>
+                    {%else%}
+                    <p class="feed-unavailable-message">No recent activity.</p>
+                    {%endif%}
+                {%elseif filter == 1%}
+                    {%if comments.count > 0%}
+                    <span class="yt-uix-c3-load-more">
+                        <span class="yt-uix-c3-load-more-list-container">
+                            <ul class="post-item-list">
+                                {%for comment in comments.data%}
+                                <li class="post-item comment-post" data-comment-id="{{comment.id}}">
+                                    <div class="post-item-heading">
+                                        <div class="heading-main">
+                                            <a href="/user/{{comment.by_user}}" class="yt-user-photo">
+                                                <span class="video-thumb ux-thumb yt-thumb-square-23">
+                                                    <span class="yt-thumb-clip">
+                                                        <span class="yt-thumb-clip-inner">
+                                                            <img src="/vi/ava/{{comment.by_user}}.jpg" alt="{{comment.by_user}}" width="27" height="23">
+                                                            <span class="vertical-align"></span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </a>
+                                            <div class="post-item-info">
+                                                <a href="/user/{{comment.by_user}}" class="yt-user-name" dir="ltr">{{comment.by_user}}</a>
+                                                posted a comment
+                                            </div>
+                                            <span class="post-item-timestamp">{{comment.date}}</span>
+                                        </div>
+                                        <div class="post-item-actions">
+                                            <button class="report-spam" title="Report Spam">
+                                                Report Spam
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="yt-tile-visible">
+                                        <p class="comment-text">
+                                            {{comment.comment|raw}}
+                                        </p>
+                                    </div>
+                                </li>
+                                {%endfor%}
+                            </ul>
+                        </span>
+                    </span>
+                    {%else%}
+                    <p class="feed-unavailable-message">No channel comments.</p>
+                    {%endif%}
+                {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

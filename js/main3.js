@@ -487,22 +487,18 @@ function bg_del_comp() {
     _("bg_upload").style.display = "block";
     _("bg_delete").style.display = "none"
 }
+
 $(".sub_button").click(function() {
-    var User = $(".sub_button").attr("user");
-    $.ajax({
-        type: "POST",
-        url: "/ajax/subscribe",
-        data: {
-            user: User
-        },
-        success: function(output) {
-            if (output.response == "subscribed") {
-                $(".sub_button").text("Unsubscribe")
-            } else if (output.response == "unsubscribed") {
-                $(".sub_button").text("Subscribe")
+    var user = $(".sub_button").attr("user");
+    fetch(`/api/user/subscribe?to=${user}`).then(resp => { return resp.json() }).then(data => {
+        if(data.status == 1) {
+            if(data.message == "Unsubscribed successfully") {
+                $(".sub_button").text("Subscribe");
+            } else {
+                $(".sub_button").text("Unsubscribe");
             }
-        }
-    })
+        } else alert(data.message);
+    });
 });
 
 function user_exists(user) {

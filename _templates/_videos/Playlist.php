@@ -1,4 +1,4 @@
-<form action="my_playlists?pl=<?= $Playlist["purl"] ?>" method="POST">
+<form action="/my_playlists?pl=<?= $Playlist["purl"] ?>" method="POST">
     <div style="background: #e2e2e2;padding: 12px">
         <strong><?= $Playlist["title"] ?></strong>
     </div>
@@ -37,7 +37,9 @@
                         <td width="20%" valign="top" align="center">
                             <div class="th">
                                 <div class="th_t"><?= $Video["length"] ?></div>
-                                <a href="/watch?v=<?= $Video["url"] ?>"><img class="vid_th" <?= $Video["thumbnail"] ?> width="190" height="131"></a>
+                                <a href="/watch?v=<?= $Video["url"] ?>">
+                                    <img class="vid_th" src="/vi/<?= $Video["url"] ?>/sqdefault.jpg" width="190" height="131">
+                                </a>
                             </div>
                         </td>
                         <td width="70%" valign="top" class="mv_info">

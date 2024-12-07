@@ -1,3 +1,4 @@
+; Help Center
 <h1 class="pg_hd">Help</h1>
 <div class="vc_l">
     <div class="vc_cats">

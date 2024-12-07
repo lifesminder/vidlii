@@ -122,8 +122,8 @@
 				</tbody>
 			</table>
 			<div class="connect_lnk" style="display: flex; justify-content: center">
-				<a href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/user/".$Profile["displayname"]; ?>">
-					<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/user/".$Profile["displayname"]; ?>
+				<a href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/".$Profile["displayname"]; ?>">
+					<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/".$Profile["displayname"]; ?>
 				</a>
 			</div>
 		</div>

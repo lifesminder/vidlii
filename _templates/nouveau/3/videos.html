@@ -1,0 +1,147 @@
+{% extends "nouveau/3/base.html" %}
+
+{% block body %}
+<div class="channel-filtered-page">
+    <div class="channel-filtered-page-head">
+        <h1 class="channel-section-heading">
+            {%if view == 1 and playlist_count > 0%}
+            Playlists
+            <span class="item-count">({{playlist_count}})</span>
+            {%else%}
+            Uploaded Videos
+            <span class="item-count">({{video_count}})</span>
+            {%endif%}
+        </h1>
+        {%if view == 0 and videos.data|length > 1%}
+        <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
+            <span class="yt-uix-button-content">{%if sort == "p"%}Most popular{%elseif sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
+            <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+            <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true" style="min-width: 185px; left: 1219.3px; top: 305px; display: none;">
+                <li role="menuitem" id="aria-id-2720847037">
+                    <span href="/user/{{profile.displayname}}/videos?sort=p&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Most popular</span>
+                </li>
+                <li role="menuitem" id="aria-id-90702033973">
+                    <span href="/user/{{profile.displayname}}/videos?sort=da&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
+                </li>
+                <li role="menuitem" id="aria-id-93516592201">
+                    <span href="/user/{{profile.displayname}}/videos?sort=dd&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
+                </li>
+            </ul>
+        </button>
+        {%endif%}
+        {%if view == 1 and playlists.data|length > 1%}
+        <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
+            <span class="yt-uix-button-content">{%if sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
+            <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+            <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true" style="min-width: 185px; left: 1219.3px; top: 305px; display: none;">
+                <li role="menuitem" id="aria-id-90702033973">
+                    <span href="/user/{{profile.displayname}}/videos?sort=da&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
+                </li>
+                <li role="menuitem" id="aria-id-93516592201">
+                    <span href="/user/{{profile.displayname}}/videos?sort=dd&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
+                </li>
+            </ul>
+        </button>
+        {%endif%}
+        <div class="yt-horizontal-rule">
+            <span class="first"></span>
+            <span class="second"></span>
+            <span class="third"></span>
+        </div>
+    </div>
+    <div class="left-pane">
+        <ul class="primary-filter-menu">
+            {%if video_count > 0%}
+            <li>
+                <a class="filter-option{%if view == 0%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=0">Uploaded Videos</a>
+            </li>
+            {%endif%}
+            {%if playlist_count > 0%}
+            <li>
+                <a class="filter-option{%if view == 1%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=1">Playlists</a>
+            </li>
+            {%endif%}
+        </ul>
+    </div>
+    <div class="channel-filtered-content">
+        {%if view == 0%}
+        <ol class="channel-videos-list">
+            {%for video in videos.data%}
+            <li class="yt-c3-grid-item">
+                <a href="/watch?v={{video.url}}" class="ux-thumb-wrap yt-uix-sessionlink contains-addto" data-sessionlink="feature=plcp&amp;context=C47f1ea1VDvjVQa1PpcFMRnKyVvPu849wZazOBedlBO-VbTr2cu1E%3D">
+                    <span class="video-thumb ux-thumb yt-thumb-default-234">
+                        <span class="yt-thumb-clip">
+                            <span class="yt-thumb-clip-inner">
+                                <img src="/vi/{{video.url}}/sqdefault.jpg" alt="Thumbnail" width="234">
+                                <span class="vertical-align"></span>
+                            </span>
+                        </span>
+                    </span>
+                    <span class="video-time">{{video.length}}</span>
+                    <button onclick=";return false;" title="Watch Later" type="button" class="addto-button video-actions addto-watch-later-button-sign-in yt-uix-button yt-uix-button-default yt-uix-button-short yt-uix-tooltip" data-button-menu-id="shared-addto-watch-later-login" role="button">
+                        <span class="yt-uix-button-content">
+                            <span class="addto-label">Watch Later</span>
+                            <span class="addto-label-error">Error</span>
+                            <img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif">
+                        </span>
+                        <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                    </button>
+                </a>
+                <h3 class="yt-c3-grid-item-title">
+                    <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" title="{{video.title}}" dir="ltr">
+                        {{video.title}}
+                    </a>
+                </h3>
+                <span class="yt-c3-grid-item-viewcount">
+                    {{video.displayviews}} view{%if video.displayviews != 1%}s{%endif%}
+                </span>
+                <span class="yt-c3-grid-item-created">
+                    {{video.uploaded_on}}
+                </span>
+            </li>
+            {%endfor%}
+        </ol>
+        {%elseif view == 1%}
+        <ol class="playlists-wide">
+            {%for playlist in playlists.data%}
+            <div class="playlist yt-tile-visible yt-uix-tile">
+                <div class="playlist-metadata">
+                    <h3 dir="ltr" style="margin-bottom: 0;">
+                        <a class="yt-uix-tile-link" href="/playlist?pl={{playlist.purl}}">{{playlist.title}}</a>
+                    </h3>
+                </div>
+                <a href="/playlist?pl={{playlist.purl}}" class="play-all yt-uix-sessionlink">
+                    <span class="playlist-thumb-strip playlist-thumb-strip-350">
+                        <span class="videos videos-{%if playlist.videos|length > 5%}5{%else%}{{playlist.videos|length}}{%endif%} vertical-cutoff">
+                            {%set thumbs_count = (playlist.videos|length > 5) ? 5 : playlist.videos|length%}
+                            {%for vt_i in 0..thumbs_count - 1%}
+                            <span class="clip">
+                                <span class="centering-offset">
+                                    <span class="centering">
+                                        <span class="ie7-vertical-align-hack">&nbsp;</span>
+                                        <img src="/vi/{{playlist.videos[vt_i].url}}.jpg" alt="" class="thumb">
+                                    </span>
+                                </span>
+                            </span>
+                            {%endfor%}
+                        </span>
+                        <span class="resting-overlay">
+                            <img src="https://s.ytimg.com/yt/img/channels/play-icon-resting-vflXxuFB8.png" class="play-button" alt="Play all">
+                            <span class="video-count-box">
+                                {{playlist.videos|length}} videos
+                            </span>
+                        </span>
+                        <span class="hover-overlay">
+                            <span class="play-all-container">
+                                <strong><img src="https://s.ytimg.com/yt/img/channels/mini-play-all-vflZu1SBs.png" alt="">Play all</strong>
+                            </span>
+                        </span>
+                    </span>
+                </a>
+            </div>
+            {%endfor%}
+        </ol>
+        {%endif%}
+    </div>
+  </div>
+{% endblock %}

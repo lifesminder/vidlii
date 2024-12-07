@@ -3,7 +3,7 @@
 <div style="display:none" id="ch_displayname"><?= $Profile["displayname"] ?></div>
 <div class="out_box ob_col">
     <div class="in_box ib_col">
-        <div class="pr_tp_hd">
+        <div class="pr_tp_hd" style="height: 50px">
             <? if ($Showcase) : ?>
             <div class="pr_pl_toggles">
                 <a href="javascript:void(0)" title="Switch to Player View" class="pl_toggler" <? if ($Profile["default_view"] == 0) : ?>id="pl_toggle_sel"<? endif ?>>
@@ -72,7 +72,7 @@
                 <a href="javascript:void(0)" id="pl_inf_i"><img src="/img/smi/1.png">Info</a><a href="javascript:void(0)" id="pl_inf_f"><img src="/img/smi/2.png">Favorite</a><a href="javascript:void(0)" id="pl_inf_s"><img src="/img/smi/3.png">Share</a><a href="javascript:void(0)" id="pl_inf_p"><img src="/img/smi/4.png">Playlists</a><a href="javascript:void(0)" id="pl_inf_fl"><img src="/img/smi/5.png">Flag</a>
                 <div id="nav_ind"></div>
             </div>
-            <div class="pr_tp_pl_inf ib_col" id="pl_inf" <? if ($Player == 0) : ?>style="height:150px"<? elseif($Player == 2) : ?>style="height:143px"<? endif ?>>
+            <div class="pr_tp_pl_inf ib_col" id="pl_inf" style="width: 100%; height: 200px;">
 
             </div>
             <? if ($Player == 1) : ?>
@@ -83,7 +83,7 @@
             </style>
             <? endif ?>
         </div>
-        <div class="pr_pl_mnu ib_col" id="pl_list">
+        <div class="pr_pl_mnu ib_col" id="pl_list" style="width: 34.2%; height: 99.5%">
             <? if ($Shows_Videos) : ?>
                 <div class="mnu_sct"<? if ((!$Shows_Favorites && !$Shows_Playlists) || !$Profile["c_all"]) : ?>style="border:0"<? endif ?>>
                     <div>Uploads (<?= $Profile["videos"] ?>)</div>

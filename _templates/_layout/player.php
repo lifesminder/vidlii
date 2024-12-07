@@ -74,9 +74,9 @@
 	<? if ($Status == 2) : ?>
 	var viValues = {
 		variable: "vlp",
-		src: "/usfi/v/<?= $URL ?>.<?= $FILENAME ?>mp4",
-		hdsrc: "/usfi/v/<?= $URL ?>.<?= $FILENAME ?>.720.mp4",
-		img: "/vi/<?= $URL ?>.jpg",
+		src: "/usfi/v/<?= $URL ?>.mp4",
+		hdsrc: "/usfi/v/<?= $URL ?>.720.mp4",
+		img: "/vi/<?= $URL ?>/hqresdefault.jpg",
 		url: "<?= $URL ?>",
 		duration: <?= $Length ?>,
 		autoplay: <?= $Autoplay == 1 ? "true" : "false" ?>,

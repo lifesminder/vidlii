@@ -14,10 +14,9 @@ if ($Sign_In == 0) {
     exit();
 }
 
-
 //REQUIREMENTS / PERMISSIONS
 //- Requires Being Not Logged In
-if ($_USER->logged_in)         { redirect("/"); exit(); }
+if ($_USER->logged_in) { redirect("/"); exit(); }
 
 // Hash IP address to generate secret
 $ip_hash = base64_encode(md5(user_ip()));
