@@ -9,4 +9,5 @@
 
 # Misc
 /.idea
+/.osp
 .env

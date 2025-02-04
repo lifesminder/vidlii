@@ -377,6 +377,21 @@ CREATE TABLE `replies` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` int(12) NOT NULL,
+  `session` varchar(255) NOT NULL,
+  `user` int(32) NOT NULL,
+  `ip` varchar(255) NOT NULL,
+  `remembered` int(2) NOT NULL DEFAULT 0,
+  `browser` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `settings`
 --
 
