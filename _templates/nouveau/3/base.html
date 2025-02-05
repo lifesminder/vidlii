@@ -29,6 +29,10 @@
                                     <label for="channel_tags">Channel Tags: </label><br>
                                     <input type="text" name="channel_tags" id="channel_tags" placeholder="Your Channel Tags" style="width: 100%"{% if profile.channel_tags != ""%} value="{{profile.channel_tags}}"{% endif %}>
                                 </div>
+                                <div>
+                                    <label for="website">Website: </label><br>
+                                    <input type="url" name="website" id="website" placeholder="Your Website" style="width: 100%"{% if profile.website != ""%} value="{{profile.website}}"{% endif %}>
+                                </div>
                             </div>
                             <div>
                                 <h2>Available Pages</h2>
@@ -55,6 +59,20 @@
                                     <label for="csm_edit_ply">
                                         <input type="checkbox" name="c_playlists" id="csm_edit_ply"{% if profile.c_playlists == 1 %}checked=""{% endif %}>
                                         Playlists
+                                    </label>
+
+                                    <h3>Profile</h3>
+                                    <label for="csm_last_login">
+                                        <input type="checkbox" name="last_login" id="csm_last_login"{% if profile.a_last == 1 %}checked=""{% endif %}>
+                                        Last Login
+                                    </label>
+                                    <label for="csm_age">
+                                        <input type="checkbox" name="age" id="csm_age"{% if profile.a_age == 1 %}checked=""{% endif %}>
+                                        Age
+                                    </label>
+                                    <label for="csm_country">
+                                        <input type="checkbox" name="country" id="csm_country"{% if profile.a_country == 1 %}checked=""{% endif %}>
+                                        Country
                                     </label>
                                 </div>
                             </div>
@@ -156,7 +174,7 @@
                                         <li{%if page == "feed"%} class="selected"{%endif%}>
                                             <a href="/user/{{profile.displayname}}/feed" class="gh-tab-101">Feed</a>
                                         </li>
-                                        {%if video_count > 0%}
+                                        {%if profile.c_videos == 1 or profile.c_playlists == 1 %}
                                         <li{%if page == "videos"%} class="selected"{%endif%}>
                                             <a href="/user/{{profile.displayname}}/videos" class="gh-tab-102">Videos</a>
                                         </li>
@@ -192,6 +210,18 @@
                                                     <p>{{profile.channel_description_visible|raw}}</p>
                                                     {%endif%}
                                                 </div>
+                                                {% if profile.a_website == 1 %}
+                                                <div class="user-profile-item">
+                                                    <div class="yt-c3-profile-custom-url field-container">
+                                                        <a href="{{website.url}}" rel="me nofollow" target="_blank" title="{{website.title}}" class="yt-uix-redirect-link">
+                                                            <img src="http://s2.googleusercontent.com/s2/favicons?domain={{website.url}}&amp;feature=youtube_channel" class="favicon" alt="">
+                                                            <span class="link-text">
+                                                                {{website.title}}
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
                                                 <hr class="yt-horizontal-rule">
                                             </div>
                                             <div class="section created-by-section">
@@ -199,26 +229,34 @@
                                                     by
                                                     <span class="yt-user-name" dir="ltr">{{profile.displayname}}</span>
                                                 </div>
+                                                {% if profile.a_last == 1 %}
                                                 <div class="user-profile-item">
                                                     <h5>Latest Activity</h5>
                                                     <span class="value">{{profile.last_login|date("M d, Y")}}</span>
                                                 </div>
+                                                {% endif %}
                                                 <div class="user-profile-item">
                                                     <h5>Date Joined</h5>
                                                     <span class="value">{{profile.reg_date|date("M d, Y")}}</span>
                                                 </div>
                                             </div>
+                                            {% if profile.a_age == 1 or profile.a_country == 1 %}
                                             <div class="section">
+                                                {% if profile.a_age == 1 %}
                                                 <div class="user-profile-item">
                                                     <h5>Age</h5>
                                                     <span class="value">{{profile.age}}</span>
                                                 </div>
+                                                {% endif %}
+                                                {% if profile.a_country == 1 %}
                                                 <div class="user-profile-item">
                                                     <h5>Country</h5>
                                                     <span class="value">{{profile.country}}</span>
                                                 </div>
                                                 <hr class="yt-horizontal-rule">
+                                                {% endif %}
                                             </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     {% if featured_channels|length > 0 and profile.c_featured_channels == 1 %}
@@ -241,7 +279,7 @@
                                                         </div>
                                                         <div class="channel-summary-info">
                                                             <h3 class="channel-summary-title">
-                                                                <a href="/user/{{channel.displayname}}" class="yt-uix-tile-link">{{channel.displayname}}</a>
+                                                                <a href="/user/{{channel.displayname}}" class="yt-uix-tile-link">{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}</a>
                                                             </h3>
                                                             <span class="subscriber-count">
                                                                 <strong>{{channel.subscribers}}</strong>

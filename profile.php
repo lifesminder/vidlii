@@ -1,6 +1,11 @@
 <?php
     require_once "_includes/init.php";
 
+    $engine = new \Vidlii\Vidlii\Engine();
+    $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+
+    $Countries = ['AF' => 'Afghanistan', 'AX' => 'Aland Islands', 'AL' => 'Albania', 'DZ' => 'Algeria', 'AS' => 'American Samoa', 'AD' => 'Andorra', 'AO' => 'Angola', 'AI' => 'Anguilla', 'AQ' => 'Antarctica', 'AG' => 'Antigua and Barbuda', 'AR' => 'Argentina', 'AM' => 'Armenia', 'AW' => 'Aruba', 'AU' => 'Australia', 'AT' => 'Austria', 'AZ' => 'Azerbaijan', 'BS' => 'Bahamas', 'BH' => 'Bahrain', 'BD' => 'Bangladesh', 'BB' => 'Barbados', 'BY' => 'Belarus', 'BE' => 'Belgium', 'BZ' => 'Belize', 'BJ' => 'Benin', 'BM' => 'Bermuda', 'BT' => 'Bhutan', 'BO' => 'Bolivia', 'BQ' => 'Bonaire', 'BA' => 'Bosnia and Herzegovina', 'BW' => 'Botswana', 'BV' => 'Bouvet Island', 'BR' => 'Brazil', 'IO' => 'British Indian Ocean Territory', 'VG' => 'British Virgin Islands', 'BN' => 'Brunei', 'BG' => 'Bulgaria', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'KH' => 'Cambodia', 'CM' => 'Cameroon', 'CA' => 'Canada', 'CV' => 'Cape Verde', 'KY' => 'Cayman Islands', 'CF' => 'Central African Republic', 'TD' => 'Chad', 'CL' => 'Chile', 'CN' => 'China', 'CX' => 'Christmas Island', 'CC' => 'Cocos Islands', 'CO' => 'Colombia', 'KM' => 'Comoros', 'CK' => 'Cook Islands', 'CR' => 'Costa Rica', 'HR' => 'Croatia', 'CU' => 'Cuba', 'CW' => 'Curacao', 'CY' => 'Cyprus', 'CZ' => 'Czech Republic', 'CD' => 'DR of the Congo', 'DK' => 'Denmark', 'DJ' => 'Djibouti', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'TL' => 'East Timor', 'EC' => 'Ecuador', 'EG' => 'Egypt', 'SV' => 'El Salvador', 'GQ' => 'Equatorial Guinea', 'ER' => 'Eritrea', 'EE' => 'Estonia', 'ET' => 'Ethiopia', 'FK' => 'Falkland Islands', 'FO' => 'Faroe Islands', 'FJ' => 'Fiji', 'FI' => 'Finland', 'FR' => 'France', 'GF' => 'French Guiana', 'PF' => 'French Polynesia', 'TF' => 'French Southern Territories', 'GA' => 'Gabon', 'GM' => 'Gambia', 'GE' => 'Georgia', 'DE' => 'Germany', 'GH' => 'Ghana', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'GL' => 'Greenland', 'GD' => 'Grenada', 'GP' => 'Guadeloupe', 'GU' => 'Guam', 'GT' => 'Guatemala', 'GG' => 'Guernsey', 'GN' => 'Guinea', 'GW' => 'Guinea-Bissau', 'GY' => 'Guyana', 'HT' => 'Haiti', 'HM' => 'Heard Island', 'HN' => 'Honduras', 'HK' => 'Hong Kong', 'HU' => 'Hungary', 'IS' => 'Iceland', 'IN' => 'India', 'ID' => 'Indonesia', 'IR' => 'Iran', 'IQ' => 'Iraq', 'IE' => 'Ireland', 'IM' => 'Isle of Man', 'IL' => 'Israel', 'IT' => 'Italy', 'CI' => 'Ivory Coast', 'JM' => 'Jamaica', 'JP' => 'Japan', 'JE' => 'Jersey', 'JO' => 'Jordan', 'KZ' => 'Kazakhstan', 'KE' => 'Kenya', 'KI' => 'Kiribati', 'XK' => 'Kosovo', 'KW' => 'Kuwait', 'KG' => 'Kyrgyzstan', 'LA' => 'Laos', 'LV' => 'Latvia', 'LB' => 'Lebanon', 'LS' => 'Lesotho', 'LR' => 'Liberia', 'LY' => 'Libya', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'MO' => 'Macao', 'MK' => 'Macedonia', 'MG' => 'Madagascar', 'MW' => 'Malawi', 'MY' => 'Malaysia', 'MV' => 'Maldives', 'ML' => 'Mali', 'MT' => 'Malta', 'MH' => 'Marshall Islands', 'MQ' => 'Martinique', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'YT' => 'Mayotte', 'MX' => 'Mexico', 'FM' => 'Micronesia', 'MD' => 'Moldova', 'MC' => 'Monaco', 'MN' => 'Mongolia', 'ME' => 'Montenegro', 'MS' => 'Montserrat', 'MA' => 'Morocco', 'MZ' => 'Mozambique', 'MM' => 'Myanmar', 'NA' => 'Namibia', 'NR' => 'Nauru', 'NP' => 'Nepal', 'NL' => 'Netherlands', 'NC' => 'New Caledonia', 'NZ' => 'New Zealand', 'NI' => 'Nicaragua', 'NE' => 'Niger', 'NG' => 'Nigeria', 'NU' => 'Niue', 'NF' => 'Norfolk Island', 'KP' => 'North Korea', 'MP' => 'Northern Mariana Islands', 'NO' => 'Norway', 'OM' => 'Oman', 'PK' => 'Pakistan', 'PW' => 'Palau', 'PS' => 'Palestinian Territory', 'PA' => 'Panama', 'PG' => 'Papua New Guinea', 'PY' => 'Paraguay', 'PE' => 'Peru', 'PH' => 'Philippines', 'PN' => 'Pitcairn', 'PL' => 'Poland', 'PT' => 'Portugal', 'PR' => 'Puerto Rico', 'QA' => 'Qatar', 'CG' => 'Republic of the Congo', 'RE' => 'Reunion', 'RO' => 'Romania', 'RU' => 'Russia', 'RW' => 'Rwanda', 'BL' => 'Saint Barthelemy', 'SH' => 'Saint Helena', 'KN' => 'Saint Kitts and Nevis', 'LC' => 'Saint Lucia', 'MF' => 'Saint Martin', 'PM' => 'Saint Pierre and Miquelon', 'VC' => 'Saint Vincent', 'WS' => 'Samoa', 'SM' => 'San Marino', 'ST' => 'Sao Tome and Principe', 'SA' => 'Saudi Arabia', 'SN' => 'Senegal', 'RS' => 'Serbia', 'SC' => 'Seychelles', 'SL' => 'Sierra Leone', 'SG' => 'Singapore', 'SX' => 'Sint Maarten', 'SK' => 'Slovakia', 'SI' => 'Slovenia', 'SB' => 'Solomon Islands', 'SO' => 'Somalia', 'ZA' => 'South Africa', 'GS' => 'South Georgia', 'KR' => 'South Korea', 'SS' => 'South Sudan', 'ES' => 'Spain', 'LK' => 'Sri Lanka', 'SD' => 'Sudan', 'SR' => 'Suriname', 'SJ' => 'Svalbard and Jan Mayen', 'SZ' => 'Swaziland', 'SE' => 'Sweden', 'CH' => 'Switzerland', 'SY' => 'Syria', 'TW' => 'Taiwan', 'TJ' => 'Tajikistan', 'TZ' => 'Tanzania', 'TH' => 'Thailand', 'TG' => 'Togo', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TT' => 'Trinidad and Tobago', 'TN' => 'Tunisia', 'TR' => 'Turkey', 'TM' => 'Turkmenistan', 'TC' => 'Turks and Caicos Islands', 'TV' => 'Tuvalu', 'VI' => 'U.S. Virgin Islands', 'UG' => 'Uganda', 'UA' => 'Ukraine', 'AE' => 'United Arab Emirates', 'GB' => 'United Kingdom', 'US' => 'United States', 'UY' => 'Uruguay', 'UZ' => 'Uzbekistan', 'VU' => 'Vanuatu', 'VA' => 'Vatican', 'VE' => 'Venezuela', 'VN' => 'Vietnam', 'WF' => 'Wallis and Futuna', 'EH' => 'Western Sahara', 'YE' => 'Yemen', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe'];
+
     $profiles_enabled = $DB->execute("SELECT value FROM settings WHERE name = 'channels'", true)["value"] ?? 1;
     if ($profiles_enabled == 0) { notification("Channels have been temporarily disabled!","/"); exit(); }
 
@@ -23,9 +28,103 @@ if (isset($_GET["user"])) {
         $Profile = $OWNER->get_profile();
         $OWNER_USERNAME = clean($Profile["username"]);
 
+        // New logic of channels: Nouveau
         if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+            $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
+            
+            if($_USER->logged_in) {
+                $args["authorized"] = true;
+                $args["owner"] = ($_USER->username === $Profile["username"]) ? true : false;
+                $args["subscribed"] = (bool)$api->db("SELECT count(*) from subscriptions where subscriber = '".$_USER->username."' and subscription = '".$Profile["username"]."'")["data"]["count(*)"];
+            } else {
+                $args["authorized"] = false;
+                $args["owner"] = false;
+                $args["subscribed"] = false;
+            }
+            $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
+            $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
+            if($Profile["channel_description"] != "") {
+                $Profile["channel_description_visible"] = str_replace("\n", "<br>", $Profile["channel_description"]);
+            }
+            if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
+                $Is_OWNER = true;
+            }
+            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER];
+            $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
+            if($args["featured_channels"] != "") {
+                $args["featured_channels"] = explode(",", $args["featured_channels"]);
+                for($i = 0; $i < count($args["featured_channels"]); $i++) {
+                    $channel = $args["featured_channels"][$i];
+                    $args["featured_channels"][$i] = $api->db("SELECT displayname, channel_title, (select count(*) from subscriptions where subscription = '$channel') as subscribers from users where username = '$channel'");
+                    if($args["featured_channels"][$i]["status"] == 0)
+                        $args["featured_channels"][$i] = $args["featured_channels"][$i]["data"];
+                }
+            }
+            $args["featured_title"] = $api->db("SELECT featured_title from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_title"];
+            if($Profile["website"] != "") {
+                $args["website"]["title"] = end(explode("://", $Profile["website"]));
+                $args["website"]["url"] = $Profile["website"];
+            }
+
+            // Stuff
+            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
+
+            if(!empty($_POST)) {
+                $channel_title = (isset($_POST["channel_title"]) && $_POST["channel_title"] != "") ? $_POST["channel_title"] : "";
+                $channel_description = (isset($_POST["channel_description"]) && $_POST["channel_description"] != "") ? $_POST["channel_description"] : "";
+                $channel_tags = (isset($_POST["channel_tags"]) && $_POST["channel_tags"] != "") ? $_POST["channel_tags"] : "";
+                $website = (isset($_POST["website"]) && $_POST["website"] != "") ? $_POST["website"] : "";
+
+                $activity = (isset($_POST["c_recent"]) && $_POST["c_recent"] == "on") ? 1 : 0;
+                $comments = (isset($_POST["c_comments"]) && $_POST["c_comments"] == "on") ? 1 : 0;
+                $videos = (isset($_POST["c_videos"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+                $favorites = (isset($_POST["c_favorites"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+                $playlists = (isset($_POST["c_playlists"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+
+                $last_login = (isset($_POST["last_login"]) && $_POST["last_login"] == "on") ? 1 : 0;
+                $age = (isset($_POST["age"]) && $_POST["age"] == "on") ? 1 : 0;
+                $country = (isset($_POST["country"]) && $_POST["country"] == "on") ? 1 : 0;
+
+                $update_channel = $api->db("UPDATE users SET channel_title = '$channel_title', channel_description = '$channel_description', channel_tags = '$channel_tags', website = '$website', c_recent = $activity, c_comments = $comments, c_videos = $videos, c_favorites = $favorites, c_playlists = $playlists, a_last = $last_login, a_country = $country, a_age = $age WHERE displayname = '".$Profile["displayname"]."'");
+                if($update_channel["status"] >= 1) {
+                    $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+                    header("Location: ".$link);
+                }
+            }
+
+            // Make everything consistent
+            if($Profile["channel_version"] == 3) {
+                if($page == "index" || $page == "featured") {
+                    if(
+                        $args["video"]["count"] == 0 &&
+                        ($Profile["c_recent"] == 0 || $Profile["c_comments"] == 0)
+                    ) {
+                        header("Location: /user/".$Profile["displayname"]."/feed");
+                    }
+                } else if($page == "feed" && ($Profile["c_recent"] == 0 || $Profile["c_comments"] == 0)) {
+                    if(!isset($_GET["filter"])) {
+                        if($Profile["c_recent"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                        else if($Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                    } else {
+                        if($Profile["c_recent"] == 0 && (int)$_GET["filter"] != 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                        else if($Profile["c_comments"] == 0 && (int)$_GET["filter"] != 2) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                    }
+                } else if($page == "videos") {
+                    if(isset($_GET["view"])) {
+                        if($_GET["view"] == 1 && $Profile["c_playlists"] != 1) header("Location: /user/".$Profile["displayname"]."/videos?view=0");
+                        else if($_GET["view"] == 0 && $Profile["c_videos"] != 1) {
+                            if($Profile["c_playlists"] == 1) header("Location: /user/".$Profile["displayname"]."/videos?view=1");
+                            else header("Location: /user/".$Profile["displayname"]);
+                        }
+                    } else {
+                        if($Profile["c_videos"] == 0 && $Profile["c_playlists"] == 1) header("Location: /user/".$Profile["displayname"]."/videos?view=1");
+                        else if($Profile["c_videos"] == 1 && $Profile["c_playlists"] == 0) header("Location: /user/".$Profile["displayname"]."/videos?view=0");
+                        else if($Profile["c_videos"] == 0 && $Profile["c_playlists"] == 0) header("Location: /user/".$Profile["displayname"]);
+                    }
+                }
+            }
+
             require_once "_templates/nouveau_structure.php";
-            exit();
         } else {
 
         $Videos_Amount = new Videos($DB, $_USER);
@@ -1269,8 +1368,8 @@ if (isset($_GET["user"])) {
 			}
 
             require_once "_templates/profile2_structure.php";
-        } elseif ($Profile["channel_version"] == 3 && $Profile["banned"] == 0) {
-            //COSMIC PANDA
+        } elseif ($Profile["channel_version"] >= 3 && $Profile["banned"] == 0) {
+            // Cosmic Panda, One Layout and newer versions of channels.
 
             if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
                 $Is_OWNER = true;

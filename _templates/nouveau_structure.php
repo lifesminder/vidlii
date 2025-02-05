@@ -78,73 +78,9 @@
     <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>
     <div style="background: transparent; background-color: transparent;">
         <?php
-            $engine = new \Vidlii\Vidlii\Engine();
-            $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
-
-            if($_USER->logged_in) {
-                $args["authorized"] = true;
-                if($_USER->username === $Profile["username"]) {
-                    $args["owner"] = true;
-                } else {
-                    $args["owner"] = false;
-                }
-                $args["subscribed"] = (bool)$api->db("SELECT count(*) from subscriptions where subscriber = '".$_USER->username."' and subscription = '".$Profile["username"]."'")["data"]["count(*)"];
-            } else {
-                $args["authorized"] = false;
-                $args["owner"] = false;
-                $args["subscribed"] = false;
-            }
-
-            $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
-            $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
-            if($Profile["channel_description"] != "") {
-                $Profile["channel_description_visible"] = str_replace("\n", "<br>", $Profile["channel_description"]);
-            }
-
-            if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
-                $Is_OWNER = true;
-            }
-            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER];
-            $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
-            if($args["featured_channels"] != "") {
-                $args["featured_channels"] = explode(",", $args["featured_channels"]);
-                for($i = 0; $i < count($args["featured_channels"]); $i++) {
-                    $channel = $args["featured_channels"][$i];
-                    $args["featured_channels"][$i] = $api->db("SELECT displayname, channel_title, (select count(*) from subscriptions where subscription = '$channel') as subscribers from users where username = '$channel'");
-                    if($args["featured_channels"][$i]["status"] == 0)
-                        $args["featured_channels"][$i] = $args["featured_channels"][$i]["data"];
-                }
-            }
-            $args["featured_title"] = $api->db("SELECT featured_title from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_title"];
-
-            if(!empty($_POST)) {
-                $channel_title = (isset($_POST["channel_title"]) && $_POST["channel_title"] != "") ? $_POST["channel_title"] : "";
-                $channel_description = (isset($_POST["channel_description"]) && $_POST["channel_description"] != "") ? $_POST["channel_description"] : "";
-                $channel_tags = (isset($_POST["channel_tags"]) && $_POST["channel_tags"] != "") ? $_POST["channel_tags"] : "";
-
-                $activity = (isset($_POST["c_recent"]) && $_POST["c_recent"] == "on") ? 1 : 0;
-                $comments = (isset($_POST["c_comments"]) && $_POST["c_comments"] == "on") ? 1 : 0;
-                $videos = (isset($_POST["c_videos"]) && $_POST["c_videos"] == "on") ? 1 : 0;
-                $favorites = (isset($_POST["c_favorites"]) && $_POST["c_videos"] == "on") ? 1 : 0;
-                $playlists = (isset($_POST["c_playlists"]) && $_POST["c_videos"] == "on") ? 1 : 0;
-
-                $update_channel = $api->db("UPDATE users SET channel_title = '$channel_title', channel_description = '$channel_description', channel_tags = '$channel_tags', c_recent = $activity, c_comments = $comments, c_videos = $videos, c_favorites = $favorites, c_playlists = $playlists WHERE displayname = '".$Profile["displayname"]."'");
-                print_r($update_channel);
-            }
-
             switch($Profile["channel_version"]) {
-                /*
-                case 1: {
-                    $engine->template("nouveau/1/index.html");
-                    break;
-                }
-                case 2: {
-                    $engine->template("nouveau/2/index.html");
-                    break;
-                }
-                */
                 case 3: {
-                    $twoColumns = true; $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
+                    $twoColumns = true;
                     $renderablePage = (file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/3/$page.html")) ? "nouveau/3/$page.html" : "nouveau/3/index.html";
 
                     $args["two_columns"] = $twoColumns;
@@ -153,7 +89,6 @@
 
                     if(strtolower($page) == "featured" || strtolower($page) == "index" || strtolower($page) == "") {
                         $args["page"] = "index";
-                        $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
                         if($args["videos"]["count"] > 0) {
                             for($i = 0; $i < $args["videos"]["count"]; $i++) {
                                 $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);

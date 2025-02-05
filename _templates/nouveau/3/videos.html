@@ -56,7 +56,7 @@
                 <a class="filter-option{%if view == 0%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=0">Uploaded Videos</a>
             </li>
             {%endif%}
-            {%if playlist_count > 0%}
+            {%if profile.c_playlists == 1 and playlist_count > 0%}
             <li>
                 <a class="filter-option{%if view == 1%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=1">Playlists</a>
             </li>

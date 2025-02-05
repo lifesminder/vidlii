@@ -3,22 +3,30 @@
 {% block body %}
     <div class="channel-activity-feeds" data-module-id="10500">
         <div class="activity-feeds-container">
+            {% if profile.c_recent == 1 or profile.c_comments == 1 %}
             <div class="activity-feeds-header ytg-box" style="height: 40px;">
                 <ul>
+                    {% if profile.c_recent == 1 %}
                     <li class="user-feed-filter{%if filter == 2%} selected{%endif%}">
                         <a href="/user/{{profile.displayname}}/feed?filter=2">Activity</a>
                     </li>
+                    {% endif %}
+                    {% if profile.c_comments == 1 %}
                     <li class="user-feed-filter{%if filter == 1%} selected{%endif%}">
                         <a href="/user/{{profile.displayname}}/feed?filter=1">Comments</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
+            {% endif %}
             <div class="activity-feed">
+                {% if profile.c_recent == 1 or profile.c_comments == 1 %}
                 <div class="yt-horizontal-rule channel-section-hr">
                     <span class="first"></span>
                     <span class="second"></span>
                     <span class="third"></span>
                 </div>
+                {% endif %}
                 <div class="feed-list-container">
                 {%if filter == 2%}
                     {%if bulletins.count > 0%}
