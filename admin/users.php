@@ -409,10 +409,10 @@
 						$RDay = (int)$Validation["reg_day"];
 						$RMonth = (int)$Validation["reg_month"];
 						$RYear = (int)$Validation["reg_year"];
-						$RHour = (int)$Validation["reg_hour"];
-						$RMinute = (int)$Validation["reg_minute"];
-						$RSecond = (int)$Validation["reg_second"];
-						$Joined = "$RYear-$RMonth-$RDay $RHour:$Rminute:$RSecond";
+						$RHour = $Validation["reg_hour"];
+						$RMinute = $Validation["reg_minute"];
+						$RSecond = $Validation["reg_second"];
+						$Joined = date("Y-m-d h:m:s", strtotime("$RYear-$RMonth-$RDay $RHour:$Rminute:$RSecond"));
 
 						if ($Validation["channel_type"] >= 0 && $Validation["channel_type"] <= 7) { $Channel_Type = $Validation["channel_type"]; } else { $Channel_Type = 0; }
 						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }

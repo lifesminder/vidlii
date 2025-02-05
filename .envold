@@ -1,0 +1,4 @@
+database = "mysqli://root@localhost/vidlii?charset=utf8mb4"
+host = "localhost"
+db = "vidlii"
+username = "root"

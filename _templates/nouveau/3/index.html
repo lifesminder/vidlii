@@ -1,6 +1,8 @@
 {% extends "nouveau/3/base.html" %}
 
 {% block body %}
+    {%if videos.count > 0%}
+    {% if profile.c_featured == 1 %}
     <div class="channels-featured-video channel-module yt-uix-c3-module-container has-visible-edge">
         <div class="module-view featured-video-view-module">
             <div class="channels-video-player player-root">
@@ -8,10 +10,10 @@
             </div>
             <div class="channels-featured-video-details yt-tile-visible clearfix">
                 <h3 class="title">
-                    <a href="#" class="yt-uix-session-link">Video Title</a>
+                    <a href="/watch?v={{videos.data[0].url}}" class="yt-uix-session-link">{{videos.data[0].title}}</a>
                     <div class="view-count-and-actions">
                         <div class="view-count">
-                            <span class="count">?</span>
+                            <span class="count">{{videos.data[0].displayviews}}</span>
                             views
                         </div>
                     </div>
@@ -23,7 +25,7 @@
             </div>
         </div>
     </div>
-    {%if videos.count > 0%}
+    {% endif %}
     <div class="single-playlist channel-module yt-uix-c3-module-container">
         <div class="module-view single-playlist-view-module">
             <div class="blogger-playall">

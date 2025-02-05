@@ -1,0 +1,203 @@
+<div id="body-container">
+    {#
+    <div id="a11y-announcements-container" role="alert">
+        <div id="a11y-announcements-message"></div>
+    </div>
+    #}
+    <div id="masthead-positioner"></div>
+    <div id="page-container">
+        <div id="page" class="not-fixed-width-tab-widescreen clearfix">
+            <div id="content" class="content-alignment" role="main">
+                <div class="branded-page-v2-container branded-page-base-bold-titles branded-page-v2-container-flex-width branded-page-v2-has-top-row">
+                    <div class="branded-page-v2-top-row">
+                        <div class="branded-page-v2-header channel-header yt-card">
+                            <div id="gh-banner">
+                                <div id="c4-header-bg-container" class="c4-visible-on-hover-container">
+                                    <div class="hd-banner">
+                                        <div class="hd-banner-image"></div>
+                                    </div>
+                                    {% if profile.website != "" %}
+                                    <div id="header-links">
+                                        <ul class="about-custom-links">
+                                            <li class="channel-links-item">
+                                                <a href="{{profile.website}}" rel="me nofollow" target="_blank" title="{{profile.website}}" class="about-channel-link yt-uix-redirect-link about-channel-link-with-icon">
+                                                    <!--<img src="//web.archive.org/web/20200329053109im_/https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url=http%3A%2F%2Fwww.twitter.com" class="about-channel-link-favicon" alt="" width="16" height="16">-->
+                                                    <span class="about-channel-link-text">
+                                                        {{profile.website}}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% endif %}
+                                    <a class="channel-header-profile-image-container spf-link" href="/user/{{profile.displayname}}">
+                                        <img class="channel-header-profile-image" src="/vi/ava/{{profile.displayname}}.jpg" title="{{profile.displayname}}" alt="{{profile.displayname}}">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="primary-header-contents clearfix" id="c4-primary-header-contents">
+                                <div class="primary-header-upper-section-wrapper clearfix">
+                                    <div class="primary-header-upper-section">
+                                        <div class="primary-header-upper-section-block">
+                                            <h1 class="branded-page-header-title">
+                                                <span class="qualified-channel-title ellipsized">
+                                                    <span class="qualified-channel-title-wrapper">
+                                                        <span dir="ltr" class="qualified-channel-title-text">
+                                                            <a dir="ltr" href="/user/{{profile.displayname}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </h1>
+                                        </div>
+                                        <div class="primary-header-upper-section-block">
+                                            <div class="primary-header-actions">
+                                                <span class="channel-header-subscription-button-container yt-uix-button-subscription-container with-preferences">
+                                                    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-branded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button" onclick=";return false;" aria-live="polite" aria-busy="false" aria-role="button" data-style-type="branded" data-href="#">
+                                                        <span class="yt-uix-button-content">
+                                                            <span class="subscribe-label" aria-label="Subscribe">Subscribe</span>
+                                                            <span class="subscribed-label" aria-label="Unsubscribe">Subscribed</span>
+                                                            <span class="unsubscribe-label" aria-label="Unsubscribe">Unsubscribe</span>
+                                                        </span>
+                                                    </button>
+                                                    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon yt-uix-subscription-preferences-button" type="button" onclick=";return false;" aria-live="polite" aria-label="Subscription preferences" aria-busy="false" aria-role="button">
+                                                        <span class="yt-uix-button-icon-wrapper">
+                                                            <span class="yt-uix-button-icon yt-uix-button-icon-subscription-preferences yt-sprite"></span>
+                                                        </span>
+                                                    </button>
+                                                    {% if profile.subscribers > 0 %}
+                                                    <span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed yt-uix-tooltip" title="{{profile.subscribers}}" tabindex="0" aria-label="{{profile.subscribers}} subscribers">{{profile.subscribers}}</span>
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="channel-subheader" class="clearfix branded-page-gutter-padding appbar-content-trigger">
+                                <ul id="channel-navigation-menu" class="clearfix">
+                                    <li>
+                                        {% if page == "index" or page == "" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="Home tab" aria-selected="true" tabindex="0">Home</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">Home</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        {% if page == "videos" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="Videos tab" aria-selected="true" tabindex="0">Videos</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}/videos" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">Videos</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        {% if page == "playlists" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="Playlists tab" aria-selected="true" tabindex="0">Playlists</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}/playlists" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">Playlists</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        {% if page == "community" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="Community tab" aria-selected="true" tabindex="0">Community</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}/community" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">Community</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        {% if page == "channels" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="Channels tab" aria-selected="true" tabindex="0">Channels</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}/channels" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">Channels</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                    <li>
+                                        {% if page == "about" %}
+                                        <h2 class="epic-nav-item-heading" aria-label="About tab" aria-selected="true" tabindex="0">About</h2>
+                                        {% else %}
+                                        <a href="/user/{{profile.displayname}}/about" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                            <span class="yt-uix-button-content">About</span>
+                                        </a>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="branded-page-v2-col-container">
+                        <div class="branded-page-v2-col-container-inner">
+                            <div class="branded-page-v2-primary-col">
+                                <div class="yt-card clearfix">
+                                    <div class="branded-page-v2-body branded-page-v2-primary-column-content">
+                                        {% block body %}{% endblock %}
+                                        {#
+                                        <ul id="browse-items-primary">
+                                            <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box vve-check">
+                                                
+                                            </li>
+                                        </ul>
+                                        #}
+                                    </div>
+                                </div>
+                            </div>
+                            {% if profile.featured_channels|length > 0 and featuredblock == "true" %}
+                            <div class="branded-page-v2-secondary-col">
+                                <div class="branded-page-related-channels branded-page-box yt-card">
+                                    <h2 class="branded-page-module-title">{% if profile.featured_title != "" %}{{profile.featured_title}}{% else %}Featured Channels{% endif %}</h2>
+                                    <ul class="branded-page-related-channels-list">
+                                        {% for channel in featured_channels %}
+                                        <li class="branded-page-related-channels-item spf-link clearfix">
+                                            <span class="yt-lockup clearfix yt-lockup-channel yt-lockup-mini">
+                                                <div class="yt-lockup-thumbnail" style="width: 34px;">
+                                                    <a href="/user/{{channel.displayname}}" class="ux-thumb-wrap yt-uix-sessionlink spf-link" aria-hidden="true" rel="nofollow">
+                                                        <span class="video-thumb  yt-thumb yt-thumb-34">
+                                                            <span class="yt-thumb-square">
+                                                                <span class="yt-thumb-clip">
+                                                                    <img width="34" alt="" height="34" data-thumb="/vi/ava/{{channel.displayname}}.jpg" src="/vi/ava/{{channel.displayname}}.jpg" aria-hidden="true" data-ytimg="1" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)">
+                                                                    <span class="vertical-align"></span>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="yt-lockup-content">
+                                                    <h3 class="yt-lockup-title">
+                                                        <a class="yt-uix-sessionlink yt-uix-tile-link spf-link" dir="ltr" title="{% if channel.channel_title != "" %}{{channel.channel_title}}{% else %}{{channel.displayname}}{% endif %}" href="/user/{{channel.displayname}}" rel="nofollow">{% if channel.channel_title != "" %}{{channel.channel_title}}{% else %}{{channel.displayname}}{% endif %}</a>
+                                                        <span class="accessible-description" id="description-id-514203"> - Channel</span>
+                                                    </h3>
+                                                    <div class="yt-lockup-meta spf-nolink">
+                                                        <span class=" yt-uix-button-subscription-container">
+                                                            <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-unbranded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button" onclick=";return false;" aria-busy="false" aria-live="polite" aria-role="button" data-clicktracking="ei=g5rHXaG9KqmGsfIPh76o-Aw&amp;feature=rc-rel&amp;ved=CLIBEJsrIhMI4YrQq-_e5QIVKUNMCB0HHwrPKJsc" data-channel-external-id="UCAiKrZDrrSJnLpDM-zEVyng" data-params="GAA%3D" data-style-type="unbranded" data-href="#">
+                                                                <span class="yt-uix-button-content">
+                                                                    <span class="subscribe-label" aria-label="Subscribe">Subscribe</span>
+                                                                    <span class="subscribed-label" aria-label="Unsubscribe">Subscribed</span>
+                                                                    <span class="unsubscribe-label" aria-label="Unsubscribe">Unsubscribe</span>
+                                                                </span>
+                                                            </button>
+                                                            <span class="yt-subscription-button-disabled-mask" title=""></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

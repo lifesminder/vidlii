@@ -18,19 +18,35 @@
     <link rel="stylesheet" href="/css/2012/rest.css">
     <script src="/js/2012/core.js"></script>
     <script src="/js/2012/channels.js"></script>
+    <script src="/js/main3.js"></script>
+    <script src="/js/cosmicpanda.js"></script>
     <script src="<?= COSMIC_JS_FILE ?>"></script>
 <?php
             break;
         }
         case 4: {
 ?>
-    <link rel="stylesheet" href="/css/2013/core.css">
-    <link rel="stylesheet" href="/css/2013/home.css">
-    <script src="/js/2013/www_base_mod.js"></script>
-    <script src="/js/2013/www_channels_mod.js"></script>
-    <script src="/js/2013/www_common_mod.js"></script>
-    <script src="/js/2013/www_masthead.js"></script>
-    <script src="/js/2013/www_searchbox.js"></script>
+    <script src="/js/one/scheduler.js" type="text/javascript" name="scheduler/scheduler" class="js-httpyoutubecomytsjsbinschedulervfl3S_KkKschedulerjs"></script>
+    <link rel="stylesheet" href="/css/one/www-core.css" name="www-core" class="css-httpyoutubecomytscssbinwwwcorevflRlRixQcss">
+    <link rel="stylesheet" href="/css/one/www-player.css" name="player/www-player" class="css-httpyoutubecomytscssbinplayervflyJJRIpwwwplayercss">
+    <link rel="stylesheet" href="/css/one/www-pageframe.css" name="www-pageframe" class="css-httpyoutubecomytscssbinwwwpageframevfldKQBmrcss">
+    <link rel="stylesheet" href="/css/one/www-guide.css" name="www-guide" class="css-httpyoutubecomytscssbinwwwguidevflybhooecss">
+    <link rel="stylesheet" href="/css/one/www-home.css" name="www-home-c4" class="css-httpyoutubecomytscssbinwwwhomec4vflSOyhuzcss">
+    <style>
+        .n_head, .n_head input, .n_head select {
+            font-family: sans-serif !important;
+        }
+        .n_head {
+            background-color: #fff;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+        } .n_head #sm_nav a {
+            color: blue !important;
+        } .n_head a:focus {
+            border: none;
+            outline: none;
+        }
+    </style>
 <?php
             break;
         }
@@ -60,7 +76,7 @@
 </head>
 <body>
     <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>
-    <div class="wrapper">
+    <div style="background: transparent; background-color: transparent;">
         <?php
             $engine = new \Vidlii\Vidlii\Engine();
             $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
@@ -79,7 +95,45 @@
                 $args["subscribed"] = false;
             }
 
+            $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
+            $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
+            if($Profile["channel_description"] != "") {
+                $Profile["channel_description_visible"] = str_replace("\n", "<br>", $Profile["channel_description"]);
+            }
+
+            if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
+                $Is_OWNER = true;
+            }
+            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER];
+            $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
+            if($args["featured_channels"] != "") {
+                $args["featured_channels"] = explode(",", $args["featured_channels"]);
+                for($i = 0; $i < count($args["featured_channels"]); $i++) {
+                    $channel = $args["featured_channels"][$i];
+                    $args["featured_channels"][$i] = $api->db("SELECT displayname, channel_title, (select count(*) from subscriptions where subscription = '$channel') as subscribers from users where username = '$channel'");
+                    if($args["featured_channels"][$i]["status"] == 0)
+                        $args["featured_channels"][$i] = $args["featured_channels"][$i]["data"];
+                }
+            }
+            $args["featured_title"] = $api->db("SELECT featured_title from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_title"];
+
+            if(!empty($_POST)) {
+                $channel_title = (isset($_POST["channel_title"]) && $_POST["channel_title"] != "") ? $_POST["channel_title"] : "";
+                $channel_description = (isset($_POST["channel_description"]) && $_POST["channel_description"] != "") ? $_POST["channel_description"] : "";
+                $channel_tags = (isset($_POST["channel_tags"]) && $_POST["channel_tags"] != "") ? $_POST["channel_tags"] : "";
+
+                $activity = (isset($_POST["c_recent"]) && $_POST["c_recent"] == "on") ? 1 : 0;
+                $comments = (isset($_POST["c_comments"]) && $_POST["c_comments"] == "on") ? 1 : 0;
+                $videos = (isset($_POST["c_videos"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+                $favorites = (isset($_POST["c_favorites"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+                $playlists = (isset($_POST["c_playlists"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+
+                $update_channel = $api->db("UPDATE users SET channel_title = '$channel_title', channel_description = '$channel_description', channel_tags = '$channel_tags', c_recent = $activity, c_comments = $comments, c_videos = $videos, c_favorites = $favorites, c_playlists = $playlists WHERE displayname = '".$Profile["displayname"]."'");
+                print_r($update_channel);
+            }
+
             switch($Profile["channel_version"]) {
+                /*
                 case 1: {
                     $engine->template("nouveau/1/index.html");
                     break;
@@ -88,11 +142,10 @@
                     $engine->template("nouveau/2/index.html");
                     break;
                 }
+                */
                 case 3: {
                     $twoColumns = true; $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
                     $renderablePage = (file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/3/$page.html")) ? "nouveau/3/$page.html" : "nouveau/3/index.html";
-                    $Profile["age"] = 90; $Profile["country"] = $Countries[$Profile["country"]];
-                    $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER];
 
                     $args["two_columns"] = $twoColumns;
                     $args["video_count"] = $api->db("SELECT count(*) from videos where uploaded_by = '".$Profile["displayname"]."'")["data"]["count(*)"];
@@ -100,7 +153,7 @@
 
                     if(strtolower($page) == "featured" || strtolower($page) == "index" || strtolower($page) == "") {
                         $args["page"] = "index";
-                        $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where uploaded_by = '".$Profile["displayname"]."'", true);
+                        $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
                         if($args["videos"]["count"] > 0) {
                             for($i = 0; $i < $args["videos"]["count"]; $i++) {
                                 $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
@@ -173,11 +226,25 @@
                         
                         $engine->template("nouveau/3/$page.html", $args);
                     }
-                    // DEBUG: echo "<pre>"; print_r($Profile); echo "</pre>";
                     break;
                 }
                 case 4: {
-                    $engine->template("nouveau/4/index.html");
+                    $page = ($page != "" && file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/4/$page.html")) ? strtolower($page) : "index";
+                    $args["featuredblock"] = "true";
+                    switch($page) {
+                        case "videos": {
+                            $args["featuredblock"] = "false";
+                            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
+                            if($args["videos"]["count"] > 0) {
+                                for($i = 0; $i < $args["videos"]["count"]; $i++) {
+                                    $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
+                                    $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    $engine->template("nouveau/4/$page.html", $args);
                     break;
                 }
                 default: {
@@ -186,11 +253,10 @@
                 }
             }
         ?>
-        <? if($Profile["channel_version"] != 3): ?>
+        <? if($Profile["channel_version"] <= 2): ?>
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/footer.php" ?>
         <? endif ?>
-    </div>
-    
+        <?php if($Profile["channel_version"] == 3) { ?>
         <div id="footer-container">
             <!-- begin footer -->
             <div id="footer">
@@ -229,7 +295,9 @@
                 </div>
             </div>
         </div>
-    <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/scripts.php" ?>
+        <?php } ?>
+        <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/scripts.php" ?>
+    </div>
     <?php if($Profile["channel_version"] == 3) { ?>
     <script>
         var params_open = false;
@@ -244,6 +312,9 @@
             }
         });
     </script>
+    <?php } else if($Profile["channel_version"] == 4) { ?>
+    <script src="/js/one/spf.js" type="text/javascript" name="spf/spf" class="js-httpswwwyoutubecomytsjsbinspfvflQdKYDspfjs"></script>
+    <script src="/js/one/base.js" name="www/base" class="js-httpswwwyoutubecomytsjsbinwwwen_USvfl7dueWabasejs"></script>
     <?php } ?>
 </body>
 </html>

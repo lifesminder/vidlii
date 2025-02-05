@@ -25,7 +25,7 @@ footer strong {
 .w_lnks a,
 .yel_btn,
 dt {
-    font-weight: 700
+    font-weight: 700 !important;
 }
 
 #hd_name img,
@@ -336,7 +336,7 @@ dd {
 }
 
 .n_head {
-    margin: 0 0 10px
+    margin: 0 0 10px !important;
 }
 
 .n_head .pr_hd_bar {
@@ -363,7 +363,7 @@ dd {
 
 #pr_hd li,
 .n_head li {
-    color: #039;
+    color: #039 !important;
     display: inline-block;
     text-align: center;
     border-top-left-radius: 6px;
@@ -415,7 +415,8 @@ dd {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none
+    -ms-user-select: none;
+    font-size: 16px;
 }
 
 #pr_hd ul a:last-of-type,
@@ -513,7 +514,9 @@ dd {
     display: inline-block
 }
 
-button, input[type="button"], input[type="submit"], input[type="reset"] {
+button, input[type="button"], input[type="submit"], input[type="reset"], .btn {
+    font-size: 13px;
+    color: #000;
     padding: 3px 7.5px;
     border-radius: 4px;
     cursor: pointer;
@@ -523,10 +526,11 @@ button, input[type="button"], input[type="submit"], input[type="reset"] {
     background: -moz-linear-gradient(top, #f4f4f4 0, #e4e5de 100%);
     background: -webkit-linear-gradient(top, #f4f4f4 0, #e4e5de 100%);
     background: linear-gradient(to bottom, #f4f4f4 0, #e4e5de 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e4e5de', GradientType=0)
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e4e5de', GradientType=0);
 }
 
-button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, .btn:hover {
+    text-decoration: none;
     border: 1px solid #b9b9b9;
     background: #f4f4f4;
     background: -moz-linear-gradient(top, #fafafa 0, #edeee7 100%);
@@ -535,7 +539,8 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#edeee7', GradientType=0)
 }
 
-button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active {
+button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active, .btn:active {
+    text-decoration: none;
     border: 1px solid #a6a6a6;
     background: #f4f4f4;
     background: -moz-linear-gradient(top, #e4e5de 0, #f4f4f4 100%);
@@ -544,16 +549,21 @@ button:active, input[type="button"]:active, input[type="submit"]:active, input[t
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4e5de', endColorstr='#f4f4f4', GradientType=0)
 }
 
-button:disabled, input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled {
+button:disabled, input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled, .btn:disabled {
     cursor: not-allowed
 }
 
-button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]:disabled:hover, input[type="reset"]:disable:hover {
+button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]:disabled:hover, input[type="reset"]:disabled:hover, .btn:disabled:hover {
+    text-decoration: none;
     background: #ddded7;
     background: -moz-linear-gradient(top, #f0f0f0 0, #ddded7 100%);
     background: -webkit-linear-gradient(top, #f0f0f0 0, #ddded7 100%);
     background: linear-gradient(to bottom, #f0f0f0 0, #ddded7 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f0f0f0', endColorstr='#ddded7', GradientType=0)
+}
+
+.btn {
+    padding: 2px 7.5px;
 }
 
 .pr_hd_bar>.yel_btn {

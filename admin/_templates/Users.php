@@ -311,9 +311,9 @@
 						</select>
 						<input type="number" name="reg_year" id="reg_year" value="<?= $Reg_Year ?>" style="width: 60px" required>
 						<span>at</span>
-						<input type="number" name="reg_hour" id="reg_hour" value="<?= $Reg_Hour ?>" style="width: 40px" required>
-						<input type="number" name="reg_minute" id="reg_minute" value="<?= $Reg_Minute ?>" style="width: 40px" required>
-						<input type="number" name="reg_second" id="reg_second" value="<?= $Reg_Second ?>" style="width: 40px" required>
+						<input type="text" name="reg_hour" id="reg_hour" value="<?= $Reg_Hour ?>" style="width: 40px">
+						<input type="text" name="reg_minute" id="reg_minute" value="<?= $Reg_Minute ?>" style="width: 40px">
+						<input type="text" name="reg_second" id="reg_second" value="<?= $Reg_Second ?>" style="width: 40px">
 					</td>
 				</tr>
 				<tr>

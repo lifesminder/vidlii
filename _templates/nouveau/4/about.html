@@ -1,0 +1,56 @@
+{% extends "nouveau/4/base.html" %}
+
+{% block body %}
+    <ul id="browse-items-primary">
+        <li>
+            <div class="about-metadata-container">
+                <div class="about-metadata-stats branded-page-box-padding">
+                    <div class="about-stats">
+                    <span class="about-stat"><b>{{profile.channel_views}}</b> channel views • <b>{{profile.video_views}}</b> views</span>
+                    <br>
+                    <span class="about-stat">Joined {{profile.reg_date|date("M d, Y")}}</span>
+                </div>
+            </div>
+            <div class="about-actions branded-page-box-padding"></div>
+            {% if profile.channel_description != "" %}
+            <div class="about-metadata-label branded-page-box-padding">
+                <span>Description</span>
+            </div>
+            <div class="about-description branded-page-box-padding">
+                <pre>{{profile.channel_description}}</pre>
+            </div>
+            {% endif %}
+            <div class="about-metadata-label about-metadata-label-border-top branded-page-box-padding">
+                <span>Details</span>
+            </div>
+            <div class="country-container branded-page-box-padding">
+                <span class="country-label">Country:</span>
+                <span class="country-inline">
+                    {{profile.country}}
+                </span>
+                <br>
+                <span class="country-label">Last Visit:</span>
+                <span class="country-inline">
+                    {{profile.last_login|date("M d, Y")}}
+                </span>
+            </div>
+            {% if profile.website != "" %}
+            <div class="about-metadata-label about-metadata-label-border-top branded-page-box-padding">
+                <span>Links</span>
+            </div>
+            <div class="about-metadata branded-page-box-padding clearfix">
+                <ul class="about-custom-links">
+                    <li class="channel-links-item">
+                        <a href="{{profile.website}}" rel="me nofollow" target="_blank" title="{{profile.website}}" class="about-channel-link">
+                            <!--<img src="//web.archive.org/web/20200329053109im_/https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url=http%3A%2F%2Fwww.twitter.com" class="about-channel-link-icon" alt="/redirect?redir_token=Z3uO1rTT7Zd0tALSr08HqBb9t9h8MTU4NTU0NjI2OUAxNTg1NDU5ODY5&amp;q=http%3A%2F%2Fwww.twitter.com%2F%23%21%2Fmarkiplier&amp;event=channel_description" width="16" height="16">-->
+                            <span class="about-channel-link-text">
+                                {{profile.website}}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+        </li>
+    </ul>
+{% endblock %}
