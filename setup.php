@@ -61,8 +61,8 @@
         <p>Now you can use your VidLii instance!</p>
         <a href="/" class="btn">Go to VidLii</a>
         <?php
-                                            echo "<details>
-                                                    <summary>Details of SQL</summary>
+                                            echo "<details style=\"margin: 8px 0 8px 0\">
+                                                    <summary style=\"cursor: pointer\">Details of SQL</summary>
                                                     <pre>";
                                             foreach($file as $line) {
                                                 $startWith = substr(trim($line), 0, 2); $endWith = substr(trim($line), -1, 1);
@@ -84,7 +84,7 @@
                                             echo "</pre>
                                                 </details>";
 
-                                            if($dbErrors == 0) {
+                                            if(!file_exists(".env")) {
                                                 $file = fopen(".env", "w");
                                                 $database = "database = \"mysqli://";
                                                 if(isset($_SESSION["password"]) && $_SESSION["password"] != "") $database .= urlencode($_SESSION["username"]).":".urlencode($_SESSION["password"]);

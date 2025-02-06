@@ -16,8 +16,7 @@
                     exit(1);
                 }
             } else {
-                echo "Configuration not found";
-                exit(1);
+                echo "";
             }
         }
 
