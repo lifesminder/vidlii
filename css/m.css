@@ -2942,7 +2942,8 @@ select {
 
 .playlist_box>div:last-of-type>a>img {
     border-radius: 4px;
-    width: 73px;
+    width: 86px;
+    height: 56px;
     float: left
 }
 
@@ -3160,4 +3161,71 @@ select {
 
 .pr_tp_btm.grid {
     width: 1011px;
+}
+
+.cosmic-module-twoside {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.playlist {
+    margin: 14px 0 14px 0;
+    padding: 7px;
+    overflow: hidden;
+} .playlist .playlist-info {
+    width: 100%;
+    display: table;
+    clear: both;
+    content: "";
+    border-bottom: 1px solid #ccc;
+} .playlist .playlist-info .playlist-info-main {
+    float: left;
+    margin-left: 8px;
+    width: 740px;
+    height: 147px;
+    padding-right: 60px;
+    margin-right: 14px;
+    border-right: 1px solid #ccc;
+}
+
+.playlist .playlist-list {
+    margin: 0; padding: 0;
+    list-style-type: none;
+    overflow: hidden;
+} .playlist .playlist-list .playlist-item {
+    display: flex;
+    padding: 2px;
+    margin-bottom: 10px;
+} .playlist .playlist-list .playlist-item .playlist-item-info {
+    margin-left: 12px;
+} .playlist .playlist-info .playlist-info-main {
+    display: flex;
+} .playlist .playlist-list .playlist-item:last-child {
+    margin-bottom: 0;
+}
+
+.playlist .playlist-info .playlist-info-main .playlist-info-box {
+    display: block;
+    padding: 12px;
+} .playlist .playlist-info .playlist-thumbnail {
+    float: left;
+    width: 227px;
+    height: 137px;
+    border: 5px double #ccc;
+} .playlist .playlist-info .playlist-title {
+    font-weight: bold;
+    font-size: 20px;
+    display: inline-block;
+    margin: 0 12px 4px 12px;
+} .playlist .playlist-info .playlist-stats {
+    float: right;
+    padding: 1px;
+    width: 220px;
+} .playlist .playlist-info .playlist-stats div {
+    margin: 8px;
+}
+
+.playlist .playlist-videos {
+    padding: 12px;
 }

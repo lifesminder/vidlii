@@ -37,7 +37,13 @@
             <? unset($_SESSION["notification"]); unset($_SESSION["n_color"]); ?>
         <?php } ?>
         <main class="bottom_wrapper">
-            <?php require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_pages/".$_PAGE->Page.".php"; ?>
+            <?php
+                if(!isset($twig) || (isset($twig) && $twig == false)) {
+                    require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_pages/".$_PAGE->Page.".php";
+                } else {
+                    $engine->template($page, $args);
+                }
+            ?>
         </main>
 
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/footer.php" ?>

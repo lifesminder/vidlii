@@ -1,7 +1,7 @@
 <?php
     namespace Vidlii\Vidlii;
 
-    class API {
+    class API extends \Vidlii\Vidlii\Engine {
         protected $env, $dir;
 
         function __construct($path = __dir__, $config = ".env") {
@@ -74,6 +74,11 @@
             header("X-XSS-Protection: 1; mode=block");
             header("X-Frame-Options: Deny");
             echo json_encode($data);
+        }
+
+        public function seconds_to_time($Seconds) {
+            $min = intval($Seconds / 60);
+            return $min . ':' . str_pad(($Seconds % 60), 2, '0', STR_PAD_LEFT);
         }
 
         function session($token) {

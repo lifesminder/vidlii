@@ -3,15 +3,15 @@
 {% block body %}
     <div class="channel-activity-feeds" data-module-id="10500">
         <div class="activity-feeds-container">
-            {% if profile.c_recent == 1 or profile.c_comments == 1 %}
+            {% if owner or profile.c_recent == 1 or profile.c_comments == 1 %}
             <div class="activity-feeds-header ytg-box" style="height: 40px;">
                 <ul>
-                    {% if profile.c_recent == 1 %}
+                    {% if owner or profile.c_recent == 1 %}
                     <li class="user-feed-filter{%if filter == 2%} selected{%endif%}">
                         <a href="/user/{{profile.displayname}}/feed?filter=2">Activity</a>
                     </li>
                     {% endif %}
-                    {% if profile.c_comments == 1 %}
+                    {% if owner or profile.c_comments == 1 %}
                     <li class="user-feed-filter{%if filter == 1%} selected{%endif%}">
                         <a href="/user/{{profile.displayname}}/feed?filter=1">Comments</a>
                     </li>
@@ -20,7 +20,7 @@
             </div>
             {% endif %}
             <div class="activity-feed">
-                {% if profile.c_recent == 1 or profile.c_comments == 1 %}
+                {% if owner or profile.c_recent == 1 or profile.c_comments == 1 %}
                 <div class="yt-horizontal-rule channel-section-hr">
                     <span class="first"></span>
                     <span class="second"></span>
@@ -29,6 +29,12 @@
                 {% endif %}
                 <div class="feed-list-container">
                 {%if filter == 2%}
+                    {% if owner %}
+                    <form action="/user/{{profile.displayname}}/feed?filter=2" method="POST" style="display: flex; margin: 8px 0 8px 0;">
+                        <textarea name="activity" id="activity" placeholder="Write your thoughts"></textarea>
+                        <button type="submit" name="activity_post" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Post!</button>
+                    </form>
+                    {% endif %}
                     {%if bulletins.count > 0%}
                     <div class="feed-item-list">
                         {%for bulletin in bulletins.data%}
@@ -42,7 +48,7 @@
                                                     <span class="video-thumb ux-thumb yt-thumb-square-46">
                                                         <span class="yt-thumb-clip">
                                                             <span class="yt-thumb-clip-inner">
-                                                                <img src="/vi/ava/{{profile.displayname}}.jpg" alt="Thumbnail" data-thumb="/vi/ava/{{profile.displayname}}.jpg" width="46" data-group-key="thumb-group-15">
+                                                                <img src="/vi/ava/{{profile.displayname}}.jpg" alt="Thumbnail" data-thumb="/vi/ava/{{profile.displayname}}.jpg" style="margin-left: 4px;" width="46" data-group-key="thumb-group-15">
                                                                 <span class="vertical-align"></span>
                                                             </span>
                                                         </span>
@@ -78,6 +84,12 @@
                     <p class="feed-unavailable-message">No recent activity.</p>
                     {%endif%}
                 {%elseif filter == 1%}
+                    {% if owner or (profile.c_comments == 1) %}
+                    <form action="/user/{{profile.displayname}}/feed?filter=1" method="POST" style="display: flex; margin: 8px 0 8px 0;">
+                        <textarea name="comment" id="comment" placeholder="Write your comment"></textarea>
+                        <button type="submit" name="channel_comment" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Publish</button>
+                    </form>
+                    {% endif %}
                     {%if comments.count > 0%}
                     <span class="yt-uix-c3-load-more">
                         <span class="yt-uix-c3-load-more-list-container">
@@ -90,7 +102,7 @@
                                                 <span class="video-thumb ux-thumb yt-thumb-square-23">
                                                     <span class="yt-thumb-clip">
                                                         <span class="yt-thumb-clip-inner">
-                                                            <img src="/vi/ava/{{comment.by_user}}.jpg" alt="{{comment.by_user}}" width="27" height="23">
+                                                            <img src="/vi/ava/{{comment.by_user}}.jpg" alt="{{comment.by_user}}" style="margin-left: 5px;" width="27" height="23">
                                                             <span class="vertical-align"></span>
                                                         </span>
                                                     </span>

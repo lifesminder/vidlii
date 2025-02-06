@@ -21,7 +21,7 @@
                                         <ul class="about-custom-links">
                                             <li class="channel-links-item">
                                                 <a href="{{profile.website}}" rel="me nofollow" target="_blank" title="{{profile.website}}" class="about-channel-link yt-uix-redirect-link about-channel-link-with-icon">
-                                                    <!--<img src="//web.archive.org/web/20200329053109im_/https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url=http%3A%2F%2Fwww.twitter.com" class="about-channel-link-favicon" alt="" width="16" height="16">-->
+                                                    <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{profile.website}}" class="about-channel-link-favicon" alt="" width="16" height="16">
                                                     <span class="about-channel-link-text">
                                                         {{profile.website}}
                                                     </span>
@@ -86,7 +86,7 @@
                                     </li>
                                     <li>
                                         {% if page == "videos" %}
-                                        <h2 class="epic-nav-item-heading" aria-label="Videos tab" aria-selected="true" tabindex="0">Videos</h2>
+                                        <h2 class="epic-nav-item-heading" aria-label="Videos tab" aria-selected="true" tabindex="1">Videos</h2>
                                         {% else %}
                                         <a href="/user/{{profile.displayname}}/videos" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Videos</span>
@@ -95,7 +95,7 @@
                                     </li>
                                     <li>
                                         {% if page == "playlists" %}
-                                        <h2 class="epic-nav-item-heading" aria-label="Playlists tab" aria-selected="true" tabindex="0">Playlists</h2>
+                                        <h2 class="epic-nav-item-heading" aria-label="Playlists tab" aria-selected="true" tabindex="2">Playlists</h2>
                                         {% else %}
                                         <a href="/user/{{profile.displayname}}/playlists" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Playlists</span>
@@ -104,7 +104,7 @@
                                     </li>
                                     <li>
                                         {% if page == "community" %}
-                                        <h2 class="epic-nav-item-heading" aria-label="Community tab" aria-selected="true" tabindex="0">Community</h2>
+                                        <h2 class="epic-nav-item-heading" aria-label="Community tab" aria-selected="true" tabindex="3">Community</h2>
                                         {% else %}
                                         <a href="/user/{{profile.displayname}}/community" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Community</span>
@@ -113,7 +113,7 @@
                                     </li>
                                     <li>
                                         {% if page == "channels" %}
-                                        <h2 class="epic-nav-item-heading" aria-label="Channels tab" aria-selected="true" tabindex="0">Channels</h2>
+                                        <h2 class="epic-nav-item-heading" aria-label="Channels tab" aria-selected="true" tabindex="4">Channels</h2>
                                         {% else %}
                                         <a href="/user/{{profile.displayname}}/channels" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Channels</span>
@@ -122,7 +122,7 @@
                                     </li>
                                     <li>
                                         {% if page == "about" %}
-                                        <h2 class="epic-nav-item-heading" aria-label="About tab" aria-selected="true" tabindex="0">About</h2>
+                                        <h2 class="epic-nav-item-heading" aria-label="About tab" aria-selected="true" tabindex="5">About</h2>
                                         {% else %}
                                         <a href="/user/{{profile.displayname}}/about" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">About</span>

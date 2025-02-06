@@ -29,7 +29,7 @@ if (isset($_GET["user"])) {
         $OWNER_USERNAME = clean($Profile["username"]);
 
         // New logic of channels: Nouveau
-        if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+        if($Profile["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
             $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
             
             if($_USER->logged_in) {
@@ -41,6 +41,7 @@ if (isset($_GET["user"])) {
                 $args["owner"] = false;
                 $args["subscribed"] = false;
             }
+
             $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
             $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
             if($Profile["channel_description"] != "") {
@@ -49,7 +50,7 @@ if (isset($_GET["user"])) {
             if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
                 $Is_OWNER = true;
             }
-            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER];
+            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER, "request_url" => $_SERVER['REQUEST_URI']];
             $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
             if($args["featured_channels"] != "") {
                 $args["featured_channels"] = explode(",", $args["featured_channels"]);
@@ -58,6 +59,17 @@ if (isset($_GET["user"])) {
                     $args["featured_channels"][$i] = $api->db("SELECT displayname, channel_title, (select count(*) from subscriptions where subscription = '$channel') as subscribers from users where username = '$channel'");
                     if($args["featured_channels"][$i]["status"] == 0)
                         $args["featured_channels"][$i] = $args["featured_channels"][$i]["data"];
+                }
+            }
+            $args["featured_playlists"] = $api->db("SELECT playlists from users where displayname = '".$Profile["displayname"]."'")["data"]["playlists"];
+            if($args["featured_playlists"] != "") {
+                $args["featured_playlists"] = explode(",", $args["featured_playlists"]);
+                $playlist = new \Vidlii\Vidlii\API\Playlist($_SERVER["DOCUMENT_ROOT"]);
+                for($i = 0; $i < count($args["featured_playlists"]); $i++) {
+                    $playlist_id = $args["featured_playlists"][$i];
+                    $args["featured_playlists"][$i] = $playlist->index(["id" => $playlist_id], []);
+                    if($args["featured_playlists"][$i]["status"] == 1)
+                        $args["featured_playlists"][$i] = $args["featured_playlists"][$i]["data"];
                 }
             }
             $args["featured_title"] = $api->db("SELECT featured_title from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_title"];
@@ -69,7 +81,7 @@ if (isset($_GET["user"])) {
             // Stuff
             $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
 
-            if(!empty($_POST)) {
+            if(isset($_POST["save_channel_branding"])) {
                 $channel_title = (isset($_POST["channel_title"]) && $_POST["channel_title"] != "") ? $_POST["channel_title"] : "";
                 $channel_description = (isset($_POST["channel_description"]) && $_POST["channel_description"] != "") ? $_POST["channel_description"] : "";
                 $channel_tags = (isset($_POST["channel_tags"]) && $_POST["channel_tags"] != "") ? $_POST["channel_tags"] : "";
@@ -80,34 +92,75 @@ if (isset($_GET["user"])) {
                 $videos = (isset($_POST["c_videos"]) && $_POST["c_videos"] == "on") ? 1 : 0;
                 $favorites = (isset($_POST["c_favorites"]) && $_POST["c_videos"] == "on") ? 1 : 0;
                 $playlists = (isset($_POST["c_playlists"]) && $_POST["c_videos"] == "on") ? 1 : 0;
+                $featured_playlists = (isset($_POST["c_featured_playlists"]) && $_POST["c_featured_playlists"] == "on") ? 1 : 0;
+                $featured_channels = (isset($_POST["c_featured_channels"]) && $_POST["c_featured_channels"] == "on") ? 1 : 0;
 
                 $last_login = (isset($_POST["last_login"]) && $_POST["last_login"] == "on") ? 1 : 0;
                 $age = (isset($_POST["age"]) && $_POST["age"] == "on") ? 1 : 0;
                 $country = (isset($_POST["country"]) && $_POST["country"] == "on") ? 1 : 0;
 
-                $update_channel = $api->db("UPDATE users SET channel_title = '$channel_title', channel_description = '$channel_description', channel_tags = '$channel_tags', website = '$website', c_recent = $activity, c_comments = $comments, c_videos = $videos, c_favorites = $favorites, c_playlists = $playlists, a_last = $last_login, a_country = $country, a_age = $age WHERE displayname = '".$Profile["displayname"]."'");
+                $update_channel = $api->db("UPDATE users SET channel_title = '$channel_title', channel_description = '$channel_description', channel_tags = '$channel_tags', website = '$website', c_recent = $activity, c_comments = $comments, c_videos = $videos, c_favorites = $favorites, c_playlists = $playlists, a_last = $last_login, a_country = $country, a_age = $age, c_featured_channels = $featured_channels, c_featured_playlists = $featured_playlists WHERE displayname = '".$Profile["displayname"]."'");
                 if($update_channel["status"] >= 1) {
                     $link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                     header("Location: ".$link);
                 }
+            } else if(isset($_POST["activity_post"]) && isset($_POST["activity"]) && $args["owner"]) {
+                $activity = $_POST["activity"];
+                if($activity != "") {
+                    $do_post = $db->query("INSERT into bulletins (content, by_user, date) values ('$activity', '".$Profile["displayname"]."', '".date("Y-m-d h:m:s")."')");
+                } else {
+                    $message = "Your post must have a content";
+                }
+            } else if(isset($_POST["channel_comment"]) && $_USER->logged_in) {
+                $comment = $_POST["comment"];
+                if($comment != "") {
+                    $do_comment = $db->query("INSERT into channel_comments (on_channel, by_user, comment, date) values ('".$Profile["displayname"]."', '$OWNER_USERNAME', '$comment', '".date("Y-m-d h:m:s")."')");
+                } else {
+                    $message = "Your comment must have a content";
+                }
             }
 
             // Make everything consistent
+            if($Profile["channel_version"] == 3 && (bool)$args["owner"] == false) {
+                switch($page) {
+                    case "feed": {
+                        if($Profile["c_recent"] == 0 || $Profile["c_comments"] == 0) {
+                            if(isset($_GET["filter"])) {
+                                if($_GET["filter"] == 0 && $Profile["c_comments"] == 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                                else if($Profile["filter"] == 1 && $Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=0");
+                                else if($Profile["c_recent"] == 0 && $Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]);
+                            } else {
+                                if($Profile["c_recent"] == 0 && $Profile["c_comments"] == 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                                else if($Profile["c_recent"] == 1 && $Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=0");
+                                else if($Profile["c_recent"] == 0 && $Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            /*
             if($Profile["channel_version"] == 3) {
                 if($page == "index" || $page == "featured") {
                     if(
-                        $args["video"]["count"] == 0 &&
-                        ($Profile["c_recent"] == 0 || $Profile["c_comments"] == 0)
+                        $args["video"]["count"] == 0
                     ) {
-                        header("Location: /user/".$Profile["displayname"]."/feed");
+                        if($Profile["c_recent"] == 1 || $Profile["c_comments"] == 1)
+                            header("Location: /user/".$Profile["displayname"]."/feed");
                     }
-                } else if($page == "feed" && ($Profile["c_recent"] == 0 || $Profile["c_comments"] == 0)) {
-                    if(!isset($_GET["filter"])) {
-                        if($Profile["c_recent"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
-                        else if($Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                } else if($page == "feed") {
+                    if($Profile["c_recent"] == 0 && $Profile["c_comments"] == 0) {
+                        header("Location: /user/".$Profile["displayname"]);
                     } else {
-                        if($Profile["c_recent"] == 0 && (int)$_GET["filter"] != 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
-                        else if($Profile["c_comments"] == 0 && (int)$_GET["filter"] != 2) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                        if(!isset($_GET["filter"])) {
+                            if($Profile["c_recent"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                            else if($Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                            else header("Location: /user/".$Profile["displayname"]);
+                        } else {
+                            if($Profile["c_recent"] == 0 && (int)$_GET["filter"] != 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
+                            else if($Profile["c_comments"] == 0 && (int)$_GET["filter"] != 2) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
+                            else header("Location: /user/".$Profile["displayname"]);
+                        }
                     }
                 } else if($page == "videos") {
                     if(isset($_GET["view"])) {
@@ -123,6 +176,7 @@ if (isset($_GET["user"])) {
                     }
                 }
             }
+            */
 
             require_once "_templates/nouveau_structure.php";
         } else {
@@ -595,7 +649,7 @@ if (isset($_GET["user"])) {
                         break;
                     case "playlists" :
                         $Page_File = "Playlists";
-                        if (!$Profile["c_playlists"] or $_PAGINATION->Total == 0) {
+                        if (!$Profile["c_playlists"]) {
                             redirect("/user/" . $Profile["displayname"]);
                         }
                         break;
@@ -2335,7 +2389,7 @@ if (isset($_GET["user"])) {
                 }
 
 			} else {
-				notification("This user has voluntarily terminated their own account!","/","red");
+				notification("This user has voluntarily terminated his own account!","/","red");
 			}
         }
         }

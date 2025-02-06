@@ -317,11 +317,15 @@ CREATE TABLE `options` (
 
 CREATE TABLE `playlists` (
   `purl` varchar(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `title` varchar(128) NOT NULL,
+  `description` text DEFAULT NULL,
   `created_by` varchar(20) NOT NULL,
   `thumbnail` varchar(11) NOT NULL,
-  `created_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `created_on` datetime NOT NULL,
+  PRIMARY KEY (`purl`),
+  UNIQUE KEY `title` (`title`,`description`,`created_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8mb4_general_ci
 
 -- --------------------------------------------------------
 
@@ -544,6 +548,7 @@ CREATE TABLE `users` (
   `c_videos` tinyint(1) NOT NULL DEFAULT '1',
   `c_favorites` tinyint(1) NOT NULL DEFAULT '1',
   `c_comments` tinyint(1) NOT NULL DEFAULT '1',
+  `c_featured_playlists` tinyint(1) NOT NULL DEFAULT '0',
   `c_featured_channels` tinyint(1) NOT NULL DEFAULT '0',
   `c_recent` tinyint(1) NOT NULL DEFAULT '1',
   `c_playlists` tinyint(1) NOT NULL DEFAULT '0',
@@ -604,6 +609,7 @@ CREATE TABLE `users` (
   `modules_vertical_l` varchar(24) NOT NULL DEFAULT 'cu,re,ft,s2,s1,fr,co',
   `custom` varchar(1024) NOT NULL DEFAULT '',
   `partner` tinyint(1) NOT NULL DEFAULT '0',
+  `nouveau` tinyint(1) NOT NULL DEFAULT '0',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `is_mod` tinyint(1) NOT NULL DEFAULT '0',
   `shadowbanned` tinyint(1) NOT NULL DEFAULT '0',

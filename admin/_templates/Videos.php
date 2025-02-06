@@ -84,7 +84,7 @@
         <div style="overflow-y:auto;max-height:455px">
             <table style="width:100%" cellspacing="0" cellpadding="0" class="atable">
                 <thead>
-                    <td><strong>Picture</strong></td>
+                    <td><strong>Thumbnail</strong></td>
                     <td><strong>Title</strong> <? if (!isset($_GET["ti"])) : ?><a href="/admin/videos?ti=1<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↔</a><? elseif ($_GET["ti"] != 0) : ?><a href="/admin/videos?ti=0<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↑</a><? elseif ($_GET["ti"] == 0) : ?><a href="/admin/videos<? if (isset($_GET["search"])) : ?>?search=<?= urlencode($_GET["search"]) ?><? endif ?>">↓</a><? endif ?></td>
                     <td><strong>Date</strong> <? if (!isset($_GET["da"])) : ?><a href="/admin/videos?da=1<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↔</a><? elseif ($_GET["da"] != 0) : ?><a href="/admin/videos?da=0<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↑</a><? elseif ($_GET["da"] == 0) : ?><a href="/admin/videos<? if (isset($_GET["search"])) : ?>?search=<?= urlencode($_GET["search"]) ?><? endif ?>">↓</a><? endif ?></td>
                     <td><strong>Views</strong> <? if (!isset($_GET["vi"])) : ?><a href="/admin/videos?vi=1<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↔</a><? elseif ($_GET["vi"] != 0) : ?><a href="/admin/videos?vi=0<? if (isset($_GET["search"])) : ?>&search=<?= urlencode($_GET["search"]) ?><? endif ?>">↑</a><? elseif ($_GET["vi"] == 0) : ?><a href="/admin/videos<? if (isset($_GET["search"])) : ?>?search=<?= urlencode($_GET["search"]) ?><? endif ?>">↓</a><? endif ?></td>
@@ -95,7 +95,9 @@
                 </thead>
                 <? foreach ($Videos as $Video) : ?>
                 <tr>
-                    <td width="100px" style="padding:0"><?= video_thumbnail2($Video["url"],$Video["length"],100,66) ?></td>
+                    <td width="100px" style="padding:0">
+                        <img src="/vi/<?= $Video["url"] ?>/hqresdefault.jpg" alt="Video Thumbnail" style="width: 100px; height: 66px">
+                    </td>
                     <td valign="center"><a href="/watch?v=<?= $Video["url"] ?>" class="ln2" style="font-weight:bold;position:relative;top:9px"><?= cut_string($Video["title"],36) ?></a></td>
                     <td style="text-align:center"><?= get_time_ago($Video["uploaded_on"]) ?></td>
                     <td style="text-align:center"><?= number_format($Video["views"]) ?></td>
@@ -143,7 +145,7 @@
 <? else : ?>
     <div style="padding-bottom:11px;margin-bottom:11px;border-bottom:1px solid #e2e2e2;overflow:hidden">
         <div style="float:left">
-            <?= video_thumbnail2($Video["url"],$Video["length"],142,90) ?>
+        <img src="/vi/<?= $Video["url"] ?>/hqresdefault.jpg" alt="Video Thumbnail" style="width: 142px; height: 90px">
         </div>
         <div style="float:left;margin-left:8px;position:relative;bottom:1px">
             <a href="/watch?v=<?= $Video["url"] ?>" style="font-weight: bold"><?= $Video["title"] ?></a><br>

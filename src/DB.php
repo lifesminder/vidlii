@@ -27,7 +27,10 @@
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($params);
                 try {
                     $stmt = $conn->prepare($query);
-                    if(strtolower(substr($query, 0, strlen("select"))) == "select") {
+                    if(
+                        strtolower(substr($query, 0, strlen("select"))) == "select" ||
+                        strtolower(substr($query, 0, strlen("show"))) == "show"
+                    ) {
                         $result = $stmt->executeQuery();
                         $datas = $result->fetchAllAssociative();
                         $data = ["count" => count($datas), "data" => $datas];

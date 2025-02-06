@@ -60,6 +60,7 @@
     $_THEMES = new Themes($DB, $_USER);
 
     // New classes, intended to replace previous ones
+    $engine = new \Vidlii\Vidlii\Engine();
     $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
 
     if($_USER->logged_in && (!isset($_SERVER["HTTP_X_REQUESTED_WITH"]) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')) {

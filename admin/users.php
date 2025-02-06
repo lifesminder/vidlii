@@ -371,7 +371,7 @@
 					));
 
 					$_GUMP->filter_rules(array(
-						"channel_version"   => "trim",
+						"channel_version" => "trim",
 						"channel_type"  => "trim",
 						"name"          => "trim|NoHTML",
 						"website"       => "trim|NoHTML",
@@ -395,7 +395,8 @@
 						"books"         => "trim|NoHTML",
 						"about"         => "trim|NoHTML",
 						"activated"     => "trim",
-						"displayname"   => "trim"
+						"displayname"   => "trim",
+						"nouveau" => "trim"
 					));
 
 					$Validation = $_GUMP->run($_POST);
@@ -404,7 +405,7 @@
 						$Day = (int)$Validation["day"];
 						$Month = (int)$Validation["month"];
 						$Year = (int)$Validation["year"];
-						$Birthday   = "$Year-$Month-$Day";
+						$Birthday = "$Year-$Month-$Day";
 
 						$RDay = (int)$Validation["reg_day"];
 						$RMonth = (int)$Validation["reg_month"];
@@ -414,8 +415,10 @@
 						$RSecond = $Validation["reg_second"];
 						$Joined = date("Y-m-d h:m:s", strtotime("$RYear-$RMonth-$RDay $RHour:$Rminute:$RSecond"));
 
+						$nouveau = ($_POST["nouveau"] == "on") ? 1 : 0;
+
 						if ($Validation["channel_type"] >= 0 && $Validation["channel_type"] <= 7) { $Channel_Type = $Validation["channel_type"]; } else { $Channel_Type = 0; }
-						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }
+						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3 || $Validation["channel_version"] == 4) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }
 						if ($Validation["activated"] == 1 || $Validation["activated"] == 2) { $Activated = $Validation["activated"]; } else { $Activated = 0; }
                         if (array_key_exists($Validation["country"],$Countries)) { $Country = $Validation["country"]; } else { $Country = $User_Info["country"]; }
 
@@ -438,10 +441,12 @@
 
 							$Partnered = (!isset($_POST["partnered"]) || (isset($_POST["partnered"]) && $_POST["partnered"] == 0)) ? 0 : 1;
 
-							$DB->modify("UPDATE users SET partner = :PARTNER, country = :COUNTRY, activated = :ACTIVATED, channel_version = :CHANNEL_VERSION, channel_type = :CHANNEL_TYPE, i_name = :NAME, channel_title = :CHANNEL_TITLE, channel_description = :CHANNEL_DESCRIPTION, channel_tags = :CHANNEL_TAGS, about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, reg_date = :JOINED, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS WHERE username = :USERNAME",
-                                       [":PARTNER" => $Partnered, ":COUNTRY" => $Country, ":ACTIVATED" => $Activated, ":CHANNEL_VERSION" => $Channel_Version, ":CHANNEL_TYPE" => $Channel_Type, ":NAME" => $Validation["name"], ":CHANNEL_TITLE" => $Validation["channel_title"], ":CHANNEL_DESCRIPTION" => $Validation["description"], ":CHANNEL_TAGS" => $Validation["tags"], ":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"],
-									   ":BIRTHDAY" => $Birthday, ":JOINED" => $Joined,
-									   ":USERNAME" => $_GET["u"], ":OCCUPATION" => $Validation["occupation"], ":SCHOOLS" => $Validation["schools"], ":INTERESTS" => $Validation["interests"], ":MOVIES" => $Validation["movies"], ":MUSIC" => $Validation["music"], ":BOOKS" => $Validation["books"]]);
+							$DB->modify("UPDATE users SET partner = :PARTNER, country = :COUNTRY, activated = :ACTIVATED, channel_version = :CHANNEL_VERSION, channel_type = :CHANNEL_TYPE, i_name = :NAME, channel_title = :CHANNEL_TITLE, channel_description = :CHANNEL_DESCRIPTION, channel_tags = :CHANNEL_TAGS, about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, reg_date = :JOINED, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS, nouveau = :NOUVEAU WHERE username = :USERNAME", [
+								":PARTNER" => $Partnered, ":COUNTRY" => $Country, ":ACTIVATED" => $Activated, ":CHANNEL_VERSION" => $Channel_Version, ":CHANNEL_TYPE" => $Channel_Type, ":NAME" => $Validation["name"], ":CHANNEL_TITLE" => $Validation["channel_title"], ":CHANNEL_DESCRIPTION" => $Validation["description"], ":CHANNEL_TAGS" => $Validation["tags"], ":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"],
+								":BIRTHDAY" => $Birthday, ":JOINED" => $Joined,
+								":USERNAME" => $_GET["u"], ":OCCUPATION" => $Validation["occupation"], ":SCHOOLS" => $Validation["schools"], ":INTERESTS" => $Validation["interests"], ":MOVIES" => $Validation["movies"], ":MUSIC" => $Validation["music"], ":BOOKS" => $Validation["books"],
+								":NOUVEAU" => $nouveau
+							]);
 							notification("User successfully updated!", "/admin/users?u=".$_GET["u"], "green"); exit();
 					}
 				}

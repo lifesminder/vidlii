@@ -61,6 +61,22 @@
             <a href="/upload" class="yel_btn">Upload</a>
         </div>
     </div>
+    <?php if(isset($message) && $message != "") { ?>
+    <div id="alerts" style="margin-top: 12px">
+        <div class="yt-alert yt-alert-default yt-alert-info">
+            <div>
+                <div class="yt-alert-icon"><img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" class="icon master-sprite" alt="Alert icon"></div>
+                <div class="yt-alert-content">
+                    <span class="yt-alert-vertical-trick"></span>
+                    <div class="yt-alert-message" style="width: 500px">
+                        <?php echo $message; ?>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="_hidediv(this.parentNode);yt.www.privacynotice.dismiss()" class="close"></button>
+        </div>
+    </div>
+    <?php } ?>
 </header>
 <? else : ?>
     <?php

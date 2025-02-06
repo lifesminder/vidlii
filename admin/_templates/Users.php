@@ -231,7 +231,19 @@
 							<option value="1"<? if ($User_Info["channel_version"] == 1) : ?> selected<? endif ?>>Channel 1.0</option>
 							<option value="2"<? if ($User_Info["channel_version"] == 2) : ?> selected<? endif ?>>Channel 2.0</option>
 							<option value="3"<? if ($User_Info["channel_version"] == 3) : ?> selected<? endif ?>>Cosmic Panda</option>
+							<?php if((int)$User_Info["nouveau"] == 1) { ?>
+							<option value="4"<? if ($User_Info["channel_version"] == 4) : ?> selected<? endif ?>>One Layout</option>
+							<?php } ?>
 						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><u title="Nouveau is an experimental layouting system, utilizing Twig and optimized rendering schemes">Is Nouveau Enabled?</u></td>
+					<td>
+						<label for="nouveau">
+							<input type="checkbox" name="nouveau" id="nouveau"<? if ((int)$User_Info["nouveau"] == 1) : ?> checked<? endif ?>>
+							Yes
+						</label>
 					</td>
 				</tr>
 			</table>

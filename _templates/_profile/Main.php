@@ -35,7 +35,6 @@
 			</div>
 			<div class="cl"></div>
 			<? if ($Profile["a_age"] != 0) : ?><div class="hl_st">Age: <strong><?= get_age($Profile["birthday"]) ?></strong></div><? else : ?><div style="height:4px"></div><? endif ?>
-			<? if (!empty($Profile["website"])) : ?><div class="hl_st">Website: <strong><a href="<?= htmlspecialchars($Profile["website"]) ?>"><?= htmlspecialchars($Profile["website"]) ?></a></strong></div><? endif ?>
 			<? if (!empty($Profile["channel_description"])) : ?><div class="hl_d"><?= DoLinks(nl2br(htmlspecialchars($Profile["channel_description"]))) ?></div><? endif ?>
 			<? if (!empty($Profile["i_occupation"])) : ?><div class="hl_st">Occupation: <strong><?= htmlspecialchars($Profile["i_occupation"]) ?></strong></div><? endif ?>
 			<? if (!empty($Profile["i_schools"])) : ?><div class="hl_st">Schools: <strong><?= htmlspecialchars($Profile["i_schools"]) ?></strong></div><? endif ?>
@@ -75,6 +74,7 @@
 					<span>Country: <strong><?= return_country($Profile["country"]) ?></strong></span>
 				</div>
 			<? endif ?>
+			<? if (!empty($Profile["website"])) : ?><div class="hl_st">Website: <strong><a href="<?= htmlspecialchars($Profile["website"]) ?>"><?= htmlspecialchars($Profile["website"]) ?></a></strong></div><? endif ?>
 		</div>
 	</section>
 	<section>
@@ -90,20 +90,16 @@
 						<a href="javascript:void(0)" <? if (!$_USER->logged_in) : ?>onclick="alert('Please log in to comment on <?= $Profile["displayname"] ?>s channel!')"<? else : ?> onmouseenter="$('#c_ac').attr('src','/img/comm1.png')" onclick="$('#comment_content').focus()" onmouseleave="$('#c_ac').attr('src','/img/comm0.png')"<? endif ?>><img class="c_l" id="c_ac" src="/img/comm0.png">Add Comment</a><br>
 						<a href="javascript:void(0)" <? if (!$_USER->logged_in) : ?>onclick="alert('Please log in to share <?= $Profile["displayname"] ?>s channel!')"<? else : ?> onmouseenter="$('#c_sc').attr('src','/img/share1.png')" onmouseleave="$('#c_sc').attr('src','/img/share0.png')"<? endif ?>><img class="c_l" id="c_sc" src="/img/share0.png">Share Channel</a><br>
 						<? if (!$_USER->logged_in) : ?>
-							<a href="javascript:void(0)" onclick="alert('Please log in to block <?= $Profile["displayname"] ?>!')"><img class="c_l" id="c_bu" src="/img/block0.png">Block User</a><br>
+							<a href="/login?next=/user/<?= $Profile["displayname"] ?>#block" id="block"><img class="c_l" id="c_bu" src="/img/block0.png">Block User</a><br>
 						<? elseif (!$Is_Blocked && !$Has_Blocked && $_USER->username !== $Profile["username"]) : ?>
 							<a href="javascript:void(0)" onclick="block_user('<?= $Profile["username"] ?>')" onmouseenter="$('#c_bu').attr('src','/img/block1.png')" onmouseleave="$('#c_bu').attr('src','/img/block0.png')"><img class="c_l" id="c_bu" src="/img/block0.png"><span id="bu">Block User</span></a><br>
 						<? elseif ($Is_Blocked && $_USER->username !== $Profile["username"]) : ?>
-							<a href="javascript:void(0)" onclick="alert('You have been blocked by <?= $Profile["displayname"] ?>!')"><img class="c_l" id="c_bu" src="/img/block0.png">You're Blocked</a><br>
+							<a href="javascript:void(0)" id="block" onclick="alert('You have been blocked by <?= $Profile["displayname"] ?>!')"><img class="c_l" id="c_bu" src="/img/block0.png">You're Blocked</a><br>
 						<? elseif ($Has_Blocked && $_USER->username !== $Profile["username"]) : ?>
-							<a href="javascript:void(0)" onclick="block_user('<?= $Profile["username"] ?>')" onmouseenter="$('#c_bu').attr('src','/img/block1.png')" onmouseleave="$('#c_bu').attr('src','/img/block0.png')"><img class="c_l" id="c_bu" src="/img/block0.png"><span id="bu">Unblock User</span></a><br>
-						<? else : ?>
-							<a href="javascript:void(0)" onclick="alert('Why do you dislike yourself?')"><img class="c_l" id="c_bu" src="/img/block0.png">Block User</a><br>
+							<a href="javascript:void(0)" id="block" onclick="block_user('<?= $Profile["username"] ?>')" onmouseenter="$('#c_bu').attr('src','/img/block1.png')" onmouseleave="$('#c_bu').attr('src','/img/block0.png')"><img class="c_l" id="c_bu" src="/img/block0.png"><span id="bu">Unblock User</span></a><br>
 						<? endif ?>
 							<? if (!$_USER->logged_in) : ?>
 								<a href="javascript:void(0)" onclick="alert('Please log in to add <?= $Profile["displayname"] ?> to friends!')"><img class="c_l" id="c_af" src="/img/friend0.png">Add as Friend</a>
-							<? elseif ($Is_OWNER) : ?>
-								<a href="javascript:void(0)" onmouseenter="$('#c_af').attr('src','/img/friend1.png')" onmouseleave="$('#c_af').attr('src','/img/friend0.png')" onclick="alert('You cannot add yourself as a friend!')"><img class="c_l" id="c_af" src="/img/friend0.png"><span id="aaf">Add as Friend</span></a>
 							<? elseif ($Is_Blocked == true || $Has_Blocked == true) : ?>
 								<a href="javascript:void(0)" onclick="alert('You cannot interact with this user!')"><img class="c_l" id="c_af" src="/img/friend0.png">Add as Friend</a>
 							<? elseif ($Is_Friends === false && $_USER->Is_Activated) : ?>

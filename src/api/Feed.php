@@ -12,13 +12,13 @@
 
 			// pure basis
 			$data["last_online"] = $this->db("SELECT users.username, users.displayname, users.videos, users.favorites, users.friends FROM users WHERE users.activated = 1 ORDER BY users.last_login DESC LIMIT 5", true)["data"];
-			$data["featured_videos"] = $this->db("SELECT url, title, description, tags, category, uploaded_by, uploaded_on, views, length, featured from videos where privacy = 0 and featured = 1 order by uploaded_on desc", true);
+			$data["featured_videos"] = $this->db("SELECT url, title, description, tags, category, uploaded_by, uploaded_on, displayviews as views, length, featured from videos where featured = 1 order by uploaded_on desc limit 10", true);
 			if($data["featured_videos"]["count"] > 0) {
 				for($i = 0; $i < $data["featured_videos"]["count"]; $i++) {
 					$data["featured_videos"]["data"][$i]["length"] = $this->seconds_to_time((int)$data["featured_videos"]["data"][$i]["length"]);
 				}
 			}
-			$data["popular_videos"] = $this->db("SELECT url, title, description, tags, category, uploaded_by, uploaded_on, views, length, featured from videos where privacy = 0 order by views desc", true);
+			$data["popular_videos"] = $this->db("SELECT url, title, description, tags, category, uploaded_by, uploaded_on, displayviews as views, length, featured from videos order by views desc limit 10", true);
 
 			if($data["popular_videos"]["count"] > 0) {
 				for($i = 0; $i < $data["popular_videos"]["count"]; $i++) {

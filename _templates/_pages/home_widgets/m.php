@@ -10,17 +10,36 @@
     </div>
     <div>
         <div class="mp_hr">
-            <? foreach ($Popular as $Video => $Info) : ?>
+            <?php
+                $categories = [
+                    1 => "Film & Animation",
+                    2 => "Autos & Vehicles",
+                    3 => "Music",
+                    4 => "Pets & Animals",
+                    5 => "Sports",
+                    6 => "Travel & Events",
+                    7 => "Gaming",
+                    8 => "People & Blogs",
+                    9 => "Comedy",
+                    10 => "Entertainment",
+                    11 => "News & Politics",
+                    12 => "Howto & Style",
+                    13 => "Education",
+                    14 => "Science & Technology",
+                    15 => "Nonprofits & Activism"
+                ];
+            ?>
+            <? foreach ($feed["popular_videos"]["data"] as $Video => $Info) : ?>
                 <div>
-                    <a href="/videos?c=<?= $Info["category"] ?>&o=re&t=0"><?= $Video ?></a>
+                    <a href="/videos?c=<?= $Info["category"] ?>&o=re&t=0"><?= $categories[$Info["category"]] ?></a>
                     <div class="th">
                         <div class="th_t"><?= $Info["length"] ?></div>
-                        <a href="/watch?v=<?= $Info["url"] ?>"><img class="vid_th" <?= $Info["thumbnail"] ?> width="140" height="88"></a>
+                        <a href="/watch?v=<?= $Info["url"] ?>"><img class="vid_th" src="/vi/<?= $Info["url"] ?>/hqresdefault.jpg" width="140" height="88"></a>
                     </div>
                     <div class="vr_i">
                         <a href="/watch?v=<?= $Info["url"] ?>" class="ln2"><?= $Info["title"] ?></a>
                         <div class="vw s"><?= number_format($Info["views"]) ?> views</div>
-                        <a href="/user/<?= $Info["displayname"] ?>" class="ch_l s"><?= $Info["displayname"] ?></a>
+                        <a href="/user/<?= $Info["uploaded_by"] ?>" class="ch_l s"><?= $Info["uploaded_by"] ?></a>
                         <div class="s_r"><?= show_ratings($Info,14,13) ?></div>
                     </div>
                 </div>

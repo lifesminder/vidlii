@@ -3,6 +3,8 @@
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
     $router = new \Bramus\Router\Router();
+    $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+
     $router->all("/", function() {
         include_once "indexold.php";
     });
@@ -32,7 +34,7 @@
     });
     $router->mount("/blog", function() use($router) {
         $router->get("/(\d+)", function($id) {
-            $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+            global $api; //$api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
             require_once "_includes/init.php";
 
             // Get blog post, according by ID
@@ -70,7 +72,7 @@
         });
     });
     $router->all("/api/(.*)", function($query) {
-        $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+        global $api; // $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
         $api->point($query, $_SERVER['REQUEST_METHOD'], ($_SERVER['REQUEST_METHOD'] == "POST") ? $_POST : $_GET, $_FILES);
     });
     $router->mount("/user", function() use($router) {
@@ -97,6 +99,78 @@
         $_USER->logout();
         redirect((isset($_GET["next"]) && $_GET["next"] != "") ? "/".$_GET["next"] : previous_page());
     });
+
+    // Portations!
+    $router->get("/test", function() {
+        require_once "_includes/init.php";
+        $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
+
+        echo "<pre>";
+        print_r($db->query("SHOW CREATE TABLE playlists"));
+        echo "</pre>";
+    });
+    $router->get("/playlist", function() {
+        require_once "_includes/init.php";
+        $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
+
+        if(isset($_GET["p"]) && $_GET["p"] != "") {
+            $id = $_GET["p"];
+            switch($id) {
+                case "WL": {
+                    echo "Watch later";
+                    break;
+                }
+                case "liked": {
+                    echo "Liked videos";
+                    break;
+                }
+                default: {
+                    $playlist = new \Vidlii\Vidlii\API\Playlist($_SERVER["DOCUMENT_ROOT"]);
+                    $playlist_info = $playlist->index(["id" => $id], []);
+
+                    if($playlist_info["status"] == 1) {
+                        $playlist_info = $playlist_info["data"];
+                        $twig = true; $page = "nouveau/playlist.html"; $args = ["playlist" => $playlist_info];
+                        require_once "_templates/page_structure.php";
+                        /*
+                        $Playlist = $db->execute("SELECT * FROM playlists WHERE purl = :PURL", true, [":PURL" => $_GET["p"]]);
+                        $Playlist_Stats = $db->execute("SELECT sum(videos.displayviews) as total_views, sum(videos.comments) as total_comments, sum(videos.responses) as total_responses, sum(videos.favorites) as total_favorites FROM playlists INNER JOIN playlists_videos ON playlists_videos.purl = playlists.purl INNER JOIN videos ON playlists_videos.url = videos.url WHERE playlists.purl = :PURL", true, [":PURL" => $_GET["p"]]);
+
+                        $Playlist_Videos                     = new Videos($db, $_USER);
+                        $Playlist_Videos->WHERE_P            = ["playlists_videos.purl" => $_GET["p"]];
+                        $Playlist_Videos->JOIN               = "RIGHT JOIN playlists_videos ON playlists_videos.url = videos.url";
+                        $Playlist_Videos->Shadowbanned_Users = true;
+                        $Playlist_Videos->Banned_Users       = true;
+                        $Playlist_Videos->Private_Videos     = true;
+                        $Playlist_Videos->Unlisted_Videos    = true;
+                        $Playlist_Videos->ORDER_BY           = "playlists_videos.position";
+                        $Playlist_Videos->LIMIT              = 512;
+                        $Playlist_Videos->get();
+
+
+                        if($Playlist_Videos::$Videos) {
+                            $Playlist_Videos = $Playlist_Videos->fixed();
+                        } else {
+                            notification("This playlist doesn't have any videos!","videos","red"); exit();
+                        }
+
+                        $_PAGE->set_variables(array(
+                            "Page_Title"        => $playlist_info["title"]." - VidLii",
+                            "Page"              => "Playlist",
+                            "Page_Type"         => "Videos",
+                            "Show_Search"       => false
+                        ));
+                        require_once "_templates/page_structure.php";
+                        */
+                    }
+                    break;
+                }
+            }
+        } else {
+            header("Location: /");
+        }
+    });
+
     $router->all("/(.*)", function($url) {
         require_once "_includes/init.php";
 

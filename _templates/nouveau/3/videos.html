@@ -72,7 +72,7 @@
                     <span class="video-thumb ux-thumb yt-thumb-default-234">
                         <span class="yt-thumb-clip">
                             <span class="yt-thumb-clip-inner">
-                                <img src="/vi/{{video.url}}/sqdefault.jpg" alt="Thumbnail" width="234">
+                                <img src="/vi/{{video.url}}/sqdefault.jpg" alt="Thumbnail" width="234" height="130" style="margin-left: 4px;">
                                 <span class="vertical-align"></span>
                             </span>
                         </span>
@@ -107,10 +107,10 @@
             <div class="playlist yt-tile-visible yt-uix-tile">
                 <div class="playlist-metadata">
                     <h3 dir="ltr" style="margin-bottom: 0;">
-                        <a class="yt-uix-tile-link" href="/playlist?pl={{playlist.purl}}">{{playlist.title}}</a>
+                        <a class="yt-uix-tile-link" href="/playlist?p={{playlist.purl}}">{{playlist.title}}</a>
                     </h3>
                 </div>
-                <a href="/playlist?pl={{playlist.purl}}" class="play-all yt-uix-sessionlink">
+                <a href="/watch?v={{playlist.videos[0].url}}&pl={{playlist.purl}}" class="play-all yt-uix-sessionlink">
                     <span class="playlist-thumb-strip playlist-thumb-strip-350">
                         <span class="videos videos-{%if playlist.videos|length > 5%}5{%else%}{{playlist.videos|length}}{%endif%} vertical-cutoff">
                             {%set thumbs_count = (playlist.videos|length > 5) ? 5 : playlist.videos|length%}
@@ -119,7 +119,7 @@
                                     <span class="centering-offset">
                                         <span class="centering">
                                             <span class="ie7-vertical-align-hack">&nbsp;</span>
-                                            <img src="/vi/{{video}}.jpg" alt="" class="thumb">
+                                            <img src="/vi/{{video.url}}.jpg" alt="" class="thumb">
                                         </span>
                                     </span>
                                 </span>
@@ -128,7 +128,7 @@
                         <span class="resting-overlay">
                             <img src="https://s.ytimg.com/yt/img/channels/play-icon-resting-vflXxuFB8.png" class="play-button" alt="Play all">
                             <span class="video-count-box">
-                                {{playlist.videos|length}} videos
+                                {{playlist.videos|length}} video{%if playlist.videos|length != 1%}s{%endif%}
                             </span>
                         </span>
                         <span class="hover-overlay">
