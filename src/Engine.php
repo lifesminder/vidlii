@@ -5,7 +5,8 @@
         function template($file, $args = [], $return = false) {
             $path = "_templates";
             $loader = new \Twig\Loader\FilesystemLoader("$path/");
-            $twig = new \Twig\Environment($loader); $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
+            $twig = new \Twig\Environment($loader);
+            $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
 			$fullfile = "$path/$file";
             
             if(!$return) {

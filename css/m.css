@@ -1539,6 +1539,7 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     -webkit-box-shadow: 0 0 5px #4496e7, inset 0 0 10px #fff;
     box-shadow: 0 0 5px #4496e7, inset 0 0 10px #fff;
 }
+
 /*
 .s_username_clicked {
     background: -moz-linear-gradient(top, #E6E6E6 0, #fff 100%)!important;
@@ -1550,6 +1551,7 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#E6E6E6', GradientType=0)!important
 }
 */
+
 #s_toggle,
 #s_toggle2 {
     display: inline-block;
@@ -1846,7 +1848,7 @@ input[type=number] {
     border: 1px solid #d5d5d5;
     padding: 3px 4px;
     border-radius: 3px;
-    outline: 0;
+    outline: none;
     font-family: Arial, sans-serif;
     font-size: 13px;
 }
@@ -1860,6 +1862,7 @@ textarea {
     font-size: 13px;
     width: 98.5%;
     resize: vertical;
+    outline: none;
 }
 
 textarea:hover,
@@ -1879,7 +1882,8 @@ input[type=email]:focus,
 input[type=search]:focus,
 input[type=url]:focus,
 input[type=number]:focus {
-    border: 1px solid #9d9efd
+    border: 1px solid #9d9efd;
+    outline: none;
 }
 
 #video_button {
@@ -3228,4 +3232,14 @@ select {
 
 .playlist .playlist-videos {
     padding: 12px;
+}
+
+.top {
+    font-size: 14px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    margin-bottom: 6px;
+    line-height: 32px;
+    box-shadow: 0 1px 3px #00000020;
 }

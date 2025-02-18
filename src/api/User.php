@@ -92,5 +92,11 @@
 			} else $data = $this->api_message(-1, "You must log in to subscribe to others");
 			return $data;
 		}
+
+		function test() {
+			$data = [];
+			$data["Test"] = $this->session2();
+			return $data;
+		}
 	}
 ?>

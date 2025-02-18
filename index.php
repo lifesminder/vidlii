@@ -34,7 +34,7 @@
     });
     $router->mount("/blog", function() use($router) {
         $router->get("/(\d+)", function($id) {
-            global $api; //$api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+            global $api;
             require_once "_includes/init.php";
 
             // Get blog post, according by ID

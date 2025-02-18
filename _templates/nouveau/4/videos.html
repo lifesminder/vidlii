@@ -2,68 +2,167 @@
 
 {% block body %}
     <ul id="browse-items-primary">
+        {% if videos.count > 0 %}
         <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
             <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
                 <span class="yt-uix-button-icon-wrapper">
                     <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
                 </span>
             </a>
+            {%if profile.c_favorites == 1%}
+            <button type="button" class="subnav-view-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" onclick=";return false;" aria-haspopup="true" aria-expanded="false" data-button-menu-indicate-selected="true">
+                <span class="yt-uix-button-content">Uploads</span>
+                <span class="yt-uix-button-arrow yt-sprite"></span>
+                <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
+                    <li role="menuitem">
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=57">All videos</span>
+                    </li>
+                    <li role="menuitem">
+                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=2">Favorite videos</span>
+                    </li>
+                </ul>
+            </button>
+            {%else%}
             <span class="branded-page-module-title">Uploads</span>
-            <button class="subnav-flow-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" aria-haspopup="true" type="button" aria-expanded="false" onclick=";return false;" data-button-menu-indicate-selected="true"><span class="yt-uix-button-content">Grid</span><span class="yt-uix-button-arrow yt-sprite"></span><ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true"><li role="menuitem"><span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/YouTube/videos?view=0&amp;sort=dd&amp;flow=list&amp;live_view=500">List</span></li></ul></button>
+            {%endif%}
+            <button class="subnav-flow-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" aria-haspopup="true" type="button" aria-expanded="false" onclick=";return false;" data-button-menu-indicate-selected="true">
+                <span class="yt-uix-button-content">{% if flow == "list" %}List{% else %}Grid{% endif %}</span>
+                <span class="yt-uix-button-arrow yt-sprite"></span>
+                <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
+                    {% if flow == "list" %}
+                    <li role="menuitem">
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?sort={{sort}}&amp;flow=grid">Grid</span>
+                    </li>
+                    {% else %}
+                    <li role="menuitem">
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?sort={{sort}}&amp;flow=list">List</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </button>
+            {%if videos.count > 1%}
+            <button aria-expanded="false" onclick=";return false;" aria-haspopup="true" type="button" class="subnav-sort-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" data-button-menu-indicate-selected="true">
+                <span class="yt-uix-button-content">{%if sort == "da"%}Date added (oldest){%elseif sort == "p"%}Most popular{%else%}Date added (newest){%endif%}</span>
+                <span class="yt-uix-button-arrow yt-sprite"></span>
+                <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
+                    {%if sort == "da"%}
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
+                    </li>
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
+                    </li>
+                    {%elseif sort == "p"%}
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
+                    </li>
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
+                    </li>
+                    {%else%}
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
+                    </li>
+                    <li role="menuitem">
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
+                    </li>
+                    {%endif%}
+                </ul>
+            </button>
+            {%endif%}
         </li>
-        <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box">
-            {% if videos.count > 0 %}
-            <ul>
-            {% for video in videos.data %}
-            <li class="feed-item-dismissable" style="margin-bottom: 0.4rem;">
-                <div class="feed-item-main feed-item-no-author">
-                    <div class="feed-item-main-content">
-                        <div class="yt-lockup clearfix yt-lockup-video yt-lockup-tile">
-                            <div class="yt-lockup-dismissable">
-                                <div class="yt-lockup-thumbnail">
-                                    <span class=" spf-link  ux-thumb-wrap contains-addto">
-                                        <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" aria-hidden="true">
-                                            <span class="video-thumb  yt-thumb yt-thumb-196">
-                                                <span class="yt-thumb-default">
-                                                    <span class="yt-thumb-clip">
-                                                        <img onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" data-ytimg="1" width="196" src="/vi/{{video.url}}/default.jpg" alt="" aria-hidden="true">
-                                                        <span class="vertical-align"></span>
+        {% endif %}
+        {% if videos.count > 0 %}
+            {%if flow == "grid"%}
+            <ul id="channels-browse-content-grid" class="channels-browse-content-grid branded-page-gutter-padding grid-lockups-container">
+                {%for video in videos.data%}
+                <li class="channels-content-item yt-shelf-grid-item">
+                    <div class="yt-lockup clearfix yt-lockup-video yt-lockup-grid vve-check">
+                        <div class="yt-lockup-dismissable">
+                            <div class="yt-lockup-thumbnail">
+                                <span class="spf-link ux-thumb-wrap contains-addto">
+                                    <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" aria-hidden="true">
+                                        <span class="video-thumb  yt-thumb yt-thumb-196">
+                                            <span class="yt-thumb-default">
+                                              <span class="yt-thumb-clip">
+                                                <img width="196" data-ytimg="1" src="/vi/{{video.url}}/hqresdefault.jpg" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" alt="" aria-hidden="true">
+                                                <span class="vertical-align"></span>
+                                              </span>
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <span class="video-time" aria-hidden="true">
+                                        <span aria-label="{{video.length}}">{{video.length}}</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="yt-lockup-content">
+                                <h3 class="yt-lockup-title">
+                                    <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{{video.title}}" rel="nofollow">{{video.title}}</a>
+                                    <span class="accessible-description"> - Duration: {{video.length}}.</span>
+                                </h3>
+                                <div class="yt-lockup-meta">
+                                    <ul class="yt-lockup-meta-info"><li>{{video.displayviews}} views</li><li>{{video.uploaded_on}}</li></ul>
+                                </div>
+                                <div class="yt-lockup-badges"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {%endfor%}
+            </ul>
+            {%else%}
+            {%for video in videos.data%}
+            <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box">
+                <div class="feed-item-dismissable">
+                    <div class="feed-item-main feed-item-no-author">
+                        <div class="feed-item-main-content">
+                            <div class="yt-lockup clearfix yt-lockup-video yt-lockup-tile">
+                                <div class="yt-lockup-dismissable">
+                                    <div class="yt-lockup-thumbnail">
+                                        <span class="spf-link ux-thumb-wrap contains-addto">
+                                            <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" aria-hidden="true">
+                                                <span class="video-thumb  yt-thumb yt-thumb-196">
+                                                    <span class="yt-thumb-default">
+                                                        <span class="yt-thumb-clip">
+                                                            <img onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" data-ytimg="1" width="196" src="/vi/{{video.url}}/default.jpg" alt="" aria-hidden="true">
+                                                            <span class="vertical-align"></span>
+                                                        </span>
                                                     </span>
                                                 </span>
+                                            </a>
+                                            <span class="video-time" aria-hidden="true"><span aria-label="{{video.length}}">{{video.length}}</span></span>
+                                                <span class="thumb-menu dark-overflow-action-menu video-actions">
                                             </span>
-                                        </a>
-                                        <span class="video-time" aria-hidden="true"><span aria-label="{{video.length}}">{{video.length}}</span></span>
-                                            <span class="thumb-menu dark-overflow-action-menu video-actions">
+                                            <button class="yt-uix-button yt-uix-button-size-small yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon no-icon-markup addto-button video-actions spf-nolink hide-until-delayloaded addto-watch-later-button-sign-in yt-uix-tooltip" type="button" onclick=";return false;" role="button" title="Watch later" data-button-menu-id="shared-addto-watch-later-login" data-video-ids="{{video.url}}"><span class="yt-uix-button-arrow yt-sprite"></span></button>
                                         </span>
-                                        <button class="yt-uix-button yt-uix-button-size-small yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon no-icon-markup addto-button video-actions spf-nolink hide-until-delayloaded addto-watch-later-button-sign-in yt-uix-tooltip" type="button" onclick=";return false;" role="button" title="Watch later" data-button-menu-id="shared-addto-watch-later-login" data-video-ids="{{video.url}}"><span class="yt-uix-button-arrow yt-sprite"></span></button>
-                                    </span>
-                                </div>
-                                <div class="yt-lockup-content">
-                                    <h3 class="yt-lockup-title">
-                                        <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{{video.title}}" aria-describedby="description-id-436828" href="/watch?v={{video.url}}" rel="nofollow">{{video.title}}</a>
-                                        <span class="accessible-description" id="description-id-436828"> - Duration: {{video.length}}.</span>
-                                    </h3>
-                                    <div class="yt-lockup-meta">
-                                        <ul class="yt-lockup-meta-info">
-                                            <li>{{video.uploaded_on}}</li>
-                                            <li>{{video.displayviews}} views</li>
-                                        </ul>
                                     </div>
-                                    <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2" direction="ltr">{% if video.description != "" %}{{video.description}}{% endif %}</div>
+                                    <div class="yt-lockup-content">
+                                        <h3 class="yt-lockup-title">
+                                            <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{{video.title}}" aria-describedby="description-id-436828" href="/watch?v={{video.url}}" rel="nofollow">{{video.title}}</a>
+                                            <span class="accessible-description" id="description-id-436828"> - Duration: {{video.length}}.</span>
+                                        </h3>
+                                        <div class="yt-lockup-meta">
+                                            <ul class="yt-lockup-meta-info">
+                                                <li>{{video.uploaded_on}}</li>
+                                                <li>{{video.displayviews}} views</li>
+                                            </ul>
+                                        </div>
+                                        <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2" direction="ltr">{% if video.description != "" %}{{video.description}}{% endif %}</div>
+                                    </div>
                                 </div>
+                                <div class="yt-lockup-notifications-container hid" style="height:110px"></div>
                             </div>
-                            <div class="yt-lockup-notifications-container hid" style="height:110px"></div>
                         </div>
                     </div>
                 </div>
             </li>
-            {% endfor %}
-            </ul>
-            {% else %}
-            <center>
-                This channel doesn't have any videos
-            </center>
-            {% endif %}
-        </li>
+            {%endfor%}
+            {%endif%}
+        {% else %}
+        <center>
+            This channel doesn't have any videos
+        </center>
+        {% endif %}
     </ul>
 {% endblock %}

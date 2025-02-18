@@ -27,7 +27,7 @@
             <a href="/channel_setup" <? if ($_PAGE->Page == "Main") : ?>id="nav_sel"<? endif ?>>Channel Setup</a>
             <? if ($Channel_Version < 2) : ?><a href="/channel_theme" <? if ($_PAGE->Page == "Customize") : ?>id="nav_sel"<? endif ?>>Channel Theme</a><? endif ?>
             <a href="/channel_version" <? if ($_PAGE->Page == "Layout") : ?>id="nav_sel"<? endif ?>>Channel Version</a>
-            <? if ($Channel_Version < 2) : ?><a href="/my_profile"<? if ($_PAGE->Page == "Profile") : ?>id="nav_sel"<? endif ?>>Profile Setup</a><? endif ?>
+            <? if ($Channel_Version != 2) : ?><a href="/my_profile"<? if ($_PAGE->Page == "Profile") : ?>id="nav_sel"<? endif ?>>Profile Setup</a><? endif ?>
             <a href="/analytics" <? if ($_PAGE->Page == "Analytics") : ?>id="nav_sel"<? endif ?>>Channel Analytics</a>
             <a href="/my_playback" <? if ($_PAGE->Page == "Playback") : ?>id="nav_sel"<? endif ?>>Playback Setup</a>
             <? if ($_USER->Is_Partner) : ?><a href="/partner_settings" <? if ($_PAGE->Page == "Partner") : ?>id="nav_sel"<? endif ?>>Partner Settings</a><? endif ?>

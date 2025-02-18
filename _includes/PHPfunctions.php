@@ -515,8 +515,10 @@ function previous_page() {
 }
 
 function seconds_to_time($Seconds) {
-	$min = intval($Seconds / 60);
-	return $min . ':' . str_pad(($Seconds % 60), 2, '0', STR_PAD_LEFT);
+	$hours = floor($Seconds / 3600);
+    $minutes = floor(($Seconds % 3600) / 60);
+	$seconds = floor($Seconds % 60);
+	return ($hours > 0) ? "$hours:$minutes:$seconds" : "$minutes:$seconds";
 }
 
 function return_category($Number) {

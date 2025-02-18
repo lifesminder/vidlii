@@ -83,7 +83,7 @@ if (isset($Info)) {
     $Channel_Version = $Info["channel_version"];
 }
 
-if ($Channel_Version > 2) {
+if ($Channel_Version == 2) {
     redirect("/my_account");
 }
 

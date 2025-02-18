@@ -134,32 +134,32 @@
                 <form action="/setup?step=2" method="post">
                     <div style="margin: 0.5rem">
                         <label for="title">Title: </label>
-                        <input type="text" name="title" placeholder="Title of your Instance" value="VidLii">
+                        <input type="text" class="vl-field" name="title" placeholder="Title of your Instance" value="VidLii">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="slogan">Slogan: </label>
-                        <input type="text" name="slogan" placeholder="Slogan of your Instance" value="Display Yourself!">
+                        <input type="text" class="vl-field" name="slogan" placeholder="Slogan of your Instance" value="Display Yourself!">
                     </div>
                     <hr>
                     <div style="margin: 0.5rem">
                         <label for="adminuser">Username: </label>
-                        <input type="text" name="adminuser" placeholder="Your Username">
+                        <input type="text" class="vl-field" name="adminuser" placeholder="Your Username">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="adminemail">E-Mail: </label>
-                        <input type="text" name="adminemail" placeholder="Your E-Mail">
+                        <input type="text" class="vl-field" name="adminemail" placeholder="Your E-Mail">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="adminpass">Password: </label>
-                        <input type="password" name="adminpass" placeholder="Your Password">
+                        <input type="password" class="vl-field" name="adminpass" placeholder="Your Password">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="adminpass2">Confirm Password: </label>
-                        <input type="password" name="adminpass2" placeholder="Confirm Your Password">
+                        <input type="password" class="vl-field" name="adminpass2" placeholder="Confirm Your Password">
                     </div>
                     <div style="margin: 0.5rem; display: flex; align-items: center;">
                         <a href="/setup" class="btn">Back</a>
-                        <button type="submit">Next</button>
+                        <button type="submit" class="btn">Next</button>
                     </div>
                 </form>
             </div>
@@ -198,7 +198,8 @@
                                         $name = $_SESSION["name"];
                                         $dbExistance = $conn->query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$name'");
                                         if($dbExistance->num_rows == 0) {
-                                            if($conn->query("CREATE DATABASE $name") === TRUE) {
+                                            // Quick Fix to eliminate "Illegal mix of collations" error(s)
+                                            if($conn->query("CREATE DATABASE $name CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci") === TRUE) {
                                                 $_SESSION["name"] = $name;
                                                 header("Location: /setup?step=2");
                                             } else $message = $conn->error;
@@ -230,22 +231,22 @@
                 <form action="/setup" method="post">
                     <div style="margin: 0.5rem">
                         <label for="host">Hostname: </label>
-                        <input type="text" name="host" placeholder="Database Host">
+                        <input type="text" class="vl-field" name="host" placeholder="Database Host">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="host">Username: </label>
-                        <input type="text" name="username" placeholder="Username">
+                        <input type="text" class="vl-field" name="username" placeholder="Username">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="host">Password: </label>
-                        <input type="password" name="password" placeholder="Password">
+                        <input type="password" class="vl-field" name="password" placeholder="Password">
                     </div>
                     <div style="margin: 0.5rem">
                         <label for="host">Name of DB: </label>
-                        <input type="text" name="name" placeholder="Name of DB" value="vidlii">
+                        <input type="text" class="vl-field" name="name" placeholder="Name of DB" value="vidlii">
                     </div>
                     <div style="margin: 0.5rem; display: flex; align-items: center;">
-                        <button type="submit">Next</button>
+                        <button type="submit" class="btn">Next</button>
                     </div>
                 </form>
             </div>

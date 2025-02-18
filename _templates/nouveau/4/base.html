@@ -12,18 +12,42 @@
                     <div class="branded-page-v2-top-row">
                         <div class="branded-page-v2-header channel-header yt-card">
                             <div id="gh-banner">
+                                <style>
+                                    #c4-header-bg-container {
+                                        background-image: url(http://youtube.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png);
+                                    }
+                                    @media screen and (-webkit-min-device-pixel-ratio: 1.5), screen and (min-resolution: 1.5dppx) {
+                                        #c4-header-bg-container {
+                                            background-image: url(http://youtube.com/yts/img/channels/c4/default_banner_hq-vfl4dpY8T.png);
+                                        }
+                                    }
+                                    #c4-header-bg-container .hd-banner-image {
+                                        background-image: url(http://youtube.com/yts/img/channels/c4/default_banner_hq-vfl4dpY8T.png);
+                                    }
+                                </style>
                                 <div id="c4-header-bg-container" class="c4-visible-on-hover-container">
                                     <div class="hd-banner">
                                         <div class="hd-banner-image"></div>
                                     </div>
-                                    {% if profile.website != "" %}
+                                    {% if website|length > 0 %}
                                     <div id="header-links">
+                                        {% if website|length > 1 %}
+                                        <ul class="about-secondary-links">
+                                            {% for i in range(1, website|length - 1) %}
+                                            <li class="channel-links-item">
+                                                <a href="{{website[i].url}}" rel="me nofollow" target="_blank" title="website[i].title" class="about-channel-link yt-uix-redirect-link about-channel-link-with-icon">
+                                                    <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{website[i].url}}" class="about-channel-link-favicon" alt="" width="16" height="16">
+                                                </a>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
                                         <ul class="about-custom-links">
                                             <li class="channel-links-item">
-                                                <a href="{{profile.website}}" rel="me nofollow" target="_blank" title="{{profile.website}}" class="about-channel-link yt-uix-redirect-link about-channel-link-with-icon">
-                                                    <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{profile.website}}" class="about-channel-link-favicon" alt="" width="16" height="16">
+                                                <a href="{{website[0].url}}" rel="me nofollow" target="_blank" title="{{website[0].title}}" class="about-channel-link yt-uix-redirect-link about-channel-link-with-icon">
+                                                    <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{website[0].url}}" class="about-channel-link-favicon" alt="" width="16" height="16">
                                                     <span class="about-channel-link-text">
-                                                        {{profile.website}}
+                                                        {{website[0].title}}
                                                     </span>
                                                 </a>
                                             </li>
@@ -43,7 +67,7 @@
                                                 <span class="qualified-channel-title ellipsized">
                                                     <span class="qualified-channel-title-wrapper">
                                                         <span dir="ltr" class="qualified-channel-title-text">
-                                                            <a dir="ltr" href="/user/{{profile.displayname}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
+                                                            <a dir="ltr" href="/user/{{profile.displayname}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ''%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
                                                         </span>
                                                     </span>
                                                 </span>
@@ -52,7 +76,7 @@
                                         <div class="primary-header-upper-section-block">
                                             <div class="primary-header-actions">
                                                 <span class="channel-header-subscription-button-container yt-uix-button-subscription-container with-preferences">
-                                                    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-branded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button" onclick=";return false;" aria-live="polite" aria-busy="false" aria-role="button" data-style-type="branded" data-href="#">
+                                                    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-branded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" id="subscribe" type="button" onclick=";return false;" aria-live="polite" aria-busy="false" aria-role="button" data-style-type="branded" data-href="#">
                                                         <span class="yt-uix-button-content">
                                                             <span class="subscribe-label" aria-label="Subscribe">Subscribe</span>
                                                             <span class="subscribed-label" aria-label="Unsubscribe">Subscribed</span>
@@ -128,6 +152,18 @@
                                             <span class="yt-uix-button-content">About</span>
                                         </a>
                                         {% endif %}
+                                    </li>
+                                    <li>
+                                        <div id="channel-search">
+                                            <button class="show-search epic-nav-item secondary-nav" title="Search Channel">
+                                                <span class="epic-nav-item-heading-icon search-icon yt-sprite"></span>
+                                            </button>
+                                            <form class="search-form epic-nav-item secondary-nav" action="/user/{{profile.displayname}}/search" method="get">
+                                                <span class=" yt-uix-form-input-container yt-uix-form-input-text-container">
+                                                    <input class="yt-uix-form-input-text search-field" name="query" id="channels-search-field" type="yt-text" value="" placeholder="Search Channel" maxlength="100" autocomplete="off">
+                                                </span>
+                                            </form>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>

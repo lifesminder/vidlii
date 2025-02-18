@@ -1,8 +1,8 @@
 console.log("TBA");
 
-/*
-document.getElementById("subscribe").addEventListener("click", function(e) {
-    e.preventDefault();
-    alert("Subscribe v2");
-});
-*/
+if(document.getElementById("subscribe") != null) {
+    document.getElementById("subscribe").addEventListener("click", function(e) {
+        e.preventDefault();
+        alert("Subscribe v2");
+    });
+}

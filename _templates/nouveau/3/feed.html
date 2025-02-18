@@ -118,6 +118,11 @@
                                             <button class="report-spam" title="Report Spam">
                                                 Report Spam
                                             </button>
+                                            {%if owner or comment.by_user == user%}
+                                            <button onclick="window.location.replace('/user/{{profile.displayname}}/feed?filter=1&remove={{comment.id}}')" class="remove-comment" title="Remove Comment">
+                                                Remove Comment
+                                            </button>
+                                            {%endif%}
                                         </div>
                                     </div>
                                     <div class="yt-tile-visible">

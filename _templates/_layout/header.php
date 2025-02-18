@@ -80,7 +80,7 @@
 </header>
 <? else : ?>
     <?php
-        if(isset($_COOKIE["nouveau"]) && $_COOKIE["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
+        if($Profile["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
     ?>
     <div id="content">
         <!-- begin masthead -->

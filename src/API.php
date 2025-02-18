@@ -36,8 +36,11 @@
 					} else {
 						$result = $stmt->executeStatement();
 						$data["status"] = $result;
+                        if(!$result) $data["message"] = $stmt->error;
 					}
-				} catch(\Doctrine\DBAL\Exception $e) {
+				} catch(\Doctrine\DBAL\DBALException $e) {
+					$data = ["status" => -1, "message" => $e->getMessage()];
+                } catch(\Doctrine\DBAL\Exception $e) {
 					$message = end(explode(": ", $e->getMessage()));
 					$data = ["status" => -1, "message" => $message];
 				}
@@ -76,18 +79,32 @@
         }
 
         public function seconds_to_time($Seconds) {
-            $min = intval($Seconds / 60);
-            return $min . ':' . str_pad(($Seconds % 60), 2, '0', STR_PAD_LEFT);
+            $hours = floor($Seconds / 3600);
+            $minutes = floor(($Seconds % 3600) / 60);
+            $seconds = floor($Seconds % 60);
+            return ($hours > 0) ? "$hours:$minutes:$seconds" : "$minutes:$seconds";
         }
 
         function session($token) {
-            $session = $this->db("SELECT session, user, ip, authorized, remembered from sessions where session = '$token'");
+            $cookie = ($token != null) ? $token : (isset($_COOKIE["session"]) && $_COOKIE["session"] != "" ? $_COOKIE["session"] : null);
+            $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie'");
             if($session["count"] == 1) {
                 $session = $session["data"];
                 $session["user"] = $this->db("SELECT username, displayname from users where id = ".$session["user"]);
                 if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             } else {
                 $session = ["session" => -1, "user" => ["username" => "Guest", "displayname" => "Guest"]];
+            }
+            return $session;
+        }
+
+        function session2($token = null) {
+            $cookie = ($token != null) ? $token : (isset($_COOKIE["session"]) && $_COOKIE["session"] != "" ? $_COOKIE["session"] : null);
+            $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie' limit 1");
+            if($session["count"] == 1) {
+                $session = $session["data"];
+                $session["user"] = $this->db("SELECT username, displayname from users where id = ".$session["user"]);
+                if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             }
             return $session;
         }

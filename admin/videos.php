@@ -4,13 +4,21 @@
     if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
         function video_thumbnail2($URL,$LENGTH,$Width,$Height,$Title = NULL) {
             if (!empty($LENGTH) || $LENGTH == "0") { $Length = seconds_to_time((int)$LENGTH); } else { $Length = $LENGTH; }
-            if (file_exists("../usfi/thmp/$URL.jpg")) { $Thumbnail = "../usfi/thmp/$URL.jpg"; } else { $Thumbnail = "/img/no_th.jpg"; }
-
-            return '<div class="th"><div class="th_t">'.$Length.'</div><a href="/watch?v='.$URL.'"><img class="vid_th" src="'.$Thumbnail.'" width="'.$Width.'" height="'.$Height.'"></a></div>';
+            return '<div class="th"><div class="th_t">'.$Length.'</div><a href="/watch?v='.$URL.'"><img class="vid_th" src="/vi/'.$URL.'/hqresdefault.jpg" width="'.$Width.'" height="'.$Height.'"></a></div>';
         }
 
-        if (!isset($_GET["v"])) {
-            if (isset($_POST["search_video"])) {
+        /*
+        if(isset($_GET["v"])) {
+            $id = $_GET["v"];
+            $video_info = $db->query("SELECT * from videos WHERE url = '$id'");
+            if($video_info["count"] == 0) {
+                notification("This video doesn't exist!", "/admin/videos", "red");
+            }
+        }
+        */
+
+        if(!isset($_GET["v"])) {
+            if(isset($_POST["search_video"])) {
                 $URL = url_parameter($_POST["v"], "v");
                 if (is_string($URL) && ctype_alnum($URL)) {
                     $DB->execute("SELECT url FROM videos WHERE url = :URL", true, [":URL" => $URL]);
@@ -76,7 +84,6 @@
             }
 
             $Videos = $DB->execute("SELECT * FROM videos $WHERE $ORDER_BY $LIMIT", false, $EXECUTE);
-            if ($DB->RowNum == 0) { notification("No videos could be found!","/admin/videos"); }
 
             $Ratings = $DB->execute("SELECT * FROM video_ratings INNER JOIN videos ON video_ratings.url = videos.url ORDER BY videos.uploaded_on DESC LIMIT 20");
 
@@ -203,12 +210,11 @@
                 notification("This video doesn't exist!", "/admin/videos", "red");
             }
         }
-
+        
         $Page_Title = "Videos";
         $Page = "Videos";
         require_once "_templates/admin_structure.php";
-    } elseif ($_USER->Is_Mod || $_USER->Is_Admin) {
-        redirect("/admin/login");
     } else {
         redirect("/");
     }
+?>

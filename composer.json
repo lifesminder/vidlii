@@ -7,11 +7,12 @@
         "hashids/hashids": "^5.0",
         "elasticsearch/elasticsearch": "^8.13",
         "twig/twig": "^3.9",
-        "twig/intl-extra": "^3.9",
+        "twig/intl-extra": "^3.12",
         "vlucas/phpdotenv": "^5.6",
         "erusev/parsedown": "^1.7",
         "php-ffmpeg/php-ffmpeg": "^1.2",
-        "bramus/router": "^1.6"
+        "bramus/router": "^1.6",
+        "twig/extra-bundle": "^3.20"
     },
     "license": "mit",
     "autoload": {

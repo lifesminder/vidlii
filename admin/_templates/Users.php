@@ -246,10 +246,23 @@
 						</label>
 					</td>
 				</tr>
+				<tr>
+					<td>Show When Joined:</td>
+					<td>
+						<label for="a_reg">
+							<input type="checkbox" name="a_reg" id="a_reg"<? if ((int)$User_Info["a_reg"] == 1) : ?> checked<? endif ?>>
+							Yes
+						</label>
+					</td>
+				</tr>
 			</table>
 		</div>
 		<div style="padding-left:1%;border-left:1px solid #ccc">
 			<table cellpadding="4">
+				<tr>
+					<td><strong>Username:</strong></td>
+					<td><input type="text" name="username" value="<?= $User_Info["username"] ?>" required maxlength="20"></td>
+				</tr>
 				<tr>
 					<td><strong>Display Name:</strong></td>
 					<td><input type="text" name="displayname" value="<?= $User_Info["displayname"] ?>" required maxlength="20"></td>
@@ -257,7 +270,7 @@
 				<tr>
 					<td>Name:</td>
 					<td><input type="text" name="name" value="<?= $User_Info["i_name"] ?>" maxlength="64"></td>
-				</tr>
+				</tr>	
 				<tr>
 					<td>Occupation:</td>
 					<td><input type="text" name="occupation" value="<?= $User_Info["i_occupation"] ?>" maxlength="128"></td>

@@ -1,0 +1,75 @@
+<style>
+    .vid_th {
+        border-radius: 0 !important;
+        border: 0 !important;
+        padding: 0;
+        margin: 0;
+        display: block;
+        transform: scaleY(1.06);
+        position: relative;
+        top: 2px;
+    }
+    table.atable, .atable td,.atable th {
+        border: 1.5px solid #ccc;
+        text-align: left;
+    }
+    table.atable {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .atable th,.atable td {
+        padding: 5px;
+    }
+</style>
+<div style="width: 1000px; margin: 0 auto; font-size: 14px;">
+    {%if posts is defined%}
+    <h2>Blog</h2>
+    <p>Manage blog articles</p>
+
+    <table style="width: 100%" cellspacing="0" cellpadding="0" class="atable">
+        <thead>
+            <td><strong>ID</strong></td>
+            <td><strong>Title</strong></td>
+            <td><strong>Actions</strong></td>
+        </thead>
+        {%if posts.count > 0%}
+        {%for post in posts.data%}
+        <tr>
+            <td>{{post.id}}</td>
+            <td>{{post.title}}</td>
+            <td>
+                <a href="/admin/blog?id={{post.id}}">Edit</a> |
+                <a href="/admin/blog?id={{post.id}}&delete=1">Delete</a>
+            </td>
+        </tr>
+        {%endfor%}
+        {%else%}
+        <tr>
+            <td>
+                There are nothing written...
+            </td>
+        </tr>
+        {%endif%}
+    </table>
+    {%elseif post is defined%}
+    <h2>Edit Post</h2>
+    <p>Manage blog post at it's best!</p>
+    <form action="/admin/blog?id={{post.id}}" method="post">
+        <div>
+            <label for="id">ID: </label>
+            <input type="number" name="id" id="id" placeholder="Blog ID" value="{{post.id}}" disabled>
+        </div>
+        <div>
+            <label for="title">Title: </label>
+            <input type="text" name="blog_title" id="title" placeholder="Blog Title" value="{{post.title}}">
+        </div>
+        <div>
+            <label for="content">Article:</label><br>
+            <textarea name="blog_content" id="content" placeholder="Blog Content">{{post.content}}</textarea>
+        </div>
+        <div>
+            <button type="submit" name="blog_edit">Save</button>
+        </div>
+    </form>
+    {%endif%}
+</div>

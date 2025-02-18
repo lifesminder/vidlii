@@ -1,4 +1,4 @@
-<? if ($Channel_Version == 1) : ?>
+<? if ($Channel_Version != 2) : ?>
 <style>
 	.p_text_area {
 		border: 1px solid #d5d5d5;

@@ -1,6 +1,6 @@
 <div style="width:48%;margin-right:2%;float:left;">
 	<div class="panel_box">
-		<strong>VidLii Statistics</strong>
+		<strong>Statistics</strong>
 		<div style="width:150px;float:left;font-weight:bold;margin-bottom:3px">
 			Total Users:
 		</div>
@@ -130,6 +130,9 @@
 			<textarea name="blog_post" maxlength="50000" placeholder="Blog Post" required rows="8"></textarea><br>
 			<input type="submit" value="Submit Blog Post" name="submit_blog">
 		</form>
+		<div style="padding: 6px 0 6px 0">
+			<a href="/admin/blog">Blog Management >></a>
+		</div>
 	</div>
 	<div class="panel_box">
 		<strong>Video Reports</strong>

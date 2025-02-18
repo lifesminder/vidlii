@@ -26,7 +26,9 @@
 				</div>
 				<div>
 					<strong><?= $Profile["displayname"] ?></strong>
+					<?php if($Profile["a_reg"] == 1) { ?>
 					<span>Joined: <strong><?= date("M d, Y",strtotime($Profile["reg_date"])) ?></strong></span>
+					<?php } ?>
 					<? if ($Profile["a_last"]) : ?><span>Last Sign In: <strong><?= get_time_ago($Profile["last_login"]) ?></strong></span><? endif ?>
 					<span>Subscribers: <strong><?= number_format($Profile["subscribers"]) ?></strong></span>
 					<? if ($Profile["videos"] > 0) : ?><span>Video Views: <strong><?= number_format($Profile["video_views"]) ?></strong></span><? endif ?>
@@ -47,7 +49,7 @@
 				<div>
 					<img src="/img/awards.png" title="<?= $Profile["displayname"] ?>s Awards">
 				</div>
-				<div style="width:296px">
+				<div>
 					<? $Count = 0; $Award_Amount = count($Awards); ?>
 					<? foreach ($Awards as $Award_Name => $Ranking) : ?>
 						<? if ($Count == 4 && $Award_Amount > 4) : ?><a href="javascript:void(0)" id="show_more_link" onclick="$('#show_more_awards').toggleClass('hddn');$(this).toggleClass('hddn');">(Show More)</a><div id="show_more_awards" class="hddn"><? endif ?>

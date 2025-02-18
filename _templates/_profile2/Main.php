@@ -214,10 +214,12 @@
                     <div><?= get_age($Profile["birthday"]) ?></div>
                 </div>
                 <? endif ?>
+                <?php if($Profile["a_reg"] == 1) { ?>
                 <div class="pr_inf_sct">
                     <div>Joined:</div>
                     <div><?= date("M d, Y",strtotime($Profile["reg_date"])) ?></div>
                 </div>
+                <?php } ?>
                 <? if ($Profile["a_last"]) : ?>
                 <div class="pr_inf_sct">
                     <div>Last Visit Date:</div>

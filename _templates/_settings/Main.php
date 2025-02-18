@@ -74,7 +74,7 @@
         </tr>
     </table>
 </form>
-<? if ($Channel_Version == 1) : ?>
+<? if ($Channel_Version != 2 && $Channel_Version != 3) : ?>
 <div style="border-top:1px solid #ccc;margin-bottom:10px"></div>
 <h4>Channel Settings</h4>
 <form action="/channel_setup" method="POST">

@@ -23,7 +23,7 @@ if (isset($_GET["user"])) {
 	
     if ($Exist) {
 		$Channel_Owner = $Channel_Owner["username"];
-        $OWNER = new User($Channel_Owner,$DB);
+        $OWNER = new User($Channel_Owner, $DB);
 
         $Profile = $OWNER->get_profile();
         $OWNER_USERNAME = clean($Profile["username"]);
@@ -51,6 +51,8 @@ if (isset($_GET["user"])) {
                 $Is_OWNER = true;
             }
             $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER, "request_url" => $_SERVER['REQUEST_URI']];
+            
+            $args["subscribed"] = true;
             $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
             if($args["featured_channels"] != "") {
                 $args["featured_channels"] = explode(",", $args["featured_channels"]);
@@ -74,9 +76,17 @@ if (isset($_GET["user"])) {
             }
             $args["featured_title"] = $api->db("SELECT featured_title from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_title"];
             if($Profile["website"] != "") {
-                $args["website"]["title"] = end(explode("://", $Profile["website"]));
-                $args["website"]["url"] = $Profile["website"];
+                $websites = explode(",", $Profile["website"]);
+                for($i = 0; $i < count($websites); $i++) {
+                    $website = explode("|", $websites[$i]);
+                    $www = [];
+                    $www["url"] = $website[0];
+                    $www["title"] = (count($website) > 1) ? end($website) : end(explode("://", $website[0]));
+                    $websites[$i] = $www;
+                }
+                $args["website"] = ($Profile["channel_version"] <= 2) ? $websites[0]["url"] : $websites;
             }
+            $args["user"] = $_USER->username;
 
             // Stuff
             $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
@@ -114,9 +124,18 @@ if (isset($_GET["user"])) {
             } else if(isset($_POST["channel_comment"]) && $_USER->logged_in) {
                 $comment = $_POST["comment"];
                 if($comment != "") {
-                    $do_comment = $db->query("INSERT into channel_comments (on_channel, by_user, comment, date) values ('".$Profile["displayname"]."', '$OWNER_USERNAME', '$comment', '".date("Y-m-d h:m:s")."')");
+                    $do_comment = $db->query("INSERT into channel_comments (on_channel, by_user, comment, date) values ('".$Profile["displayname"]."', '".$_SESSION["username"]."', '$comment', '".date("Y-m-d h:m:s")."')");
                 } else {
                     $message = "Your comment must have a content";
+                }
+            } else if(isset($_GET["remove"]) && (int)$_GET["remove"] > 0) {
+                $remove_id = (int)$_GET["remove"];
+                $comment = $api->db("SELECT by_user as user, (select is_admin from users where displayname = '".$args["user"]."') as is_web_admin from channel_comments where on_channel = '".$Profile["displayname"]."'");
+                if($comment["count"] == 1) {
+                    $commenter = $comment["data"];
+                    if($args["owner"] || $commenter["user"] == $args["user"] || $args["is_web_admin"] == 1) {
+                        $delete_comment = $api->db("DELETE from channel_comments where id = $remove_id");
+                    }
                 }
             }
 
@@ -198,6 +217,14 @@ if (isset($_GET["user"])) {
         $Favorites_Amount->Count              = true;
         $Favorites_Amount->Count_Column       = "video_favorites.url";
         $Profile["favorites"]                 = $Favorites_Amount->get();
+
+        /*
+            As newer Website logic introduced, channel versions 1, 2 and legacy Cosmic Panda doesn't support it,
+            so we showcase only first website if there are more than 1 specified.
+        */
+        if($Profile["website"] != "") {
+            $Profile["website"] = explode("|", explode(",", $Profile["website"])[0])[0];
+        }
 
         if ($Profile["channel_version"] == 1 && $Profile["banned"] == 0) {
             if ($_USER->logged_in && $_USER->username === $Profile["username"]) {

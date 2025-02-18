@@ -53,7 +53,10 @@
         <div style="word-spacing:20px;text-align:center;padding-bottom:8px;margin-bottom:13px;border-bottom:1px solid #e2e2e2">
             <a href="/admin/dashboard"<? if ($Page == "dashboard") : ?> style="font-weight:bold;color:black"<? endif ?>>Dashboard</a> <? if ($_USER->Is_Admin) : ?>| <a href="/admin/statistics"<? if ($Page == "statistics") : ?> style="font-weight:bold;color:black"<? endif ?>>Charts</a> <? endif ?>| <a href="/admin/users"<? if ($Page == "Users") : ?> style="font-weight:bold;color:black"<? endif ?>>Users</a> | <a href="/admin/videos" <? if ($Page == "Videos") : ?> style="font-weight:bold;color:black"<? endif ?>>Videos</a> | <a href="/admin/misc" <? if ($Page == "misc") : ?> style="font-weight:bold;color:black"<? endif ?>>Misc</a>
         </div>
-        <? require_once $_SERVER['DOCUMENT_ROOT']."/admin/_templates/$Page.php" ?>
+        <?php
+            if(!isset($twig) || !$twig)
+                require_once $_SERVER['DOCUMENT_ROOT']."/admin/_templates/$Page.php";
+        ?>
     </main>
 </div>
 <script src="<?= MAIN_JS_FILE ?>"></script>

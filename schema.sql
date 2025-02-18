@@ -325,7 +325,7 @@ CREATE TABLE `playlists` (
   `created_on` datetime NOT NULL,
   PRIMARY KEY (`purl`),
   UNIQUE KEY `title` (`title`,`description`,`created_by`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -391,7 +391,7 @@ CREATE TABLE `sessions` (
   `ip` varchar(255) NOT NULL,
   `remembered` int(2) NOT NULL DEFAULT 0,
   `browser` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -402,7 +402,7 @@ CREATE TABLE `sessions` (
 CREATE TABLE `settings` (
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `value` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -492,7 +492,7 @@ CREATE TABLE `uploads` (
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `username` varchar(20) NOT NULL,
-  `displayname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `displayname` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(128) NOT NULL,
   `password` varchar(64) NOT NULL,
   `reg_date` datetime NOT NULL,
@@ -510,7 +510,7 @@ CREATE TABLE `users` (
   `birthday` date NOT NULL,
   `country` varchar(5) NOT NULL DEFAULT '',
   `website` varchar(128) NOT NULL DEFAULT '',
-  `about` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `about` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `avatar` text NULL DEFAULT '',
   `bg_version` int NOT NULL DEFAULT '1',
   `banner_version` int NOT NULL DEFAULT '1',
@@ -560,9 +560,9 @@ CREATE TABLE `users` (
   `bg_stretch` int NOT NULL DEFAULT '0',
   `h_trans` int NOT NULL DEFAULT '0',
   `n_trans` int DEFAULT '0',
-  `channel_title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `channel_description` varchar(2500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `channel_tags` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `channel_title` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `channel_description` varchar(2500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `channel_tags` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `i_name` varchar(128) DEFAULT '',
   `i_occupation` varchar(128) NOT NULL DEFAULT '',
   `i_schools` varchar(128) NOT NULL DEFAULT '',
@@ -580,6 +580,7 @@ CREATE TABLE `users` (
   `a_music` tinyint(1) NOT NULL DEFAULT '1',
   `a_books` tinyint(1) DEFAULT '1',
   `a_last` tinyint(1) NOT NULL DEFAULT '1',
+  `a_reg` tinyint(1) NOT NULL DEFAULT '1',
   `a_subs` tinyint(1) NOT NULL DEFAULT '1',
   `a_subs2` tinyint(1) NOT NULL DEFAULT '0',
   `a_country` tinyint(1) NOT NULL DEFAULT '1',
@@ -1196,6 +1197,16 @@ ALTER TABLE `video_comments`
 --
 ALTER TABLE `video_responses`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
+COMMIT;
+
+-- Default settings
+INSERT INTO `settings` (`name`, `value`) VALUES
+('channels', '1'),
+('login', '1'),
+('logo', '0'),
+('signup', '1'),
+('uploader', '1'),
+('videos', '1');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

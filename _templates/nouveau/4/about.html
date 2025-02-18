@@ -6,9 +6,11 @@
             <div class="about-metadata-container">
                 <div class="about-metadata-stats branded-page-box-padding">
                     <div class="about-stats">
-                    <span class="about-stat"><b>{{profile.channel_views}}</b> channel views • <b>{{profile.video_views}}</b> views</span>
+                    <span class="about-stat"><b>{{profile.subscribers}}</b> subscribers • <b>{{profile.video_views}}</b> video views</span>
+                    {% if profile.a_reg == 1 %}
                     <br>
                     <span class="about-stat">Joined {{profile.reg_date|date("M d, Y")}}</span>
+                    {% endif %}
                 </div>
             </div>
             <div class="about-actions branded-page-box-padding"></div>
@@ -28,26 +30,23 @@
                 <span class="country-inline">
                     {{profile.country}}
                 </span>
-                <br>
-                <span class="country-label">Last Visit:</span>
-                <span class="country-inline">
-                    {{profile.last_login|date("M d, Y")}}
-                </span>
             </div>
-            {% if profile.website != "" %}
+            {% if website|length > 0 %}
             <div class="about-metadata-label about-metadata-label-border-top branded-page-box-padding">
                 <span>Links</span>
             </div>
             <div class="about-metadata branded-page-box-padding clearfix">
                 <ul class="about-custom-links">
+                    {% for website in website %}
                     <li class="channel-links-item">
-                        <a href="{{profile.website}}" rel="me nofollow" target="_blank" title="{{profile.website}}" class="about-channel-link">
-                            <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{profile.website}}" class="about-channel-link-icon" width="16" height="16">
+                        <a href="{{website.url}}" rel="me nofollow" target="_blank" title="{{website.url}}" class="about-channel-link">
+                            <img src="https://s2.googleusercontent.com/s2/favicons?feature=youtube_channel&amp;domain_url={{website.url}}" class="about-channel-link-icon" width="16" height="16">
                             <span class="about-channel-link-text">
-                                {{profile.website}}
+                                {{website.title}}
                             </span>
                         </a>
                     </li>
+                    {% endfor %}
                 </ul>
             </div>
             {% endif %}

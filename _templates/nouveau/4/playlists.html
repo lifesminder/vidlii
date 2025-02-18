@@ -1,5 +1,92 @@
 {% extends "nouveau/4/base.html" %}
 
 {% block body %}
-    <p>Playlists</p>
+    <ul id="browse-items-primary">
+        <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
+            {{profile.playlists}}
+            {%if playlists|length > 0%}
+            <a href="/user/{{profile.displayname}}" class="yt-uix-button  sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
+                <span class="yt-uix-button-icon-wrapper">
+                    <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
+                </span>
+            </a>
+            <span class="branded-page-module-title">Playlists</span>
+            <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box">
+                <div class="feed-item-dismissable">
+                    <div class="feed-item-main feed-item-no-author">
+                        <div class="feed-item-main-content">
+                            <div class="shelf-wrapper clearfix">
+                                <div class="multirow-shelf shelf-item c4-visible-on-hover-container yt-section-hover-container">
+                                    <h2 class="branded-page-module-title">
+                                        <a href="/user/{{profile.displayname}}/playlists?shelf_id=0&amp;view=1&amp;sort=dd" class="yt-uix-sessionlink branded-page-module-title-link spf-nolink" data-sessionlink="ei=DgW0WoO5BMfB-AO-4qWgBA&amp;ved=CEYQzh4iEwiD-IeR1oDaAhXHIH4KHT5xCUQomxw">
+                                            <span class="branded-page-module-title-text">
+                                                <span class="">Created playlists</span>
+                                            </span>
+                                        </a>
+                                    </h2>
+                                    <ul class="shelf-content clearfix">
+                                        {%for playlist in playlists.data%}
+                                        <li class="yt-shelf-grid-item">
+                                            <div class="yt-lockup clearfix  yt-lockup-playlist yt-lockup-grid">
+                                                <div class="yt-lockup-dismissable">
+                                                    <div class="yt-lockup-thumbnail">
+                                                        <a href="/watch?v={{playlists.data[0].videos.url}}&pl={{playlist.purl}}" class="yt-pl-thumb-link yt-uix-sessionlink spf-link">
+                                                            <span class="yt-pl-thumb">
+                                                                <span class="video-thumb yt-thumb yt-thumb-196">
+                                                                    <span class="yt-thumb-default">
+                                                                        <span class="yt-thumb-clip">
+                                                                            <img aria-hidden="true" data-ytimg="1" width="196" alt="" src="/vi/{{playlists.data[0].videos.url}}/hqresdefault.jpg" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)">
+                                                                            <span class="vertical-align"></span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="sidebar">
+                                                                    <span class="yt-pl-sidebar-content yt-valign">
+                                                                        <span class="yt-valign-container">
+                                                                            <span class="formatted-video-count-label">
+                                                                                <b>{{playlist.count}}</b> videos
+                                                                            </span>
+                                                                            <span class="yt-pl-icon yt-pl-icon-reg yt-sprite"></span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="yt-pl-thumb-overlay">
+                                                                    <span class="yt-pl-thumb-overlay-content">
+                                                                        <span class="play-icon yt-sprite"></span>
+                                                                        <span class="yt-pl-thumb-overlay-text">
+                                                                            Play all
+                                                                        </span>
+                                                                    </span>
+                                                                  </span>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="yt-lockup-content">
+                                                        <h3 class="yt-lockup-title">
+                                                            <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="International Women's Day: Creators Press for Progress" href="/playlist?p={{playlist.purl}}" rel="nofollow">{{playlist.title}}</a>
+                                                            <span class="accessible-description"> - Playlist</span>
+                                                        </h3>
+                                                        <div class="yt-lockup-meta"><ul class="yt-lockup-meta-info"></ul></div>
+                                                    </div>
+                                                </div>
+                                                <div class="yt-lockup-notifications-container hid" style="height:110px"></div>
+                                            </div>
+                                        </li>
+                                        {%endfor%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {%for playlist in playlists%}
+                {%endfor%}
+            </li>
+            {%else%}
+            <center>
+                This channel have no playlists
+            </center>
+            {%endif%}
+        </li>
+    </ul>
 {% endblock %}

@@ -24,7 +24,7 @@
     define("DB_DATABASE", $_ENV["db"]);
     define("DB_USER", $_ENV["username"]);
     define("DB_PASSWORD", (isset($_ENV["password"]) && $_ENV["password"] != "") ? $_ENV["password"] : "");
-    define("DB_CHARSET", "utf8");
+    define("DB_CHARSET", "utf8mb4");
 
     define("CSS_FILE",          "/css/m.css?8");
     define("PROFILE_CSS_FILE",  "/css/profile.css?5");
@@ -61,6 +61,7 @@
 
     // New classes, intended to replace previous ones
     $engine = new \Vidlii\Vidlii\Engine();
+    $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
     $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
 
     if($_USER->logged_in && (!isset($_SERVER["HTTP_X_REQUESTED_WITH"]) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')) {

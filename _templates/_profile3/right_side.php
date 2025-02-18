@@ -18,10 +18,12 @@
     </div>
     <div class="cosmic_more_about">
         <? if (!empty($Profile["country"]) or $Profile["a_last"]) : ?>
+            <?php if($Profile["a_reg"] == 1) { ?>
             <div class="cosmic_profile">
                 <div>Joined</div>
                 <div><?= date("M d, Y",strtotime($Profile["reg_date"])) ?></div>
             </div>
+            <?php } ?>
             <? if ($Profile["a_last"]) : ?>
                 <div class="cosmic_profile">
                     <div>Last Login</div>

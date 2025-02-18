@@ -1,5 +1,5 @@
 <div style="width:60%;text-align:center;padding: 100px 0;float:left">
-    <h1>VidLii Admin Panel</h1>
+    <h1>Admin Panel</h1>
     This page is being heavily monitored, so don't do anything bad.
 </div>
 <div style="width:40%;float:left;text-align: center;padding: 20px 0">

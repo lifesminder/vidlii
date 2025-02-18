@@ -33,18 +33,28 @@
         </article>
     <?php
         } else {
+            if(!empty($Blog_Posts)) {
+                foreach($Blog_Posts as $Post) {
     ?>
-    <? foreach($Blog_Posts as $Post) : ?>
-        <div class="blog-box">
-            <div>
-                <h2 style="font-size: 19px"><a href="/blog/<?= $Post["id"] ?>"><?= $Post["title"] ?></a></h2>
-            </div>
-            <div>
-                <?= $Post["date"] ?>
-            </div>
+    <div class="blog-box">
+        <div>
+            <h2 style="font-size: 19px"><a href="/blog/<?= $Post["id"] ?>"><?= $Post["title"] ?></a></h2>
         </div>
-    <? endforeach ?>
+        <div>
+            <?= $Post["date"] ?>
+        </div>
+    </div>
     <?php
+                }
+            } else {
+    ?>
+    <center style="color: #999">
+        <p style="font-size: 32px"><:(</p>
+        <h3 style="color: #666">We haven't written anything yet...</h3>
+        <p>But we'll ultimately do it when a new announcement will appear from us. Stay tuned ;)</p>
+    </center>
+    <?php
+            }
         }
     ?>
 </div>

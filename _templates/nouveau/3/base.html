@@ -31,7 +31,7 @@
                                 </div>
                                 <div>
                                     <label for="website">Website: </label><br>
-                                    <input type="url" name="website" id="website" placeholder="Your Website" style="width: 100%"{% if profile.website != ""%} value="{{profile.website}}"{% endif %}>
+                                    <input type="text" name="website" id="website" placeholder="Your Website" style="width: 100%"{% if profile.website != ""%} value="{{profile.website}}"{% endif %}>
                                 </div>
                             </div>
                             <div>
@@ -136,6 +136,9 @@
                                     </a>
                                     <div class="upper-left-section">
                                         <h1>{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}'s Channel{%endif%}</h1>
+                                        {%if subscribed%}
+                                        Subscribed
+                                        {%endif%}
                                     </div>
                                     <div class="upper-left-section">
                                         {%if owner == true%}
@@ -221,22 +224,24 @@
                                         <div class="module-view profile-view-module">
                                             <h2>About {%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</h2>
                                             <div class="section first">
+                                                {%if profile.channel_description != ""%}
                                                 <div class="user-profile-item profile-description">
-                                                    {%if profile.channel_description != ""%}
                                                     <p>{{profile.channel_description_visible|raw}}</p>
-                                                    {%endif%}
                                                 </div>
-                                                {% if profile.a_website == 1 and website.url != "" %}
-                                                <div class="user-profile-item">
+                                                {%endif%}
+                                                {% if profile.a_website == 1 and website|length > 0 %}
+                                                {% for url in website %}
+                                                <div class="user-profile-item" style="margin-bottom: 0px;">
                                                     <div class="yt-c3-profile-custom-url field-container">
-                                                        <a href="{{website.url}}" rel="me nofollow" target="_blank" title="{{website.title}}" class="yt-uix-redirect-link">
-                                                            <img src="http://s2.googleusercontent.com/s2/favicons?domain={{website.url}}&amp;feature=youtube_channel" class="favicon" alt="">
+                                                        <a href="{{url.url}}" rel="me nofollow" target="_blank" title="{{url.title}}" class="yt-uix-redirect-link">
+                                                            <img src="http://s2.googleusercontent.com/s2/favicons?domain={{url.url}}&amp;feature=youtube_channel" class="favicon" alt="">
                                                             <span class="link-text">
-                                                                {{website.title}}
+                                                                {{url.title}}
                                                             </span>
                                                         </a>
                                                     </div>
                                                 </div>
+                                                {% endfor %}
                                                 {% endif %}
                                                 <hr class="yt-horizontal-rule">
                                             </div>
@@ -251,10 +256,12 @@
                                                     <span class="value">{{profile.last_login|date("M d, Y")}}</span>
                                                 </div>
                                                 {% endif %}
+                                                {% if profile.a_reg == 1 %}
                                                 <div class="user-profile-item">
                                                     <h5>Date Joined</h5>
                                                     <span class="value">{{profile.reg_date|date("M d, Y")}}</span>
                                                 </div>
+                                                {% endif %}
                                             </div>
                                             {% if profile.a_age == 1 or profile.a_country == 1 %}
                                             <div class="section">
@@ -275,13 +282,13 @@
                                             {% endif %}
                                         </div>
                                     </div>
-                                    {% if profile.c_featured_playlists == 1 and featured_playlists|length > 0 %}
+                                    {% if owner or (profile.c_featured_playlists == 1 and featured_playlists|length > 0) %}
                                     <div class="playlists-narrow channel-module yt-uix-c3-module-container">
                                         <div class="module-view gh-featured">
                                             {% if owner %}
                                             <div class="cosmic-module-twoside">
-                                                <div><h2 style="margin-bottom: 4px;">Featured Playlists</h2></div>
-                                                <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="edit_playlists" onclick="$(this).toggleClass('hddn');$('.cosmic_featured_playlists > a').toggleClass('hddn');$('#playlists_add').toggleClass('hddn')">Edit</button></div>
+                                                <div><h2>Featured Playlists</h2></div>
+                                                <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="edit_playlists" style="margin-top: -10px" onclick="$(this).toggleClass('hddn');$('.cosmic_featured_playlists > a').toggleClass('hddn');$('#playlists_add').toggleClass('hddn')">Edit</button></div>
                                             </div>
                                             <div id="playlists_add" class="hddn" style="background-color:#7696e6;padding:52px 13px 13px 13px;font-size:14px;border-radius:5px;margin-top:5px;margin-bottom:25px;position:relative;border:1px solid #4f87d4;color:white;font-weight:bold">
                                                 <form action="{{request_url}}" method="POST" style="position:absolute;top:12px;left:12px">
@@ -289,8 +296,28 @@
                                                     <button type="submit" class="yt-uix-button yt-uix-button-primary yt-uix-button-short" name="save_playlists">Save</button>
                                                     <button type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" onclick="$('#playlists_add').toggleClass('hddn');$('#edit_playlists').toggleClass('hddn');$('.cosmic_featured_playlists > a').toggleClass('hddn')">Cancel</button>
                                                 </form>
-                                                <div style="border-radius:3px;background-color:white;padding:6px"></div>
-                                                <div id="featured_playlists_small"></div>
+                                                <div style="border-radius:3px;background-color:white;padding:6px">
+                                                    <select id="select_playlist" style="background: #f5f5f5;padding:6px;width:166px">
+                                                        {% if playlists.count > 0 %}
+                                                            {% for playlist in playlists.data %}
+                                                            <option value="{{playlist.purl}}">{{playlist.title}}</option>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <option>No Playlists...</option>
+                                                        {% endif %}
+                                                    </select>
+                                                    <button onclick="{% if playlists.count > 0 %}cosmic_add_playlist(){% else %}alert('You have no playlists to add!'){% endif %}" type="button" class="cosmic_button" style="height:31px;position:relative;left:12px;bottom:0.9px">Add</button>
+                                                </div>
+                                                <div id="featured_playlists_small">
+                                                    {% if playlists.count > 0 %}
+                                                        {% for playlist in playlists.data %}
+                                                        <div id="pl_<?= $Playlist["purl"] ?>" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
+                                                            <div style="float:left;color:black;font-weight:bold">{{playlist.title}}</div>
+                                                            <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_pl('{{playlist.purl}}')">Remove</a></div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                             {% else %}
                                             <h2>Featured Playlists</h2>
@@ -318,6 +345,7 @@
                                                                 {{playlist.videos|length}} video{%if playlist.videos|length != 1%}s{%endif%}
                                                             </span>
                                                         </span>
+                                                        {% if playlist.videos|length > 0 %}
                                                         <span class="hover-overlay">
                                                             <span class="play-all-container">
                                                                 <strong>
@@ -326,6 +354,7 @@
                                                                 </strong>
                                                             </span>
                                                         </span>
+                                                        {% endif %}
                                                     </span>
                                                 </a>
                                                 <h3>
@@ -336,7 +365,7 @@
                                                 <span class="playlist-author-attribution">by {%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</span>
                                             </div>
                                             {% endfor %}
-                                            {% if profile.c_playlists == 1 %}
+                                            {% if featured_playlists|length > 0 %}
                                             <a class="view-all-link" href="/user/{{profile.displayname}}/videos?view=1">
                                                 view all
                                                 <img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
@@ -345,13 +374,38 @@
                                         </div>
                                     </div>
                                     {% endif %}
-                                    {% if featured_channels|length > 0 and profile.c_featured_channels == 1 %}
+                                    {% if owner or (featured_channels|length > 0 and profile.c_featured_channels == 1) %}
                                     <div class="channel-module other-channels yt-uix-c3-module-container other-channels-compact">
                                         <div class="module-view other-channels-view">
                                             {% if owner %}
                                             <div class="cosmic-module-twoside">
                                                 <div><h2 style="margin-bottom: 10px;">{% if featured_title != "" %}{{featured_title}}{% else %}Featured Channels{% endif %}</h2></div>
-                                                <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short">Edit</button></div>
+                                                <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="edit_featured" onclick="$(this).toggleClass('hddn');$('.cosmic_featured_channels > a').toggleClass('hddn');$('#featured_users_add').toggleClass('hddn')">Edit</button></div>
+                                            </div>
+                                            <div id="featured_users_add" class="hddn" style="background-color:#7696e6; padding: 13px; font-size:14px;border-radius:5px;margin: 5px 0 5px 0; border:1px solid #4f87d4;color:white;font-weight:bold">
+                                                <form action="/user/{{profile.displayname}}" method="POST">
+                                                    <button type="submit" name="save_featured_channels" class="yt-uix-button yt-uix-button-primary yt-uix-button-short">Save</button>
+                                                    <input type="hidden" id="featured_channels_small_input" value="{{profile.featured_channels}}," name="featured_channels">
+                                                    <button type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" onclick="$('#featured_users_add').toggleClass('hddn');$('#edit_featured').toggleClass('hddn');$('.cosmic_featured_channels > a').toggleClass('hddn')">Cancel</button>
+                                                    <div>
+                                                        <input type="yt-text" maxlength="64" name="featured_title" style="padding:7px;width:238px;margin-top:7px" placeholder="Featured Channels" value="{% if featured_title != '' %}{{featured_title}}{% else %}Featured Channels{% endif %}">
+                                                        <hr>
+                                                        <div>
+                                                            <input type="yt-text" maxlength="64" style="padding: 7px;" placeholder="Channel Name" id="ft_channel_name">
+                                                            <button onclick="cosmic_add_channel()" type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" style="height:31px;position:relative;left:12px;bottom:0.9px">Add</button>
+                                                        </div>
+                                                        <div id="featured_channels_small">
+                                                            {% if profile.featured_channels != "" %}
+                                                                {% for channel in featured_channels %}
+                                                                    <div id="fc_{{channel}}" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
+                                                                        <div style="float:left;color:black;font-weight:bold"><?= $Featured_Channel["displayname"] ?></div>
+                                                                        <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_ft('{{channel}}')">Remove</a></div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                             {% else %}
                                             <h2>{% if featured_title != "" %}{{featured_title}}{% else %}Featured Channels{% endif %}</h2>
