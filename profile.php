@@ -51,7 +51,7 @@ if (isset($_GET["user"])) {
                 $args["owner"] = false;
                 $args["subscribed"] = false;
             }
-
+            $args["background"] = (bool)($api->db("SELECT length(cover) as l from users where displayname = '".$Profile["displayname"]."'")["data"]["l"] > 0);
             $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
             if($args["featured_channels"] != "") {
                 $args["featured_channels"] = explode(",", $args["featured_channels"]);
@@ -86,7 +86,7 @@ if (isset($_GET["user"])) {
                 $args["website"] = ($Profile["channel_version"] <= 2) ? $websites[0]["url"] : $websites;
             }
             $args["user"] = $_USER->username;
-
+            
             // Stuff
             $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
 
@@ -528,12 +528,12 @@ if (isset($_GET["user"])) {
             $Channel_Type_Icon = $Channel_Type[1];
             $Channel_Type = $Channel_Type[0];
 
-            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            $Background = $api->db("SELECT cover from users where username = \"$Profile[displayname]\"");
             if($Background["count"] == 1) {
                 if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
                     $Has_Background = false;
                 } else {
-                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Background = "/vi/cover/".$Profile["displayname"].".jpg";
                     $Has_Background = true;
                 }
             } else $Has_Background = false;
@@ -1322,12 +1322,12 @@ if (isset($_GET["user"])) {
                 }
             }
 
-            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            $Background = $api->db("SELECT cover from users where username = \"$Profile[displayname]\"");
             if($Background["count"] == 1) {
                 if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
                     $Has_Background = false;
                 } else {
-                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Background = "/vi/cover/".$Profile["displayname"].".jpg";
                     $Has_Background = true;
                 }
             } else $Has_Background = false;
@@ -2134,12 +2134,12 @@ if (isset($_GET["user"])) {
             }
 
 
-            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            $Background = $api->db("SELECT cover from users where username = \"$Profile[displayname]\"");
             if($Background["count"] == 1) {
                 if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
                     $Has_Background = false;
                 } else {
-                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Background = "/vi/cover/".$Profile["displayname"].".jpg";
                     $Has_Background = true;
                 }
             } else $Has_Background = false;

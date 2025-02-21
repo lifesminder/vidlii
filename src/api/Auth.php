@@ -23,9 +23,8 @@
                         else $data = $this->api_message(-1, "Invalid Username or Password");
                     } else $data = $this->api_message(-1, "Invalid Username or Password");
                 } else $data = $this->api_message(-1, "Invalid Username or Password");
-            } else {
-                $data = $this->api_message(-1, "Enter credentials");
-            }
+            } else $data = $this->api_message(-1, "Enter credentials");
+            
             return $data;
         }
     }

@@ -401,13 +401,16 @@ CREATE TABLE `replies` (
 --
 
 CREATE TABLE `sessions` (
-  `id` int(12) NOT NULL,
+  `id` int(12) NOT NULL AUTO_INCREMENT,
   `session` varchar(255) NOT NULL,
   `user` int(32) NOT NULL,
   `ip` varchar(255) NOT NULL,
   `remembered` int(2) NOT NULL DEFAULT 0,
-  `browser` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `first_access` timestamp NOT NULL DEFAULT current_timestamp(),
+  `last_access` timestamp NOT NULL DEFAULT current_timestamp(),
+  `browser` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

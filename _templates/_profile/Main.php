@@ -390,7 +390,7 @@
 <?php
 	if($Has_Background) {
 ?>
-<div style="color: #fff; float: left; width: 100%; text-align: center; font-size: 12px; display: block; padding: 10px 0;" id="report_bgd">
+<div style="float: left; width: 100%; text-align: center; font-size: 12px; display: block; padding: 10px 0;" id="report_bgd">
 	<a href="javascript:void(0);" onclick="report(this, '<?php echo $Profile['displayname']; ?>', 'bgd')">Report</a> background graphic.
 </div>
 <?php

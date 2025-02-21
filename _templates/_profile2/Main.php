@@ -325,6 +325,12 @@
                         </div>
                     </div>
                 <? endif ?>
+                <?php if(strlen($Profile["avatar"]) > 0) { ?>
+                <div class="pr_inf_sct"></div>
+                <div class="pr_inf_sct">
+                    <a href="javascript:void(0);" onclick="report(this, '<?php echo $Profile['displayname']; ?>', 'pfp')">Report</a> profile image violation
+                </div>
+                <?php } ?>
             </div>
             <? if ($Is_OWNER) : ?>
             <div id="ch_edit_info" class="ch_edit_info" style="display:none">
@@ -463,3 +469,12 @@
         <? endforeach ?>
     </div>
 </div>
+<?php
+	if($Has_Background) {
+?>
+<div style="float: left; width: 100%; display: block; font-size: 14px; padding: 10px 0;" id="report_bgd">
+	<a href="javascript:void(0);" onclick="report(this, '<?php echo $Profile['displayname']; ?>', 'bgd')">Report</a> background graphic.
+</div>
+<?php
+	}
+?>

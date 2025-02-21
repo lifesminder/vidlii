@@ -28,7 +28,7 @@
 				$conn = \Doctrine\DBAL\DriverManager::getConnection($params);
 				try {
 					$stmt = $conn->prepare($query);
-					if(strtolower(substr($query, 0, strlen("select"))) == "select") {
+					if(strtolower(substr($query, 0, strlen("select"))) == "select" || strtolower(substr($query, 0, strlen("show"))) == "show") {
 						$result = $stmt->executeQuery();
 						$datas = $result->fetchAllAssociative();
 						if($alwaysKeyed) $data = ["count" => count($datas), "data" => $datas];
@@ -94,14 +94,15 @@
                 $session["user"] = $this->db("SELECT id, username, displayname from users where id = ".$session["user"]);
                 if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             } else {
-                $session = ["session" => -1, "user" => ["username" => "Guest", "displayname" => "Guest"]];
+                $session = ["session" => -1, "user" => ["id" => -1, "username" => "Guest", "displayname" => "Guest"]];
             }
 
             if($action != null) {
                 $result = null;
                 switch(strtolower($action)) {
                     case "logout": {
-                        $logout = $this->db("DELETE from sessions where session = \"$cookie\"");
+                        $id = $session["user"]["id"];
+                        $logout = $this->db("DELETE from sessions where user = $id");
                         return $logout;
                         break;
                     }

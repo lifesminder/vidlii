@@ -8,7 +8,7 @@ if (!$_USER->logged_in)         { redirect("/login"); exit(); }
 
 if (isset($_POST["update_info"])) {
     $_GUMP->validation_rules(array(
-        "website"       => "valid_url|max_len,128",
+        "website"       => "max_len,128",
         "day"           => "is_day",
         "month"         => "is_month",
         "year"          => "is_year",
