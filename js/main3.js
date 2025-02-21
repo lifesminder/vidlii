@@ -502,24 +502,20 @@ $(".sub_button").click(function() {
 });
 
 function user_exists(user) {
-    $.ajax({
-        type: "POST",
-        url: "/ajax/user_exists",
-        data: {
-            user: user
-        },
-        success: function(output) {
-            if (output == "true") {
-                document.getElementById("reg_submit").disabled = !0;
-                $("#user_exists").css("display", "block");
-                $("#user_exists").html("<strong>" + user + "</strong> is already in use!")
-            } else {
-                document.getElementById("reg_submit").disabled = !1;
-                $("#user_exists").css("display", "none");
-                $("#user_exists").html("")
-            }
+    fetch(`/api/user/check?u=${user}`).then(resp => {
+        return resp.json();
+    }).then(data => {
+        let user_exists = document.getElementById("user_exists"), available = data.available;
+        console.log(data);
+
+        if(available) {
+            user_exists.style.color = "green";
+            user_exists.innerHTML = `Username is available`;
+        } else {
+            user_exists.style.color = "red";
+            user_exists.innerHTML = `<strong>${user}</strong> is already in use!`;
         }
-    })
+    });
 }
 current_page = 0;
 

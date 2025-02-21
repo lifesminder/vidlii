@@ -31,7 +31,17 @@ if (isset($_GET["user"])) {
         // New logic of channels: Nouveau
         if($Profile["nouveau"] == 1 && $Profile["channel_version"] >= 3) {
             $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
-            
+
+            $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
+            $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
+            if($Profile["channel_description"] != "") {
+                $Profile["channel_description_visible"] = str_replace("\n", "<br>", $Profile["channel_description"]);
+            }
+            if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
+                $Is_OWNER = true;
+            }
+
+            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER, "request_url" => $_SERVER['REQUEST_URI']];
             if($_USER->logged_in) {
                 $args["authorized"] = true;
                 $args["owner"] = ($_USER->username === $Profile["username"]) ? true : false;
@@ -42,17 +52,6 @@ if (isset($_GET["user"])) {
                 $args["subscribed"] = false;
             }
 
-            $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
-            $Profile["age"] = $interval->y; $Profile["country"] = $Countries[$Profile["country"]];
-            if($Profile["channel_description"] != "") {
-                $Profile["channel_description_visible"] = str_replace("\n", "<br>", $Profile["channel_description"]);
-            }
-            if ($_USER->logged_in && $_USER->username === $Profile["username"]) {
-                $Is_OWNER = true;
-            }
-            $args = ["profile" => $Profile, "owner" => $Is_OWNER, "page" => $page, "two_columns" => $twoColumns, "_server" => $_SERVER, "request_url" => $_SERVER['REQUEST_URI']];
-            
-            $args["subscribed"] = true;
             $args["featured_channels"] = $api->db("SELECT featured_channels from users where displayname = '".$Profile["displayname"]."'")["data"]["featured_channels"];
             if($args["featured_channels"] != "") {
                 $args["featured_channels"] = explode(",", $args["featured_channels"]);
@@ -158,44 +157,6 @@ if (isset($_GET["user"])) {
                     }
                 }
             }
-            /*
-            if($Profile["channel_version"] == 3) {
-                if($page == "index" || $page == "featured") {
-                    if(
-                        $args["video"]["count"] == 0
-                    ) {
-                        if($Profile["c_recent"] == 1 || $Profile["c_comments"] == 1)
-                            header("Location: /user/".$Profile["displayname"]."/feed");
-                    }
-                } else if($page == "feed") {
-                    if($Profile["c_recent"] == 0 && $Profile["c_comments"] == 0) {
-                        header("Location: /user/".$Profile["displayname"]);
-                    } else {
-                        if(!isset($_GET["filter"])) {
-                            if($Profile["c_recent"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
-                            else if($Profile["c_comments"] == 0) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
-                            else header("Location: /user/".$Profile["displayname"]);
-                        } else {
-                            if($Profile["c_recent"] == 0 && (int)$_GET["filter"] != 1) header("Location: /user/".$Profile["displayname"]."/feed?filter=1");
-                            else if($Profile["c_comments"] == 0 && (int)$_GET["filter"] != 2) header("Location: /user/".$Profile["displayname"]."/feed?filter=2");
-                            else header("Location: /user/".$Profile["displayname"]);
-                        }
-                    }
-                } else if($page == "videos") {
-                    if(isset($_GET["view"])) {
-                        if($_GET["view"] == 1 && $Profile["c_playlists"] != 1) header("Location: /user/".$Profile["displayname"]."/videos?view=0");
-                        else if($_GET["view"] == 0 && $Profile["c_videos"] != 1) {
-                            if($Profile["c_playlists"] == 1) header("Location: /user/".$Profile["displayname"]."/videos?view=1");
-                            else header("Location: /user/".$Profile["displayname"]);
-                        }
-                    } else {
-                        if($Profile["c_videos"] == 0 && $Profile["c_playlists"] == 1) header("Location: /user/".$Profile["displayname"]."/videos?view=1");
-                        else if($Profile["c_videos"] == 1 && $Profile["c_playlists"] == 0) header("Location: /user/".$Profile["displayname"]."/videos?view=0");
-                        else if($Profile["c_videos"] == 0 && $Profile["c_playlists"] == 0) header("Location: /user/".$Profile["displayname"]);
-                    }
-                }
-            }
-            */
 
             require_once "_templates/nouveau_structure.php";
         } else {
@@ -361,11 +322,19 @@ if (isset($_GET["user"])) {
                 }
 
                 if ($Profile["c_videos"]) {
-                    $Videos                     = new Videos($DB, $_USER);
-                    $Videos->WHERE_P            = ["uploaded_by" => $Profile["username"]];
-                    $Videos->ORDER_BY           = "uploaded_on DESC";
+                    $sort = "uploaded_on DESC";
+                    if(isset($_GET["sort"]) && $_GET["sort"] != "") {
+                        switch(strtolower($_GET["sort"])) {
+                            case "v": $sort = "displayviews DESC"; break;
+                            case "d": $sort = "comments DESC"; break;
+                        }
+                    }
+
+                    $Videos = new Videos($DB, $_USER);
+                    $Videos->WHERE_P = ["uploaded_by" => $Profile["username"]];
+                    $Videos->ORDER_BY = $sort;
                     $Videos->Shadowbanned_Users = true;
-                    $Videos->LIMIT              = $LIMIT_VIDEO;
+                    $Videos->LIMIT = $LIMIT_VIDEO;
                     $Videos->get();
 
                     if ($Videos::$Videos) {
@@ -553,22 +522,21 @@ if (isset($_GET["user"])) {
 
             }
 
-
             $_USER->view_channel($Profile["username"]);
 
-            $Channel_Type       = $_USER->channel_type($Profile["channel_type"]);
-            $Channel_Type_Icon  = $Channel_Type[1];
-            $Channel_Type       = $Channel_Type[0];
+            $Channel_Type = $_USER->channel_type($Profile["channel_type"]);
+            $Channel_Type_Icon = $Channel_Type[1];
+            $Channel_Type = $Channel_Type[0];
 
-
-            $Background = @glob("usfi/bg/".$Profile["username"].".*")[0];
-            if ($Background === NULL) {
-                $Has_Background = false;
-            } else {
-                $Background = "/".$Background."?".$Profile["bg_version"];
-                $Has_Background = true;
-            }
-
+            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            if($Background["count"] == 1) {
+                if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
+                    $Has_Background = false;
+                } else {
+                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Has_Background = true;
+                }
+            } else $Has_Background = false;
 
             $HightLight_Num = round(100 - $Profile["h_trans"]);
 
@@ -715,13 +683,10 @@ if (isset($_GET["user"])) {
                 $Folder = "";
             }
 
-            if (empty($Folder)) {
-                $Avatar = "/img/no.png";
-            } else {
-                $Avatar = "/usfi/$Folder/$Avatar.jpg";
-            }
+            $Avatar = "/vi/ava/".$Profile["displayname"].".jpg";
 
             $Channel_Types = array(
+                -1 => "Administrator",
                 0 => "",
                 1 => "Director",
                 2 => "Musician",
@@ -851,6 +816,7 @@ if (isset($_GET["user"])) {
             }
 
             $Channel_Types = [
+                -1 => "Administrator",
                 0 => "",
                 1 => "Director",
                 2 => "Musician",
@@ -1299,20 +1265,27 @@ if (isset($_GET["user"])) {
                         $bg_position = (int)$Validation["bg_position"];
                     }
 
-
-                    if (!empty($_FILES["bg_upload"]["name"])) {
-                        $Allowed_Types = array("jpg","jpeg","gif","png","bmp");
-                        $Image_Type = pathinfo($_FILES["bg_upload"]["name"], PATHINFO_EXTENSION);
-
-                        if (convert_filesize($_FILES["bg_upload"]["size"],"kb") <= 502 && in_array(strtolower($Image_Type),$Allowed_Types)) {
-                            $File = @glob("usfi/bg/$_USER->username.*")[0];
-                            if ($File === NULL) {
-                                move_uploaded_file($_FILES["bg_upload"]["tmp_name"],"usfi/bg/$_USER->username.$Image_Type");
-                                $DB->modify("UPDATE users SET bg_version = bg_version + 1 WHERE username = '$_USER->username'");
-                            }
-                        }
+                    if(!empty($_FILES["bg_upload"]["name"])) {
+                        /*
+                            Channel background uploader!
+                        */
+                        $background = $_FILES["bg_upload"];
+                        $allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+                        $background_info = getimagesize($background["tmp_name"]);
+                        
+                        if(in_array($background_info["mime"], $allowed_types)) {
+                            if(convert_filesize($background_info["size"], "mb") <= 5) {
+                                $bgd = base64_encode(file_get_contents($background["tmp_name"]));
+                                $cover_update = $api->db("UPDATE users set cover = \"$bgd\" where username = \"".$api->session()["user"]["username"]."\"");
+                                if($cover_update["status"] >= 1) notification("Background changed successfully", "/user/".$Profile["displayname"], "green");
+                                else notification($cover_update["message"], "/user/".$Profile["displayname"], "red");
+                            } else notification("Maximum background size is 5 MB", "/user/".$Profile["displayname"], "red");
+                        } else notification("Invalid format! Consider uploading PNG/JPEG/WEBP/GIF", "/user/".$Profile["displayname"], "red");
+                    } else {
+                        $cover_update = $api->db("UPDATE users set cover = null where username = \"".$api->session()["user"]["username"]."\"");
+                        if($cover_update["status"] >= 1) notification("Background removed successfully", "/user/".$Profile["displayname"], "green");
+                        else notification($cover_update["message"], "/user/".$Profile["displayname"], "red");
                     }
-
 
                     if (isset($Validation["bg_fixed"])) { $bg_fixed = 1; } else { $bg_fixed = 0; }
                     if (isset($Validation["bg_stretch"])) { $bg_stretch = 1; } else { $bg_stretch = 0; }
@@ -1349,14 +1322,15 @@ if (isset($_GET["user"])) {
                 }
             }
 
-            $Background = @glob("usfi/bg/".$Profile["username"].".*")[0];
-            if ($Background === NULL) {
-                $Has_Background = false;
-            } else {
-                $Background = "/".$Background."?".$Profile["bg_version"];
-                $Has_Background = true;
-            }
-
+            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            if($Background["count"] == 1) {
+                if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
+                    $Has_Background = false;
+                } else {
+                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Has_Background = true;
+                }
+            } else $Has_Background = false;
 
             if ($Profile["c_featured_channels"] == "1" && !empty($Profile["featured_channels"])) {
                 $Featured_Channels_Array = sql_IN_fix(explode(",",$Profile["featured_channels"]));
@@ -1847,17 +1821,26 @@ if (isset($_GET["user"])) {
                 $Validation = $_GUMP->run($_POST);
 
                 if ($Validation) {
-                    if (!empty($_FILES["bg_upload"]["name"])) {
-                        $Allowed_Types = array("jpg","jpeg","gif","png","bmp");
-                        $Image_Type = pathinfo($_FILES["bg_upload"]["name"], PATHINFO_EXTENSION);
-
-                        if (convert_filesize($_FILES["bg_upload"]["size"],"kb") <= 500 && in_array(strtolower($Image_Type),$Allowed_Types)) {
-                            $File = @glob("usfi/bg/$_USER->username.*")[0];
-                            if ($File === NULL) {
-                                move_uploaded_file($_FILES["bg_upload"]["tmp_name"],"usfi/bg/$_USER->username.$Image_Type");
-                                $DB->modify("UPDATE users SET bg_version = bg_version + 1 WHERE username = '$_USER->username'");
-                            }
-                        }
+                    if(!empty($_FILES["bg_upload"]["name"])) {
+                        /*
+                            Channel background uploader!
+                        */
+                        $background = $_FILES["bg_upload"];
+                        $allowed_types = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+                        $background_info = getimagesize($background["tmp_name"]);
+                        
+                        if(in_array($background_info["mime"], $allowed_types)) {
+                            if(convert_filesize($background_info["size"], "mb") <= 5) {
+                                $bgd = base64_encode(file_get_contents($background["tmp_name"]));
+                                $cover_update = $api->db("UPDATE users set cover = \"$bgd\" where username = \"".$api->session()["user"]["username"]."\"");
+                                if($cover_update["status"] >= 1) notification("Background changed successfully", "/user/".$Profile["displayname"], "green");
+                                else notification($cover_update["message"], "/user/".$Profile["displayname"], "red");
+                            } else notification("Maximum background size is 5 MB", "/user/".$Profile["displayname"], "red");
+                        } else notification("Invalid format! Consider uploading PNG/JPEG/WEBP/GIF", "/user/".$Profile["displayname"], "red");
+                    } else {
+                        $cover_update = $api->db("UPDATE users set cover = null where username = \"".$api->session()["user"]["username"]."\"");
+                        if($cover_update["status"] >= 1) notification("Background removed successfully", "/user/".$Profile["displayname"], "green");
+                        else notification($cover_update["message"], "/user/".$Profile["displayname"], "red");
                     }
 
                     if (isset($Validation["bg_fixed"])) { $bg_fixed = 1; } else { $bg_fixed = 0; }
@@ -2151,14 +2134,15 @@ if (isset($_GET["user"])) {
             }
 
 
-            $Background = @glob("usfi/bg/".$Profile["username"].".*")[0];
-            if ($Background === NULL) {
-                $Has_Background = false;
-            } else {
-                $Background = "/".$Background."?".$Profile["bg_version"];
-                $Has_Background = true;
-            }
-
+            $Background = $api->db("SELECT cover from users where username = \"".$api->session()["user"]["username"]."\"");
+            if($Background["count"] == 1) {
+                if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
+                    $Has_Background = false;
+                } else {
+                    $Background = "/vi/cover/".$api->session()["user"]["displayname"].".jpg";
+                    $Has_Background = true;
+                }
+            } else $Has_Background = false;
 
             //GET META DESCRIPTION
             if (!empty($Profile["channel_description"])) {

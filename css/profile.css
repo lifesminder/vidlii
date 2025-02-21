@@ -786,9 +786,14 @@
 .connect_lnk,
 .pr_lks,
 .us_box,
-.vi_box,
-.vi_box>div {
+.vi_box {
     text-align: center
+}
+
+.vi_box > div {
+    text-align: left;
+    width: 160px;
+    margin: 0 auto;
 }
 
 #recent_activity table {
@@ -871,7 +876,13 @@
 } .pr_lks > a {
     padding: 0 12px;
     border-right: 1px solid #000;
-    text-decoration: underline;
+} .pr_lks > a.active {
+    font-weight: bold;
+}
+
+.flagging_text {
+    text-align: center;
+    padding: 10px 0;
 }
 
 .pr_lks>a:first-of-type {
@@ -1053,8 +1064,10 @@
     width: 166px
 }
 
-.vi_box>div>a:first-of-type {
-    font-size: 13px
+.vi_box .ln2 {
+    font-size: 12px;
+    font-weight: bold;
+    text-wrap: wrap;
 }
 
 .vi_box>div:last-of-type {

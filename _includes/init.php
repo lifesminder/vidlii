@@ -81,7 +81,6 @@
 
     }
 
-
     $_SESSION["ten2020Holiday"] = date("d", time());
 
     //Load for traffic regulation

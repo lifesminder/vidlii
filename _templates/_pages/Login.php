@@ -25,7 +25,15 @@
 <section class="lg_r">
     <div class="you_wnt" id="login_box">
         <div>
-            <form action="/login<? if (isset($_GET["activate"])) : ?>?activate=<?= $_GET["activate"] ?><? endif ?>" method="POST">
+            <?php
+                $next = "";
+                if(isset($_GET["next"]) && $_GET["next"] != "") {
+                    $next = htmlspecialchars($_GET["next"]);
+                } else if(isset($_GET["activate"]) && $_GET["activate"] != "") {
+                    $next = "?activate=".$_GET["activate"];
+                }
+            ?>
+            <form action="/login<?php echo $next; ?>" method="POST">
             <img src="/img/vidlii.png" height="37" width="92" alt="VidLii" title="VidLii - Display Yourself.">
             <? if ($_PAGE->has_errors()) : ?>
                 <div style="color:red;text-align: center"><?= $_PAGE->return_errors()[0] ?></div>

@@ -491,6 +491,7 @@
 
         public function channel_type($Type = NULL) {
             static $Types = array(
+                -1 => "Administrator",
                 0 => "",
                 1 => "Director",
                 2 => "Musician",

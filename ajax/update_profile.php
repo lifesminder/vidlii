@@ -79,7 +79,8 @@ if ($Validation) {
             a_books = :ABOOKS,
             a_subs = :ASUBS,
             a_last = :ALAST,
-            a_age = :AAGE
+            a_age = :AAGE,
+            a_reg = 1
             WHERE username = :USERNAME
             ",
             [

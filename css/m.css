@@ -1450,6 +1450,12 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
     top: 1px
 }
 
+#user_exists {
+    font-size: 12px;
+    position: relative;
+    top: 1px; left: 1px;
+}
+
 .wdg_sel {
     float: right;
     top: 4px
@@ -1834,7 +1840,6 @@ button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]
 }
 
 .ln2 {
-    height: 2.4em;
     line-height: 16px;
     bottom: 1px
 }

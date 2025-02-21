@@ -518,6 +518,7 @@ function seconds_to_time($Seconds) {
 	$hours = floor($Seconds / 3600);
     $minutes = floor(($Seconds % 3600) / 60);
 	$seconds = floor($Seconds % 60);
+	if($seconds < 10) $seconds = "0$seconds";
 	return ($hours > 0) ? "$hours:$minutes:$seconds" : "$minutes:$seconds";
 }
 

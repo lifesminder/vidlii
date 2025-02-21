@@ -18,6 +18,10 @@
             $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]);
             $cdn->avatar($id, $_GET);
         });
+        $router->get("/cover/(.*).jpg", function($id) {
+            $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]);
+            $cdn->cover($id, $_GET);
+        });
         $router->get("/(.*)/(.*).jpg", function($id, $type) {
             $cdn = new \Vidlii\Vidlii\CDN($_SERVER["DOCUMENT_ROOT"]); $params = [];
             switch(strtolower($type)) {
@@ -72,7 +76,7 @@
         });
     });
     $router->all("/api/(.*)", function($query) {
-        global $api; // $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+        global $api;
         $api->point($query, $_SERVER['REQUEST_METHOD'], ($_SERVER['REQUEST_METHOD'] == "POST") ? $_POST : $_GET, $_FILES);
     });
     $router->mount("/user", function() use($router) {
@@ -93,10 +97,12 @@
     });
     $router->get("/logout", function() {
         require_once "_includes/init.php";
+        global $api;
         if(!$_USER->logged_in) {
             redirect("/");
         }
         $_USER->logout();
+        $api->session(null, "logout");
         redirect((isset($_GET["next"]) && $_GET["next"] != "") ? "/".$_GET["next"] : previous_page());
     });
 
@@ -106,7 +112,7 @@
         $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
 
         echo "<pre>";
-        print_r($db->query("SHOW CREATE TABLE playlists"));
+        print_r($db->query("SHOW CREATE TABLE users"));
         echo "</pre>";
     });
     $router->get("/playlist", function() {
@@ -130,38 +136,8 @@
 
                     if($playlist_info["status"] == 1) {
                         $playlist_info = $playlist_info["data"];
-                        $twig = true; $page = "nouveau/playlist.html"; $args = ["playlist" => $playlist_info];
+                        $twig = true; $title = $playlist_info["title"]." - VidLii"; $page = "nouveau/playlist.html"; $args = ["playlist" => $playlist_info];
                         require_once "_templates/page_structure.php";
-                        /*
-                        $Playlist = $db->execute("SELECT * FROM playlists WHERE purl = :PURL", true, [":PURL" => $_GET["p"]]);
-                        $Playlist_Stats = $db->execute("SELECT sum(videos.displayviews) as total_views, sum(videos.comments) as total_comments, sum(videos.responses) as total_responses, sum(videos.favorites) as total_favorites FROM playlists INNER JOIN playlists_videos ON playlists_videos.purl = playlists.purl INNER JOIN videos ON playlists_videos.url = videos.url WHERE playlists.purl = :PURL", true, [":PURL" => $_GET["p"]]);
-
-                        $Playlist_Videos                     = new Videos($db, $_USER);
-                        $Playlist_Videos->WHERE_P            = ["playlists_videos.purl" => $_GET["p"]];
-                        $Playlist_Videos->JOIN               = "RIGHT JOIN playlists_videos ON playlists_videos.url = videos.url";
-                        $Playlist_Videos->Shadowbanned_Users = true;
-                        $Playlist_Videos->Banned_Users       = true;
-                        $Playlist_Videos->Private_Videos     = true;
-                        $Playlist_Videos->Unlisted_Videos    = true;
-                        $Playlist_Videos->ORDER_BY           = "playlists_videos.position";
-                        $Playlist_Videos->LIMIT              = 512;
-                        $Playlist_Videos->get();
-
-
-                        if($Playlist_Videos::$Videos) {
-                            $Playlist_Videos = $Playlist_Videos->fixed();
-                        } else {
-                            notification("This playlist doesn't have any videos!","videos","red"); exit();
-                        }
-
-                        $_PAGE->set_variables(array(
-                            "Page_Title"        => $playlist_info["title"]." - VidLii",
-                            "Page"              => "Playlist",
-                            "Page_Type"         => "Videos",
-                            "Show_Search"       => false
-                        ));
-                        require_once "_templates/page_structure.php";
-                        */
                     }
                     break;
                 }
@@ -201,7 +177,15 @@
             require_once "_templates/page_structure.php";
         } else {
             if(file_exists($system_page)) include_once $system_page;
-            else echo "404 Not Found";
+            else {
+                $feed = new \Vidlii\Vidlii\API\Feed($_SERVER["DOCUMENT_ROOT"]);
+
+                $twig = true;
+                $title = "404 - Page Not Found | VidLii";
+                $page = "nouveau/error.html";
+                $args["featured"] = $feed->index(["show" => "featured"]);
+                require_once "_templates/page_structure.php";
+            }
         }
     });
     $router->run();

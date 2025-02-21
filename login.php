@@ -124,6 +124,9 @@ if (isset($_POST["submit_login"])) {
                     if (!isset($_GET["activate"])) {
                         redirect(previous_page());
                         exit();
+                    } else if(isset($_GET["next"]) && $_GET["next"] != "") {
+                        redirect($_GET["next"]);
+                        exit();
                     } else {
                         redirect("/activate?code=" . $_GET["activate"]);
                         exit();

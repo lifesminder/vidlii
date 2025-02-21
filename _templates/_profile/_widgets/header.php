@@ -59,17 +59,6 @@
 			</div>
 		</div>
 	</header>
-	
-	<? if ($Profile["banned"] == 0 && $Banner_Links !== false)
-		require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/banner.php"; ?>
-	
-	<? if (($Profile["c_videos"] || $Profile["c_favorites"] || $Profile["c_subscriber"] || $Profile["c_subscription"] || $Profile["c_friend"]) && $Profile["banned"] == 0) : ?>
-		<div class="pr_lks">
-            <a href="/user/<?= $Profile["displayname"] ?>">Channel</a><? if ($Profile["c_videos"] && $Profile["videos"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/videos">Videos</a><? endif ?><? if ($Profile["c_favorites"] && $Profile["favorites"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/favorites">Favorites</a><? endif ?><? if ($Profile["c_subscriber"] && $Profile["subscribers"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/subscribers">Subscribers</a><? endif ?><? if ($Profile["c_subscription"] && $Profile["subscriptions"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/subscriptions">Subscriptions</a><? endif ?><? if ($Profile["c_friend"] && $Profile["friends"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/friends">Friends</a><? endif ?><? if ($Profile["c_playlists"]) : ?><a href="/user/<?= $Profile["displayname"] ?>/playlists">Playlists</a><? endif ?>
-		</div>
-	<? else : ?>
-		<div style="height:20px"></div>
-	<? endif ?>
 <? else : ?>
     <header class="s_head" style="background: white;margin-top:0;padding: 6px 5px;border-bottom-left-radius: 6px;border-bottom-right-radius: 6px">
         <div style="overflow:hidden">
@@ -129,12 +118,30 @@
             <? endif ?>
         </div>
     </header>
-	
-	<? if ($Profile["banned"] == 0 && $Banner_Links !== false)
-		require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/banner.php"; ?>
-	<? if ($Profile["banned"] == 0) : ?>
-    <div class="pr_lks" style="margin-top: 17px">
-        <a href="/user/<?= $Profile["displayname"] ?>">Channel</a><? if ($Profile["c_videos"] && $Profile["videos"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/videos">Videos</a><? endif ?><? if ($Profile["c_favorites"] && $Profile["favorites"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/favorites">Favorites</a><? endif ?><? if ($Profile["c_subscriber"] && $Profile["subscribers"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/subscribers">Subscribers</a><? endif ?><? if ($Profile["c_subscription"] && $Profile["subscriptions"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/subscriptions">Subscriptions</a><? endif ?><? if ($Profile["c_friend"] && $Profile["friends"] > 0) : ?><a href="/user/<?= $Profile["displayname"] ?>/friends">Friends</a><? endif ?><? if ($Profile["c_playlists"]) : ?><a href="/user/<?= $Profile["displayname"] ?>/playlists">Playlists</a><? endif ?>
-    </div>
-    <? endif ?>
 <? endif ?>
+<?php
+    if($Profile["banned"] == 0) {
+        if($Banner_Links !== false)
+            require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/banner.php";
+        
+        $username = $Profile["displayname"];
+        $active = (isset($_GET["page"]) && $_GET["page"] != "") ? strtolower($_GET["page"]) : null;
+?>
+<div class="pr_lks" style="margin-top: 17px">
+    <?php if(isset($_GET["page"])) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>">Channel</a>
+    <?php } if ($Profile["c_videos"] && $Profile["videos"] > 0) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/videos"<?php if($active == "videos") echo "class=\"active\""; ?>>Videos</a>
+    <?php } if ($Profile["c_favorites"] && $Profile["favorites"] > 0) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/favorites"<?php if($active == "favorites") echo "class=\"active\""; ?>>Favorites</a>
+    <?php } if($Profile["c_subscriber"] && $Profile["subscribers"] > 0) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/subscribers"<?php if($active == "subscribers") echo "class=\"active\""; ?>>Subscribers</a>
+    <?php } if($Profile["c_subscription"] && $Profile["subscriptions"] > 0) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/subscriptions"<?php if($active == "subscriptions") echo "class=\"active\""; ?>>Subscriptions</a>
+    <?php } if($Profile["c_friend"] && $Profile["friends"] > 0) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/friends"<?php if($active == "friends") echo "class=\"active\""; ?>>Friends</a>
+    <?php } if($Profile["c_playlists"]) { ?>
+        <a href="/user/<?= $Profile["displayname"] ?>/playlists"<?php if($active == "playlists") echo "class=\"active\""; ?>>Playlists</a>
+    <?php } ?>
+</div>
+<?php } ?>

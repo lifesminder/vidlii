@@ -312,6 +312,22 @@ CREATE TABLE `options` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` int(12) NOT NULL AUTO_INCREMENT,
+  `report_from` int(12) NOT NULL,
+  `report_to` int(12) NOT NULL,
+  `report_type` varchar(255) DEFAULT NULL,
+  `report_description` text DEFAULT NULL,
+  `reported` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `playlists`
 --
 
@@ -512,6 +528,7 @@ CREATE TABLE `users` (
   `website` varchar(128) NOT NULL DEFAULT '',
   `about` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `avatar` text NULL DEFAULT '',
+  `cover` mediumblob DEFAULT NULL,
   `bg_version` int NOT NULL DEFAULT '1',
   `banner_version` int NOT NULL DEFAULT '1',
   `channel_type` int NOT NULL DEFAULT '0',

@@ -43,7 +43,7 @@
                     <td align="right" valign="top"><label for="re_username" style="position:relative;top:3px">Username:</label></td>
                     <td>
                         <input type="text" maxlength="20" name="vl_usernames" id="re_username" autocomplete="off" <? if (isset($Validation["vl_username"])) : ?>value="<?= $Validation["vl_username"] ?>"<? endif ?> required pattern="[a-zA-Z0-9 ]+" spellcheck="false" onblur="if(this.value !== '') { user_exists(this.value); }">
-                        <div id="user_exists" style="display:none;color:red;font-size:12px;position:relative;top:1px;left:1px"></div>
+                        <div id="user_exists"></div>
                     </td>
                 </tr>
                 <tr>
@@ -66,7 +66,7 @@
                     <td>
                         <select name="country" style="width:214px">
                             <? foreach ($Countries as $Country => $Name) : ?>
-                                <option value="<?= $Country ?>"<? if (isset($_POST["country"]) && $Country == $_POST["country"]) : ?>selected<? endif ?>><?= $Name ?></option>
+                                <option value="<?= $Country ?>"<? if ($Country == "US" || (isset($_POST["country"]) && $Country == $_POST["country"])) : ?>selected<? endif ?>><?= $Name ?></option>
                             <? endforeach ?>
                         </select>
                     </td>
@@ -94,7 +94,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <label style="position: relative; right: 2.5px;"><input type="checkbox" name="age" <? if (isset($_POST["age"])) : ?>checked<? endif ?> required> <span style="position:relative;bottom:1.5px">I certify I am over 13 years old!</span></label>
+                        <label style="position: relative; right: 2.5px;"><input type="checkbox" name="age" <? if (isset($_POST["age"])) : ?>checked<? endif ?> required> <span style="position:relative;bottom:1.5px">I agree with VidLii's <a href="/terms">Terms of Use</a></span></label>
                     </td>
                 </tr>
             </table>

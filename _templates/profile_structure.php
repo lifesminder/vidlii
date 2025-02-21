@@ -53,25 +53,27 @@
           </script>
         <? endif ?>
     <div class="wrapper">
-<? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_profile/_widgets/header.php" ?>
-    <main class="bottom_wrapper" id="prfle">
-        <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_profile/$Page_File.php" ?>
-    </main>
+        <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_profile/_widgets/header.php" ?>
+        <div>
+            <main class="bottom_wrapper" id="prfle">
+                <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_profile/$Page_File.php" ?>
+            </main>
+            <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/scripts.php" ?>
+            <script src="<?= PROFILE_JS_FILE ?>"></script>
+            <? if (isset($_GET["page"]) && $_GET["page"] !== "0" && !empty($_GET["page"]) && is_numeric($_GET["page"])) : ?>
+                <script>
+                    $('html, body').animate({
+                        scrollTop: $("#cc_count").offset().top
+                    }, 200);
+                </script>
+            <? endif ?>
+            <? if ($_USER->logged_in && $Profile["username"] == $_USER->username) : ?>
+            <script>
+                vertical_r = '<?= $Profile["modules_vertical_r"] ?>';
+                vertical_l = '<?= $Profile["modules_vertical_l"] ?>';
+            </script>
+            <? endif ?>
+        </div>
     </div>
-    <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/scripts.php" ?>
-	<script src="<?= PROFILE_JS_FILE ?>"></script>
-    <? if (isset($_GET["page"]) && $_GET["page"] !== "0" && !empty($_GET["page"]) && is_numeric($_GET["page"])) : ?>
-        <script>
-            $('html, body').animate({
-                scrollTop: $("#cc_count").offset().top
-            }, 200);
-        </script>
-    <? endif ?>
-	<? if ($_USER->logged_in && $Profile["username"] == $_USER->username) : ?>
-    <script>
-        vertical_r = '<?= $Profile["modules_vertical_r"] ?>';
-        vertical_l = '<?= $Profile["modules_vertical_l"] ?>';
-    </script>
-    <? endif ?>
     </body>
 </html>

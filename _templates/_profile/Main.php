@@ -15,7 +15,7 @@
 				<div>
 				<div>
 					<div>
-						<?= user_avatar2($Profile["displayname"],96,96,$Profile["avatar"]) ?>
+						<?= user_avatar2($Profile["displayname"],99,99,$Profile["avatar"]) ?>
 					</div>
 				</div>
 					<? if (!empty($Channel_Type)) : ?>
@@ -71,12 +71,34 @@
 				</div>
 			</div>
 			<? endif ?>
+			<?php if(!empty($Profile["i_name"])) { ?>
+				<div style="margin-bottom: 5px">
+					<span>Name: <strong><?php echo $Profile["i_name"]; ?></strong></span>
+				</div>
+			<?php } ?>
 			<? if ($Profile["a_country"]) : ?>
 				<div style="margin-bottom: 5px">
 					<span>Country: <strong><?= return_country($Profile["country"]) ?></strong></span>
 				</div>
 			<? endif ?>
-			<? if (!empty($Profile["website"])) : ?><div class="hl_st">Website: <strong><a href="<?= htmlspecialchars($Profile["website"]) ?>"><?= htmlspecialchars($Profile["website"]) ?></a></strong></div><? endif ?>
+			<?php
+				if(!empty($Profile["website"])) {
+					$first_website = explode(",", $Profile["website"])[0];
+					$first_website = htmlspecialchars(explode("|", $first_website)[0]);
+					$visible_website = end(explode("://", $first_website));
+			?>
+				<div class="hl_st">
+					Website:
+					<strong>
+						<a href="<?php echo $first_website; ?>" target="_blank"><?php echo $visible_website; ?></a>
+					</strong>
+				</div>
+			<?php } ?>
+			<?php if(strlen($Profile["avatar"]) > 0) { ?>
+			<div class="flagging_text" id="report_pfp">
+				<a href="javascript:void(0);" onclick="report(this, '<?php echo $Profile['displayname']; ?>', 'pfp')">Report</a> profile image violation
+			</div>
+			<?php } ?>
 		</div>
 	</section>
 	<section>
@@ -183,6 +205,21 @@
 			Videos (<a href="/user/<?= $Profile["displayname"] ?>/videos"><?= number_format($Profile["videos"]) ?></a>)
 		</div>
 		<div class="prbx_in nm_in prbx_video">
+            <?php if(number_format($Profile["videos"]) > 1) { ?>
+            <div style="padding: 5px; display: block; margin-bottom: 30px;">
+                <div style="margin: 5px 0 5px 5px; float: left;">
+                    <span>Videos</span> | 
+                    <a href="/user/<?= $Profile["displayname"] ?>/videos?sort=v">Most Viewed</a> | 
+                    <a href="/user/<?= $Profile["displayname"] ?>/videos?sort=d">Most Discussed</a>
+                </div>
+                <div style="margin: 5px 0 5px 5px; float: right;">
+                    <form action="/user/<?= $Profile["displayname"] ?>/videos" method="POST" style="position:relative;bottom:1px" id="searcher">
+                        <input type="text" name="search" maxlength="64"<? if (isset($_POST["search"])) : ?> value="<?= $_POST["search"] ?>" <? endif ?> id="search_input" style="width:200px;border-radius:0">
+                        <input type="submit" value="Search" name="search_input" class="search_button" style="border-radius:0;">
+                    </form>
+                </div>
+            </div>
+            <?php } ?>	
 			<? $Count = 0 ?>
 			<div class="vi_box">
 				<? foreach ($Videos as $Video) : ?>
@@ -193,10 +230,12 @@
                         <div class="th_t"><?= $Video["length"] ?></div>
                         <a href="/watch?v=<?= $Video["url"] ?>"><img class="vid_th" <?= $Video["thumbnail"] ?> width="125" height="90"></a>
                     </div>
-					<a href="/watch?v=<?= $Video["url"] ?>" class="ln2"><?= htmlspecialchars($Video["title"]) ?></a>
-					<span><?= get_time_ago($Video["uploaded_on"]) ?></span><br>
-					<?= number_format($Video["views"]) ?> views<br>
-					<div class="st"><? show_ratings($Video,13,13) ?></div>
+					<div>
+						<a href="/watch?v=<?= $Video["url"] ?>" class="ln2"><?= htmlspecialchars($Video["title"]) ?></a>
+						<span><?= get_time_ago($Video["uploaded_on"]) ?></span><br>
+						<?= number_format($Video["views"]) ?> views<br>
+						<div class="st"><? show_ratings($Video,13,13) ?></div>
+					</div>
 				</div>
 				<? endforeach ?>
 				<? if ($Count >= 5) : ?></div> <? endif ?>
@@ -348,3 +387,12 @@
         <? endif ?>
     <? endforeach ?>
 </div>
+<?php
+	if($Has_Background) {
+?>
+<div style="color: #fff; float: left; width: 100%; text-align: center; font-size: 12px; display: block; padding: 10px 0;" id="report_bgd">
+	<a href="javascript:void(0);" onclick="report(this, '<?php echo $Profile['displayname']; ?>', 'bgd')">Report</a> background graphic.
+</div>
+<?php
+	}
+?>

@@ -82,31 +82,35 @@
             $hours = floor($Seconds / 3600);
             $minutes = floor(($Seconds % 3600) / 60);
             $seconds = floor($Seconds % 60);
+            if($seconds < 10) $seconds = "0$seconds";
             return ($hours > 0) ? "$hours:$minutes:$seconds" : "$minutes:$seconds";
         }
 
-        function session($token) {
+        function session($token = null, $action = null) {
             $cookie = ($token != null) ? $token : (isset($_COOKIE["session"]) && $_COOKIE["session"] != "" ? $_COOKIE["session"] : null);
             $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie'");
             if($session["count"] == 1) {
                 $session = $session["data"];
-                $session["user"] = $this->db("SELECT username, displayname from users where id = ".$session["user"]);
+                $session["user"] = $this->db("SELECT id, username, displayname from users where id = ".$session["user"]);
                 if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             } else {
                 $session = ["session" => -1, "user" => ["username" => "Guest", "displayname" => "Guest"]];
             }
-            return $session;
-        }
 
-        function session2($token = null) {
-            $cookie = ($token != null) ? $token : (isset($_COOKIE["session"]) && $_COOKIE["session"] != "" ? $_COOKIE["session"] : null);
-            $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie' limit 1");
-            if($session["count"] == 1) {
-                $session = $session["data"];
-                $session["user"] = $this->db("SELECT username, displayname from users where id = ".$session["user"]);
-                if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
+            if($action != null) {
+                $result = null;
+                switch(strtolower($action)) {
+                    case "logout": {
+                        $logout = $this->db("DELETE from sessions where session = \"$cookie\"");
+                        return $logout;
+                        break;
+                    }
+                    default: return $session;
+                }
+                return $result;
+            } else {
+                return $session;
             }
-            return $session;
         }
     }
 ?>

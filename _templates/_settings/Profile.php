@@ -19,6 +19,8 @@
 <h4>Profile Setup</h4>
 <form action="/my_profile" method="POST">
 	<div style="margin:15px 0 21px">
+		<label for="st_we" style="display:block;font-size:13px;position:relative;bottom:1px">Name:</label>
+		<input type="text" id="st_we" name="name" value="<?= htmlspecialchars($Info["i_name"]) ?>" maxlength="128" size="36"><br><br>
 		<label for="st_in" style="display:block;font-size:13px;position:relative;bottom:1px">About You:</label>
 		<textarea class="p_text_area" name="about" maxlength="500" style="width:300px;height:79px"><?= $Info["about"] ?></textarea><br><br>
 		<label for="st_we" style="display:block;font-size:13px;position:relative;bottom:1px">Website:</label>

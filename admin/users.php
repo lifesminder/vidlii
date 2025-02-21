@@ -420,7 +420,7 @@
 						$Joined = "$RYear-$RMonth-$RDay $RHour:$RMinute:$Rsecond";
 
 						$nouveau = ($_POST["nouveau"] == "on") ? 1 : 0;
-						$show_joined = (int)$Valudation["a_reg"];
+						$show_joined = (int)$Validation["a_reg"];
 
 						if ($Validation["channel_type"] >= 0 && $Validation["channel_type"] <= 7) { $Channel_Type = $Validation["channel_type"]; } else { $Channel_Type = 0; }
 						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3 || $Validation["channel_version"] == 4) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }

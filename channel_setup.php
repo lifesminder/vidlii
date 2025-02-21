@@ -3,9 +3,10 @@
 
     $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
 
-//REQUIREMENTS / PERMISSIONS
-//- Requires Login
-if (!$_USER->logged_in)         { redirect("/login"); exit(); }
+    //REQUIREMENTS / PERMISSIONS
+    //- Requires Login
+    if (!$_USER->logged_in)         { redirect("/login"); exit(); }
+    $Info = $_USER->get_profile();
 
 if (isset($_POST["update_holiday"])) {
 
@@ -58,11 +59,13 @@ if (isset($_POST["update_channel"])) {
     $Validation = $_GUMP->run($_POST);
 
     if ($Validation) {
-        $Channel_Title          = (string)$Validation["ch_title"];
-        $Channel_Description    = (string)$Validation["ch_description"];
-        $Channel_Tags           = (string)$Validation["ch_tags"];
-        $Type                   = (int)$_POST["channel_type"];
-        if ($Type >= 0 && $Type <= 7) {
+        $Channel_Title = (string)$Validation["ch_title"];
+        $Channel_Description = (string)$Validation["ch_description"];
+        $Channel_Tags = (string)$Validation["ch_tags"];
+        $Type = (int)$_POST["channel_type"];
+        $type_min = ($Info["is_admin"]) ? -1 : 0;
+
+        if($Type >= $type_min && $Type <= 7) {
             $DB->modify("UPDATE users SET channel_type = '$Type', channel_title = :TITLE, channel_description = :DESCRIPTION, channel_tags = :TAGS WHERE username = :USERNAME",
                        [
                            ":TITLE"         => $Channel_Title,
@@ -91,7 +94,6 @@ if (isset($_POST["update_privacy"])) {
 }
 
 //GET INFO
-$Info = $_USER->get_profile();
 $Is_Uploaded_Avatar = (bool)($api->db("SELECT IF(avatar IS NULL or avatar = '', 'empty', avatar) as avatar from users where username = '".$_USER->username."'")["data"]["avatar"] != "empty");
 
 if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {

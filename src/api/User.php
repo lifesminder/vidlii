@@ -62,10 +62,10 @@
 				$session = $this->session($_COOKIE["session"]);
 				if(isset($_GET["to"]) && $_GET["to"] != "") {
 					$to = $_GET["to"];
-					$check_existance = $this->db("SELECT username, displayname from users where username = '$to' or displayname = '$to'");
+					$check_existance = $this->db("SELECT username, displayname from users where username = \"$to\" or displayname = \"$to\"");
 					if($check_existance["count"] == 1) {
 						$from = $session["user"]["displayname"]; $to = $check_existance["data"]["displayname"];
-						if($from !== $to) {
+						if($from != $to) {
 							$is_subscribed = (bool)$this->db("SELECT count(*) from subscriptions where subscriber = '$from' and subscription = '$to'")["data"]["count(*)"];
 							if($is_subscribed) {
 								$unsubscribe = $this->db("DELETE from subscriptions where subscriber = '$from' and subscription = '$to'");
@@ -93,9 +93,13 @@
 			return $data;
 		}
 
-		function test() {
+		function check($args, $files = null) {
 			$data = [];
-			$data["Test"] = $this->session2();
+			if(isset($args["u"]) && $args["u"] != "") {
+				$username = htmlspecialchars($args["u"]);
+				$availability = (bool)$this->db("SELECT count(*) from users where username = \"$username\" or displayname = \"$username\"")["data"]["count(*)"];
+				$data["available"] = !$availability;
+			} else $data = $this->api_message(-1, "Enter username to check");
 			return $data;
 		}
 	}

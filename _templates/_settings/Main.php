@@ -95,6 +95,9 @@
             <td align="right"><label for="st_opw">Channel Type:</label></td>
             <td>
                 <select name="channel_type">
+                    <?php if($Info["is_admin"]) { ?>
+                    <option value="-1"<? if ($Info["channel_type"] == -1) : ?> selected<? endif ?>>Administrator</option>
+                    <?php } ?>
                     <option value="0"<? if ($Info["channel_type"] == 0) : ?> selected<? endif ?>>Default</option>
                     <option value="1"<? if ($Info["channel_type"] == 1) : ?> selected<? endif ?>>Director</option>
                     <option value="2"<? if ($Info["channel_type"] == 2) : ?> selected<? endif ?>>Musician</option>

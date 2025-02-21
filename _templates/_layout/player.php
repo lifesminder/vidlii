@@ -5,8 +5,6 @@
 	if (isset($_GET["p"]) && $_GET["p"] > 1) {
 	    $Autoplay = 0;
     }
-	
-	$prev = file_exists($_SERVER['DOCUMENT_ROOT']."/usfi/prvw/$URL.jpg");
 ?>
 
 <script id="heightAdjust">
@@ -173,7 +171,7 @@
 			var attributes = {};
 			flashvars.video_id = videoInfo.url;
 			flashvars.autoplay = videoInfo.autoplay ? "1" : "0";
-			flashvars.thumbnailurl = "www.vidlii.com"+videoInfo.img;
+			flashvars.thumbnailurl = "/"+videoInfo.img;
 			params.allowfullscreen = "true";
 			attributes.id = "vlplayer";
 			swfobject.embedSWF("/player/as.swf", "vlplayer", "100%", "100%", "9.0.0", false, flashvars, params, attributes);

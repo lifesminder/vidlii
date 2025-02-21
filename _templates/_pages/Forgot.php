@@ -14,7 +14,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <?= captcha(0) ?>
+                        <?php /* captcha(0); */ ?>
                     </td>
                 </tr>
                 <tr>

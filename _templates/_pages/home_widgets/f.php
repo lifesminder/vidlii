@@ -10,7 +10,10 @@
     </div>
     <div>
         <div class="v_v_bx">
-            <? foreach ($feed["featured_videos"]["data"] as $Video) : ?>
+            <?php
+                if($feed["featured_videos"]["count"] > 0) {
+                    foreach ($feed["featured_videos"]["data"] as $Video) {
+            ?>
                 <div>
                     <div class="th">
                         <div class="th_t"><?= $Video["length"] ?></div>
@@ -21,7 +24,14 @@
                     <a href="/user/<?= $Video["uploaded_by"] ?>" class="ch_l s"><?= $Video["uploaded_by"] ?></a>
                     <div class="s_r"><?= show_ratings($Video,14,13) ?></div>
                 </div>
-            <? endforeach ?>
+            <?php
+                    }
+                } else {
+            ?>
+            <p>There are no any featured videos</p>
+            <?php
+                }
+            ?>
         </div>
     </div>
 </div>

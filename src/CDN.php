@@ -45,5 +45,19 @@
             imagejpeg($im, NULL, (isset($params["q"]) && (int)$params["q"] >= 0 && (int)$params["q"] <= 100) ? (int)$params["q"] : 80);
             imagedestroy($im);
         }
+
+        function cover($id, $params = []) {
+            $cover = $this->db("SELECT cover from users where displayname = '$id'");
+            if($cover["count"] == 1) {
+                $im = imagecreatefromstring(base64_decode($cover["data"]["cover"]));
+                header("Content-Type: image/jpeg");
+                header("Cache-Control: no-cache");
+                header("Accept-Ranges: bytes");
+                imagejpeg($im, null);
+                imagedestroy($im);
+            } else {
+                echo "Not found";
+            }
+        }
     }
 ?>
