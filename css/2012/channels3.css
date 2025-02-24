@@ -2548,10 +2548,11 @@ a.see-more-link img {
 }
 
 .channels-video-player {
-    background: #000;
+    background-color: #000;
     clear: both;
+    width: 640px;
     height: 390px;
-    width: 640px
+    padding: 0 !important;
 }
 
 .channels-video-player.multicam-video-player {

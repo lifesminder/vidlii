@@ -1,0 +1,180 @@
+{%if cookie.player is defined%}
+{%if cookie.player == 3%}{%set player_skin = "2012"%}{%elseif cookie.player == 2%}{%set player_skin = "2007HD"%}{%else%}{%set player_skin = "2009HD"%}{%endif%}
+{%endif%}
+<script id="heightAdjust">
+	if (!window.videoInfo)
+		var videoInfo = {};
+
+	function adjustHeight(n) {
+		var height;
+		var par = $("#heightAdjust").parent();
+		if (par[0].style.height) {
+			height = par.height();
+			par.height(height+n);
+		}
+	}
+	
+	// Easier way of setting cookies
+	function setCookie(name, value) {
+		var CookieDate = new Date;
+		CookieDate.setFullYear(CookieDate.getFullYear() + 10);
+		document.cookie = name+'='+value+'; expires=' + CookieDate.toGMTString( ) + '; path=/';
+	}
+
+	// Easier way of getting cookies
+	function getCookie(cname) {
+		var name = cname + "=";
+		var decodedCookie = decodeURIComponent(document.cookie);
+		var ca = decodedCookie.split(';');
+		for(var i = 0; i <ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+	
+	function getTimeHash() {
+		var h = 0;
+		var st = 0;
+		
+		if ((h = window.location.href.indexOf("#t=")) >= 0) {
+			st = window.location.href.substr(h+3);
+			return parseInt(st);
+		}
+		
+		return 0;
+	}
+	
+	var vlpColors = "{%if cookie.vlpColors is defined%}{{cookie.vlpColors}}{%else%}teal,white{%endif%}";
+	vlpColors = vlpColors.split(",");
+
+	var viValues = {
+		variable: "vlp",
+		src: "/usfi/v/{{player_video.url}}.mp4",
+		hdsrc: "/usfi/v/{{player_video.url}}.720.mp4",
+		img: "/vi/{{player_video.url}}/hqresdefault.jpg",
+		url: "{{player_video.url}}",
+		duration: {{player_video.length}},
+		autoplay: "{%if player_video.autoplay is defined or player_video.autoplay == 1%}true{%else%}false{%endif%}",
+		skin: "{{player_skin}}",
+		btcolor: vlpColors[0],
+		bgcolor: vlpColors[1],
+		adjust: true,
+		start: getTimeHash()
+	};
+    
+	for (var i in viValues) {
+		if (videoInfo[i] === void(0)) {
+			videoInfo[i] = viValues[i];
+		}
+	}
+</script>
+{%if player_video.status is null or (player_video.status is defined and player_video.status == 2)%}
+	{%if player_type is null%}
+		<!-- VidLii HTML5/Flash Player -->
+		<div class="vlPlayer">
+			<script>
+				window[videoInfo.variable] = new VLPlayer({
+					id: videoInfo.id,
+					src: videoInfo.src,
+					hdsrc: "null",
+					preview: videoInfo.img,
+					videoUrl: "/watch?v="+videoInfo.url,
+					duration: videoInfo.duration,
+					autoplay: videoInfo.autoplay,
+					skin: "/vlPlayer/skins/"+videoInfo.skin,
+					adjust: videoInfo.adjust,
+					btcolor: videoInfo.btcolor,
+					bgcolor: videoInfo.bgcolor,
+					start: videoInfo.start,
+					expand: videoInfo.expand,
+					complete: videoInfo.complete,
+					ended: videoInfo.ended
+				});
+				
+				$(window).on('hashchange', function() {
+					var t = getTimeHash();
+					vlp.play();
+					vlp.seek(t);
+					$(window).scrollTop(0);
+				});
+			</script>
+		</div>
+	{%elseif player_type == 1%}
+		<!-- JWPlayer HTML5 Player -->
+		<div id="vlplayer"></div>
+		<script type="text/javaScript">
+			var modernPlayer = new ModernPlayer({
+				instance: jwplayer("vlplayer"),
+				duration: videoInfo.duration,
+				videoUrl: "/watch?v="+videoInfo.url,
+				src: videoInfo.src,
+				hdsrc: "null",
+				startinhd: "{%if cookie.vlphd is null or cookie.vlphd != 1%}false{%endif%}",
+				preview: videoInfo.img,
+				autoplay: videoInfo.autoplay,
+				start: videoInfo.start,
+				ended: videoInfo.ended
+			});
+			
+			$(window).on('hashchange', function() {
+				modernPlayer.seek(getTimeHash());
+				$(window).scrollTop(0);
+			});
+		</script>
+		
+		<!-- Customization -->
+			<style>
+				.jw-button-color {
+					color: #fff !important;
+				}
+				.jw-progress {
+					background: #ff0000 !important;
+				}
+			</style>
+	{%else%}
+		<!-- Flash Player -->
+		<div id="vlplayer">
+			<a href="https://www.adobe.com/go/getflashplayer"><img src="https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a>
+		</div>
+		
+		<script>
+			adjustHeight(25);
+			
+			var flashvars = {};
+			var params = {};
+			var attributes = {};
+			flashvars.video_id = videoInfo.url;
+			flashvars.autoplay = videoInfo.autoplay ? "1" : "0";
+			flashvars.thumbnailurl = "/"+videoInfo.img;
+			params.allowfullscreen = "true";
+			attributes.id = "vlplayer";
+			swfobject.embedSWF("/player/as.swf", "vlplayer", "100%", "100%", "9.0.0", false, flashvars, params, attributes);
+		</script>
+	{%endif%}
+{%else%}
+<? if ($Status != 1) : ?>
+<div style="display:table;background:black;width:100%;height:100%;color:white;font-size:17px;">
+	<div style="display:table-cell;text-align:center;vertical-align:middle;">
+		<? if ($Status == 1 || $Status == 0) : ?>
+		This video is still converting.....
+		<? elseif ($Status == -1) : ?>
+		This video is still uploading...
+		<? elseif ($Status == -2) : ?>
+		This video has failed conversion...
+		<? elseif ($Status == -3) : ?>
+		This video has been deleted for<br>violating our Community Guidelines.
+		<? endif ?>
+	</div>
+</div>
+<? else : ?>
+<video width="320" height="240" style="width:100%;height:100%" autoplay loop>
+  <source src="/img/Untitled.mp4" type="video/mp4">
+</video>
+<? endif ?>
+{%endif%}

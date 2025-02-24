@@ -1,11 +1,13 @@
 console.log("TBA");
 
+/*
 if(document.getElementById("subscribe") != null) {
     document.getElementById("subscribe").addEventListener("click", function(e) {
         e.preventDefault();
         alert("Subscribe v2");
     });
 }
+*/
 
 function report(e, user, what) {
     fetch(`/api/report?to=${user}&what=${what}`).then(resp => { return resp.json() }).then(data => {

@@ -32,7 +32,7 @@
         }
         
         function avatar($id, $params = []) {
-            $avatar = $this->db("SELECT avatar from users where username = '$id'");
+            $avatar = $this->db("SELECT avatar from users where displayname = '$id'");
             if($avatar["count"] >= 1 && $avatar["data"]["avatar"] != "") {
                 $avatar = base64_decode($avatar["data"]["avatar"]);
             } else {

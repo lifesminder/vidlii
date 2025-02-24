@@ -1,0 +1,70 @@
+{%extends "base.html"%}
+
+{%block title%}{{title}} - VidLii{%endblock%}
+
+{%block body%}
+    <div class="playlist">
+        <div class="playlist-info">
+            <div class="playlist-info-main">
+                <div>
+                    <img src="/vi/{{playlist.thumbnail}}/sqdefault.jpg" class="playlist-thumbnail">
+                </div>
+                <div>
+                    <a href="/playlist?p={{playlist.purl}}" class="playlist-title">{{playlist.title}}</a>
+                    <div class="playlist-info-box">
+                        <em>No Description...</em>
+                    </div>
+                </div>
+            </div>
+            <div class="playlist-stats">
+                <div>
+                    <b>Total Views: </b>
+                    <span>{{playlist.stats.total_views}}</span>
+                </div>
+                <div>
+                    <b>Total Comments: </b>
+                    <span>{{playlist.stats.total_comments}}</span>
+                </div>
+                <div>
+                    <b>Total Favorites: </b>
+                    <span>{{playlist.stats.total_responses}}</span>
+                </div>
+                <div>
+                    <b>Total Responses: </b>
+                    <span>{{playlist.stats.total_favorites}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="playlist-videos">
+            {% if playlist.videos|length > 0 %}
+            <ul class="playlist-list">
+            {% for video in playlist.videos %}
+                <li>
+                    <div class="playlist-item">
+                        <div class="th">
+                            <div class="th_t">{{video.duration}}</div>
+                            <a href="/watch?v={{video.url}}&pl={{playlist.purl}}">
+                                <img class="vid_th" src="/vi/{{video.url}}/hqresdefault.jpg" alt="{{video.title}}" style="width: 200px; height: 120px;">
+                            </a>
+                        </div>
+                        <div class="playlist-item-info">
+                            <div>
+                                <a href="/watch?v={{video.url}}&pl={{playlist.purl}}">
+                                    <h2>{{video.title}}</h2>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="/user/{{video.uploaded_by}}">{{video.uploaded_by}}</a> at
+                                {{video.uploaded_on}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+            {% else %}
+            <p>There are no videos</p>
+            {% endif %}
+        </div>
+    </div>
+{%endblock%}

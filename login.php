@@ -121,11 +121,12 @@ if (isset($_POST["submit_login"])) {
                 // Log the user in
                 if ($_USER->login()) {
                     // Redirect to activation page if the account needs to be activated, otherwise go to the previous page the user was on
-                    if (!isset($_GET["activate"])) {
+                    if(!isset($_GET["activate"])) {
                         redirect(previous_page());
                         exit();
                     } else if(isset($_GET["next"]) && $_GET["next"] != "") {
-                        redirect($_GET["next"]);
+                        $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                        redirect("$actual_link/".$_GET["next"]);
                         exit();
                     } else {
                         redirect("/activate?code=" . $_GET["activate"]);

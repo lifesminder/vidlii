@@ -69,6 +69,7 @@ if (isset($_POST["update_info"])) {
             ":ACOUNTRY" => $country,
             ":SIGNIN" => $signin
         ]);
+        
         notification("Profile successfully updated!","/my_profile","green"); exit();
     }
 }

@@ -55,10 +55,12 @@ function mention($text) {
 }
 
 function notification($Message,$Redirect,$Color = "red") {
+	/*
 	$_SESSION["notification"] = $Message;
 	$_SESSION["n_color"] = $Color;
-
-	if ($Redirect != false) {
+	*/
+	setcookie("notification", "$Message;$Color", time() + (86400 * 30), "/", $_SERVER['SERVER_NAME']);
+	if($Redirect != false) {
         redirect($Redirect);
     }
 }

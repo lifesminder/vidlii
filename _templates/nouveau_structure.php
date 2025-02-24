@@ -102,6 +102,9 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
         }
     </style>
     <script src="/js/main.js"></script>
+    <script src="/js/modern_player.js"></script>
+    <script src="/jwplayer2/jwplayer.js"></script>
+    <script src="/vlPlayer/main19.js"></script>
 </head>
 <body>
     <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>

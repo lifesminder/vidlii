@@ -6,21 +6,23 @@
     <div class="channels-featured-video channel-module yt-uix-c3-module-container has-visible-edge">
         <div class="module-view featured-video-view-module">
             <div class="channels-video-player player-root">
-                
+                {%set player_video = featured_video%}
+                {%set player_skin = "2012"%}
+                {%include "nouveau/player.html"%}
             </div>
             <div class="channels-featured-video-details yt-tile-visible clearfix" style="padding: 15px 10px 15px 15px;">
                 <h3 class="title">
-                    <a href="/watch?v={{videos.data[0].url}}" class="yt-uix-session-link">{{videos.data[0].title}}</a>
+                    <a href="/watch?v={{featured_video.url}}" class="yt-uix-session-link" style="font-size: 16px; font-weight: normal;">{{featured_video.title}}</a>
                     <div class="view-count-and-actions">
                         <div class="view-count">
-                            <span class="count">{{videos.data[0].displayviews}}</span>
+                            <span class="count">{{featured_video.displayviews}}</span>
                             views
                         </div>
                     </div>
                 </h3>
                 <p class="channels-featured-video-metadata">
                     <span>by {{profile.displayname}}</span>
-                    <span class="created-date">2 days ago</span>
+                    <span class="created-date">? {{featured_video.uploaded}}</span>
                 </p>
             </div>
         </div>

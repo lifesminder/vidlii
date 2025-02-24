@@ -1,4 +1,6 @@
 <script>
+	let vitag = {};
+
 	function getCookie(name) {
 		var value = "; " + document.cookie;
 		var parts = value.split("; " + name + "=");
@@ -76,7 +78,7 @@
 <div id="vtbl">
         <noscript>
             <div id="noscript-player">
-                <video id="noscript-player-video" src="/usfi/v/<?= str_replace("..", ".", $URL) ?>mp4" controls autoplay></video>
+                <video id="noscript-player-video" src="/usfi/v/<?= str_replace("..", ".", $URL) ?>mp4" allow="autoplay" controls autoplay></video>
                 <? if($ISHD): ?>
                     <form action="" method="GET" id="noscript-player-hd">
                         <input type="hidden" name="v" value="<?= $_GET["v"] ?>">
@@ -154,7 +156,7 @@
         <div id="vtbl_actions">
 		<script> vitag.videoConfig = { width: 640, height: 480, loadingText: "Loading advertisement..", complete: function () { }, error: function () { }, hidden: function () { } }; function loadAd() { (vitag.Init = window.vitag.Init || []).push(function () { viAPItag.startPreRoll("vi_2050787313"); }); } </script>
             <? if (isset($Single_Response)) : ?>
-            <div style="    background: #ffc;border: 1px solid #fc3;font-weight: bold;padding: 5px; margin-top: 11px;">This video is a response to: <a href="/watch?v=<?= $Single_Response["url"] ?>"><?= $Single_Response["title"] ?></a></div>
+            <div style="background: #ffc;border: 1px solid #fc3;font-weight: bold;padding: 5px; margin-top: 11px;">This video is a response to: <a href="/watch?v=<?= $Single_Response["url"] ?>"><?= $Single_Response["title"] ?></a></div>
             <? endif ?>
             <div class="w_actions">
 				<div id="rateYo"></div>

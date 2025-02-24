@@ -15,10 +15,10 @@
                 $Shadowbanned,
                 $Header;
 
-        protected $DB;
+        protected $api, $DB;
 
         function __construct($ID = NULL, \Vidlii\Vidlii\DB $Database, $re = NULL) {
-			
+			$this->api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]); 
 			if (!isset($_SESSION["token"])) $_SESSION["token"] = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 11);
 
             $this->DB = $Database;
@@ -112,49 +112,18 @@
 
 
         public function owns_video($URL) {
-
-
-            $this->DB->execute("SELECT url FROM videos WHERE url = :URL AND uploaded_by = :USERNAME", true,
-                              [
-                                  ":URL"        => $URL,
-                                  ":USERNAME"   => $this->username
-                              ]);
-            if ($this->DB->RowNum == 1) {
-
-                return true;
-
-            } else {
-
-                return false;
-
-            }
-
-
+            return (bool)($this->api->db("SELECT count(*) from videos where url = \"$URL\" and uploaded_by = \"".$session["user"]["username"]."\"")["data"]["count(*)"] == 1);
         }
 
         public function view_channel($Channel) {
-
-
-            if (count($this->Viewed_Channels) > 0 && !in_array($Channel,$this->Viewed_Channels)) {
-
-                $this->DB->modify("UPDATE users SET channel_views = channel_views + 1 WHERE username = :USERNAME", [":USERNAME" => $Channel]);
-                $_SESSION["viewed_channels"][] = $Channel;
-
-            } elseif (!in_array($Channel,$this->Viewed_Channels)) {
-
-                $_SESSION["viewed_channels"][] = $Channel;
-
-            } else {
-
-                return false;
-
-            }
-
-
+            if(count($this->Viewed_Channels) > 0 && !in_array($Channel,$this->Viewed_Channels)) {
+                $update_channel_views = $this->api->db("UPDATE users SET channel_views = channel_views + 1 WHERE username = \"".$session["user"]["username"]."\"");
+                return ($update_channel_views["status"] == 1) ? true : false;
+            } return false;
         }
 
         public function watch_video($URL) {
-            if (!in_array($URL,$this->Viewed_Videos)) {
+            if(!in_array($URL,$this->Viewed_Videos)) {
                 $_SESSION["watched_videos"][] = $URL;
                 $this->Viewed_Videos[] = $URL;
 
@@ -188,15 +157,13 @@
 
         }
 
-
         private function ban() {
             if ($this->logged_in) {
                 $this->logout();
                 redirect("/?bn=1"); exit();
             }
         }
-
-
+        
         //LOG THE MAIN USER IN
         public function login($Remember = true): bool {
             if (!$this->logged_in && isset($this->username) && !empty($this->username)) {
@@ -209,14 +176,21 @@
                 session_regenerate_id();
 
                 // Sessionizing! Soon on an official class
-                $session = hash("sha256", random_bytes(6));
-                $authorize = $this->DB->query("INSERT into sessions (session, user, ip, remembered, browser) values ('$session', '".$Info["id"]."', '".$IP_Address."', ".($Remember ? 1: 0).", '".$Browser."')");
-                if($authorize["status"] >= 0) {
-                    setcookie("session", $session, time() + 90 * 60 * 24 * 100, "/", null, null, true);
+                $get_remembered_sessions = $this->api->db("SELECT * from sessions where ip = \"$IP_Address\" and browser = \"$Browser\" and remembered = 1 limit 1");
+                if($get_remembered_sessions["count"] == 1) {
+                    $session = $get_remembered_sessions["data"]["session"];
+                    $authorize = $this->api->db("UPDATE sessions set last_access = NOW() where session = \"$session\"");
                 } else {
+                    $session = hash("sha256", random_bytes(6));
+                    $authorize = $this->api->db("INSERT into sessions (session, user, ip, remembered, browser) values (\"$session\", \"$Info[id]\", \"$IP_Address\", ".($Remember ? 1: 0).", \"$Browser\")");
+                }
+
+                if($authorize["status"] >= 1) {
+                    setcookie("session", $session, time() + 90 * 60 * 24 * 100, "/", null, null, true);
+                } /* else {
                     print_r($authorize);
                     exit(0);
-                }
+                } */
 
                 if($Info["is_admin"] || $Info["is_mod"]) {
                     $this->DB->modify("UPDATE users SET last_login = NOW(), 1st_latest_ip = :FIRST_IP, 2nd_latest_ip = :SECOND_IP WHERE username = :UID AND banned = 0", [
@@ -243,46 +217,21 @@
         }
 
         public function logout(): bool {
-
-
-            if ($this->logged_in) {
-
-                if (isset($_COOKIE["re"]) && !empty($_COOKIE["re"])) {
-
-                    $Browser = browser_name();
-
-                    $this->DB->modify("DELETE FROM users_remembers WHERE code = BINARY :CODE AND browser = :BROWSER AND uid = :UID",
-                        [
-                            ":CODE"    => $_COOKIE["re"],
-                            ":BROWSER" => $Browser,
-                            ":UID"     => $this->username
-                        ]);
-                    unset($_COOKIE["re"]);
-                    setcookie("re", NULL, -1, "/");
-
+            $session = $this->api->session();
+            $is_authorized = (bool)($session["session"] != -1);
+            if($is_authorized) {
+                $session_hash = $session["session"];
+                $log_out = $this->api->db("DELETE from sessions where session = \"$session_hash\"");
+                if($log_out["status"] >= 1) {
+                    setcookie('h', null, -1, '/');
+                    setcookie('po', null, -1, '/');
+                    setcookie('re', null, -1, '/');
+                    $this->logged_in = false;
+                    $this->username = NULL;
+                    $this->displayname = NULL;
                 }
-
-                unset($_SESSION["username"]);
-                unset($_COOKIE["re"]);
-                unset($_SESSION["admin_panel"]);
-
-
-
-
-
-
-                setcookie('h', null, -1, '/');
-                setcookie('po', null, -1, '/');
-                $this->logged_in    = false;
-                $this->username     = NULL;
-                $this->displayname  = NULL;
-                return true;
-
-            }
-
-            return false;
-
-
+                return (bool)($log_out["status"] >= 1);
+            } return false;
         }
 
         public function check_password($Password) {

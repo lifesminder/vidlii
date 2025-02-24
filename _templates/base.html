@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- VidLii 2 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>{%block title%}{%if title is defined%}{{title}} | {%endif%}VidLii{%endblock%}</title>
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/img/vl_app.png">
+    <meta name="description" content="{%if page_description is defined%}{{page_description}}{%endif%}">
+    <meta name="keywords" content="{%if page_keywords is defined%}{{page_keywords}}{%endif%}">
+    <meta property="og:site_name" content="VidLii">
+    <link rel="stylesheet" type="text/css" href="/css/m.css">
+    <link id="vlPlayer2007css" rel="stylesheet" href="/vlPlayer/skins/2007HD/skin.css?5013">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/vlPlayer/main19.js?5013"></script>
+    <script src="/js/main.js"></script>
+    <!-- some pre-defined scenarios from legacy below! -->
+</head>
+<body>
+    {%if config.top_text is defined%}
+    <div class="top">{{config.top_text}}</div>
+    {%endif%}
+    {%if config.header is defined and config.header == 2%}
+        <div id="masthead-container">
+            <div id="masthead" dir="ltr">
+                <a id="logo-container" href="/" title="{{config.title}} home">
+                    <img id="logo" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="{{config.title}} home">
+                </a>
+                <div id="masthead-utility" class="">
+                    <a href="/browse">Browse</a><a href="/upload" class="split">Upload</a>
+                    <a class="start" href="/register">Create Account</a><a class="end" href="/login">Sign In</a>
+                </div>
+                <form id="masthead-search" class="search-form" autocomplete="off" action="/results" onsubmit="if (_gel('masthead-search-term').value == '') return false;">
+                    <button class="search-button yt-uix-button" onclick="if (_gel('masthead-search-term').value == '') return false; _gel('masthead-search').submit(); return false;;return false;" type="button" id="search-btn" dir="ltr" tabindex="2" role="button" aria-pressed="false">
+                        <span class="yt-uix-button-content">Search</span>
+                    </button>
+                    <label>
+                        <input id="masthead-search-term" class="search-term" name="search_query" value="" type="text" tabindex="1" onkeyup="goog.i18n.bidi.setDirAttribute(event,this)" title="Search" autocomplete="off">
+                    </label>
+                    <script>document.getElementById('masthead-search-term').focus();</script>
+                    <input type="hidden" name="aq" value="f"><input type="hidden" name="oq" value="" disabled="">
+                </form>
+            </div>
+        </div>
+    {%endif%}
+    <div class="wrapper">
+        {%block header%}
+        
+        {%if config.header is null or config.header == 1%}
+        <header class="n_head">
+            <div class="pr_hd_wrapper">
+                <a href="/">
+                    <img src="{{config.logo}}" alt="{{config.title}}" title="{{config.slogan}}" id="hd_vidlii">
+                </a>
+                <nav>
+                    <ul>
+                        <a href="/"{%if page_type is defined and page_type == "Home"%} id="pr_sel"{%endif%}><li>Home</li></a>
+                        <a href="/videos"{%if page_type is defined and page_type == "Videos"%} id="pr_sel"{%endif%}><li>Videos</li></a>
+                        <a href="/channels"{%if page_type is defined and page_type == "Channels"%} id="pr_sel"{%endif%}><li>Channels</li></a>
+                        <a href="/community"{%if page_type is defined and page_type == "Community"%} id="pr_sel"{%endif%}><li>Community</li></a>
+                    </ul>
+                </nav>
+                <nav id="sm_nav">
+                    {%if session.session != -1%}
+                    <a href="/user/{{session.user.displayname}}" id="hd_name">{{session.user.displayname}}<img id="n_ar" src="/img/dar.png"></a><a href="/my_account">Account</a><a href="/inbox" id="inbox_hd"><img id="inbox_icon" src="/img/amsg0.png"><span id="inbox_notifications">(0)</span></a><a href="/help">Help</a><a href="/logout">Log Out</a>
+                    <div id="name_nav">
+                        <div>
+                        <a href="/user/{{session.user.displayname}}">My Channel</a>
+                        {# <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?><a href="/admin/dashboard">Admin Panel</a><? endif ?> #}
+                        <a href="/my_videos">My Videos</a>
+                        <a href="/my_favorites">My Favorites</a>
+                        <a href="/my_subscriptions">Subscriptions</a>
+                        <a href="/friends">Friends</a>
+                        <a href="/inbox">Inbox</a>
+                        </div>
+                    </div>
+                    {%else%}
+                    <a href="/register">Sign Up</a>
+                    <a href="/help">Help</a>
+                    <a href="/login">Sign In</a>
+                    <div id="login_modal">
+                        <form action="/login" method="POST">
+                            <input type="password" class="search_bar" placeholder="Your Password" style="display:none">
+                            <input type="text" name="v_username" class="search_bar" placeholder="Username/E-Mail">
+                            <input type="password" name="v_password" class="search_bar" placeholder="Your Password">
+                            <input type="submit" name="submit_login" class="search_button" value="Sign In">
+                            <div class="forgot_pass">
+                                <a href="/forgot_password">Forgot Password?</a>
+                            </div>
+                        </form>
+                    </div>
+                    {%endif%}
+                </nav>
+                <div class="pr_hd_bar">
+                    <form action="/results" method="GET">
+                        <input type="search" name="q" class="search_bar" maxlength="256" {%if page is defined and page != "login" and page != "register" and page != "send" and q is null%}autofocus{%elseif q is defined%} value="{{q}}"{%endif%}> 
+                        <select name="f">
+                            <option>All</option>
+                            <option value="1">Videos</option>
+                            <option value="2">Members</option>
+                        </select>
+                        <input type="submit" class="search_button" value="Search">
+                    </form>
+                    <a href="/upload" class="yel_btn">Upload</a>
+                </div>
+            </div>
+        </header>
+        {%endif%}
+
+        {%endblock%}
+        <div style="font-size: 14px;">
+            {%block body%}{%endblock%}
+        </div>
+        {%block footer%}
+        <div class="cl"></div>
+        <footer style="margin-top:30px">
+            <form action="/results" method="GET">
+                <input type="search" name="q" class="search_bar" maxlength="256"> <input type="submit" value="Search" class="search_button">
+            </form>
+            <div>
+                <div>
+                    <strong>About VidLii</strong>
+                    <div>
+                        <a href="/blog">Blog</a><a href="/about">About</a>
+                    </div>
+                    <div>
+                        <a href="/terms">Terms of Use</a><a href="/privacy">Privacy Policy</a>
+                    </div>
+                    <div style="margin-right: 49px">
+                        <a href="/themes">Themes</a><a href="/testlii">Testlii</a>
+                    </div>
+                </div>
+                <div>
+                    <strong>Help & Info</strong>
+                    <div>
+                        <a href="/help">Help Center</a><a href="/partners">Partnership</a>
+                    </div>
+                    <div>
+                        <a href="/copyright">Copyright</a><a href="/guidelines">Community Guidelines</a>
+                    </div>
+                </div>
+                <div>
+                    <strong>Your Account</strong>
+                    <div>
+                        <a href="/my_videos">My Videos</a><a href="/my_favorites">My Favorites</a>
+                    </div>
+                    <div>
+                        <a href="/my_subscriptions">My Subscriptions</a><a href="/my_account">My Account</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {%endblock%}
+    </div>
+    {%if session.session != -1%}
+    <script>
+        let inbox = document.getElementById("inbox_hd");
+        if(inbox != null) {
+            let inbox_icon = document.getElementById("inbox_icon"), inbox_notifications = document.getElementById("inbox_notifications");
+            const checkInbox = setInterval(() => {
+                fetch("/api/user/inbox").then(resp => { return resp.json() }).then(data => {
+                    const notifications = data.notifications;
+                    if(notifications > 0) {
+                        inbox.style.paddingLeft = "34px !important";
+                        inbox_icon.style.bottom = "2px";
+                    }
+                    inbox_icon.setAttribute("src", `/img/amsg${notifications > 0 ? 1 : 0}.png`);
+                    inbox_notifications.innerText = `(${notifications})`;
+                });
+            }, 5000);
+        }
+    </script>
+    {%endif%}
+</body>
+</html>

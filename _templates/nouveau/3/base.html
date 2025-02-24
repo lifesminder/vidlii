@@ -136,19 +136,32 @@
                                     </a>
                                     <div class="upper-left-section">
                                         <h1>{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}'s Channel{%endif%}</h1>
-                                        {%if subscribed%}
-                                        Subscribed
-                                        {%endif%}
                                     </div>
                                     <div class="upper-left-section">
                                         {%if owner == true%}
                                         <button class="yt-uix-button yt-uix-button-primary" style="margin: -5px 0 -5px 10px" onclick="$('.cosmic_edit').toggleClass('hddn')">
                                             Edit Channel
                                         </button>
+                                        {%elseif session != -1%}
+                                        <div class="yt-subscription-button-hovercard yt-uix-hovercard">
+                                            <span class="yt-uix-button-context-light yt-uix-button-subscription-container">
+                                                <button onclick="window.location.replace('/login?next=/user/{{profile.displayname}}')" class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip{%if subscribed%} subscribed{%endif%}">
+                                                    <span class="yt-uix-button-icon-wrapper">
+                                                        <img class="yt-uix-button-icon yt-uix-button-icon-subscribe" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                                                        <span class="yt-valign-trick"></span>
+                                                    </span>
+                                                    <span class="yt-uix-button-content">
+                                                        <span class="subscribe-label">Subscribe</span>
+                                                        <span class="subscribed-label">Subscribed</span>
+                                                        <span class="unsubscribe-label">Unsubscribe</span>
+                                                    </span>
+                                                </button>
+                                            </span>
+                                        </div>
                                         {%else%}
                                         <div class="yt-subscription-button-hovercard yt-uix-hovercard">
                                             <span class="yt-uix-button-context-light yt-uix-button-subscription-container">
-                                                <button class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip">
+                                                <button id="subscribe" class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip{%if subscribed%} subscribed{%endif%}">
                                                     <span class="yt-uix-button-icon-wrapper">
                                                         <img class="yt-uix-button-icon yt-uix-button-icon-subscribe" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
                                                         <span class="yt-valign-trick"></span>
@@ -167,13 +180,13 @@
                                         <div class="header-stats">
                                             <div class="stat-entry">
                                                 <span class="stat-value">{{profile.subscribers}}</span>
-                                                <span class="stat-name">subscribers</span>
+                                                <span class="stat-name">subscriber{%if profile.subscribers != 1%}s{%endif%}</span>
                                             </div>
                                         </div>
                                         <div class="header-stats">
                                             <div class="stat-entry">
                                                 <span class="stat-value">{{profile.video_views}}</span>
-                                                <span class="stat-name">video views</span>
+                                                <span class="stat-name">video view{%if profile.video_views != 1%}s{%endif%}</span>
                                             </div>
                                         </div>
                                         <span class="valign-shim"></span>
@@ -311,7 +324,7 @@
                                                 <div id="featured_playlists_small">
                                                     {% if playlists.count > 0 %}
                                                         {% for playlist in playlists.data %}
-                                                        <div id="pl_<?= $Playlist["purl"] ?>" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
+                                                        <div id="pl_{{playlist.purl}}" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
                                                             <div style="float:left;color:black;font-weight:bold">{{playlist.title}}</div>
                                                             <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_pl('{{playlist.purl}}')">Remove</a></div>
                                                         </div>
@@ -450,3 +463,22 @@
         </div>
     </div>
 </div>
+<script src="/js/cosmicpanda.js"></script>
+<script>
+    let subscribe = document.getElementById("subscribe");
+    if(subscribe != null) {
+        const subClass = subscribe.className;
+        subscribe.addEventListener("click", function(e) {
+            e.preventDefault();
+            fetch(`/api/user/subscribe?to={{profile.displayname}}`).then(resp => { return resp.json() }).then(data => {
+                if(data.status != -1) {
+                    if(data.message.startsWith("Subscribed")) {
+                        subscribe.className += " subscribed";
+                    } else {
+                        subscribe.className = subClass;
+                    }
+                } else alert(data.message);
+            });
+        });
+    }
+</script>

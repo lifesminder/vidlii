@@ -2994,9 +2994,10 @@ select {
 }
 
 #login_modal form {
+    margin: 0;
     padding: 10px;
     border: 1px solid rgba(0, 0, 0, .25);
-    border-radius: 5px
+    border-radius: 5px;
 }
 
 #login_modal .search_bar {
@@ -3247,4 +3248,134 @@ select {
     margin-bottom: 6px;
     line-height: 32px;
     box-shadow: 0 1px 3px #00000020;
+}
+
+.notification {
+    border: 1.5px solid #ccc;
+    padding: 6px;
+    text-align: center;
+    margin-bottom: 11px;
+    font-size: 14px;
+    font-weight: bold;
+} .notification.green {
+    border-color: #008000;
+} .notification.red {
+    border-color: #ff0000;
+}
+
+#page {
+    margin: 0 auto;
+    position: relative;
+}
+
+#masthead-container {
+    margin: 0 auto .8333em;
+    border-bottom: 1px solid #f3f3f3;
+}
+
+#masthead {
+    margin: 0 auto;
+    padding: 0.69231em 0 .9166em;
+    font-size: 1.0833em;
+}
+
+#masthead, #masthead-subnav ul {
+    width: 1000px;
+}
+
+#masthead #logo {
+    display: block;
+    float: left;
+    width: 110px;
+    height: 40px;
+    margin: 0 10px 0 0;
+    background: no-repeat url(/img/Vidlii6.png);
+    background-size: 90%;
+}
+
+#masthead-utility {
+    float: right;
+    margin-left: 15px;
+    text-align: right;
+    margin-top: 13px;
+    _margin-top: 11px;
+    font-size: 13px;
+} #masthead-utility a {
+    padding: 0.1em 0.8em;
+    border-left: 1px solid #ccc;
+    white-space: nowrap;
+} #masthead-utility a.start {
+    border-left: none;
+} #masthead-utility a.end {
+    padding-right: 0;
+} #masthead-utility .split {
+    margin-right: 60px;
+}
+
+#masthead-search {
+    overflow: hidden;
+    padding-top: 8px;
+    zoom: 1;
+} #masthead-search label {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid;
+    border-radius: 0;
+    border-color: #8c8c8c #999 #ccc #8c8c8c;
+    width: 89%;
+    height: 25px;
+    zoom: 1;
+    float: left;
+} #masthead-search input {
+    border: 2px solid #fff;
+    width: 100%;
+    height: 23px;
+    padding: 2px 4px 3px;
+    margin: 0;
+    font-size: 12px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+#search-btn, #search-btn button {
+    padding: 0 .5em;
+    height: 2.0833em;
+    border: 1px solid #ccc;
+    color: #000;
+    background: #f6f6f6;
+    background-image: -moz-linear-gradient(top, #ffffff, #efefef);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#efefef));
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#ffffff,endColorStr=#efefef);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    overflow: visible;
+    border-color: #999;
+} #search-btn button:hover, #search-btn button:focus {
+    border-color: #999;
+    background: #f3f3f3;
+    background-image: -moz-linear-gradient(top, #ffffff, #ebebeb);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ebebeb));
+    filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#ffffff,endColorStr=#ebebeb);
+    outline: 0;
+    -moz-box-shadow: 0 0 3px #999;
+    -webkit-box-shadow: 0 0 3px #999;
+    box-shadow: 0 0 3px #999;
+} #search-btn, #masthead-search .yt-uix-button-group .start {
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius-top-left: 0;
+    -moz-border-radius-bottom-left: 0;
+    font-size: 12px;
+}
+
+#vtbl_pl {
+    padding: 0 !important;
 }

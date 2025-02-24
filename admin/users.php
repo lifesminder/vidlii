@@ -368,8 +368,7 @@
 						"channel_version"   => "required",
 						"activated"         => "required",
 						"username" => "required|max_len,20|alpha_numeric",
-						"displayname" => "required|max_len,20|alpha_numeric",
-						"a_reg" => "required"
+						"displayname" => "required|max_len,20|alpha_numeric"
 					));
 
 					$_GUMP->filter_rules(array(
@@ -399,8 +398,6 @@
 						"activated"     => "trim",
 						"username" => "trim",
 						"displayname" => "trim",
-						"nouveau" => "trim",
-						"a_reg" => "trim"
 					));
 
 					$Validation = $_GUMP->run($_POST);
@@ -420,7 +417,7 @@
 						$Joined = "$RYear-$RMonth-$RDay $RHour:$RMinute:$Rsecond";
 
 						$nouveau = ($_POST["nouveau"] == "on") ? 1 : 0;
-						$show_joined = (int)$Validation["a_reg"];
+						//$show_joined = ($_POST["a_reg"] == "on") ? 1 : 0;
 
 						if ($Validation["channel_type"] >= 0 && $Validation["channel_type"] <= 7) { $Channel_Type = $Validation["channel_type"]; } else { $Channel_Type = 0; }
 						if ($Validation["channel_version"] == 1 || $Validation["channel_version"] == 2 || $Validation["channel_version"] == 3 || $Validation["channel_version"] == 4) { $Channel_Version = $Validation["channel_version"]; } else { $Channel_Version = 1; }
@@ -445,6 +442,7 @@
 							}
 
 							$Partnered = (!isset($_POST["partnered"]) || (isset($_POST["partnered"]) && $_POST["partnered"] == 0)) ? 0 : 1;
+							$show_joined = (isset($_POST["a_reg"]) && $_POST["a_reg"] == "on") ? 1 : 0;
 
 							$DB->modify("UPDATE users SET partner = :PARTNER, country = :COUNTRY, activated = :ACTIVATED, channel_version = :CHANNEL_VERSION, channel_type = :CHANNEL_TYPE, i_name = :NAME, channel_title = :CHANNEL_TITLE, channel_description = :CHANNEL_DESCRIPTION, channel_tags = :CHANNEL_TAGS, about = :ABOUT, website = :WEBSITE, birthday = :BIRTHDAY, reg_date = :JOINED, i_occupation = :OCCUPATION, i_schools = :SCHOOLS, i_interests = :INTERESTS, i_movies = :MOVIES, i_music = :MUSIC, i_books = :BOOKS, nouveau = :NOUVEAU, a_reg = :A_REG WHERE username = :USERNAME", [
 								":PARTNER" => $Partnered, ":COUNTRY" => $Country, ":ACTIVATED" => $Activated, ":CHANNEL_VERSION" => $Channel_Version, ":CHANNEL_TYPE" => $Channel_Type, ":NAME" => $Validation["name"], ":CHANNEL_TITLE" => $Validation["channel_title"], ":CHANNEL_DESCRIPTION" => $Validation["description"], ":CHANNEL_TAGS" => $Validation["tags"], ":ABOUT" => $Validation["about"], ":WEBSITE" => $Validation["website"],

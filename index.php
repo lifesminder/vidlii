@@ -4,6 +4,7 @@
 
     $router = new \Bramus\Router\Router();
     $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+    $engine = new \Vidlii\Vidlii\Engine();
 
     $router->all("/", function() {
         include_once "indexold.php";
@@ -115,19 +116,26 @@
         print_r($db->query("SHOW CREATE TABLE users"));
         echo "</pre>";
     });
+    $router->get("/nouveau", function() {
+        global $engine;
+        $engine->template("page.html", ["title" => "NouVeau", "content" => "## Nouveau\nWe implemented newer Nouveau style in order to replace PHP-based templating engine of VidLii. Hope you understood us..."]);
+    });
     $router->get("/playlist", function() {
-        require_once "_includes/init.php";
-        $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
+        global $engine, $session;
 
         if(isset($_GET["p"]) && $_GET["p"] != "") {
-            $id = $_GET["p"];
+            $id = $_GET["p"]; $playlist = [];
             switch($id) {
                 case "WL": {
-                    echo "Watch later";
+                    if($session["session"] != -1) {
+                        echo "Watch later";
+                    } else header("Location: /login?next=playlist?pl=WL");
                     break;
                 }
                 case "liked": {
-                    echo "Liked videos";
+                    if($session["session"] != -1) {
+                        echo "Liked videos";
+                    } else header("Location: /login?next=playlist?pl=WL");
                     break;
                 }
                 default: {
@@ -136,9 +144,9 @@
 
                     if($playlist_info["status"] == 1) {
                         $playlist_info = $playlist_info["data"];
-                        $twig = true; $title = $playlist_info["title"]." - VidLii"; $page = "nouveau/playlist.html"; $args = ["playlist" => $playlist_info];
-                        require_once "_templates/page_structure.php";
-                    }
+                        /* echo "<pre>"; print_r($playlist_info); echo "</pre>"; */
+                        $engine->template("playlist.html", ["playlist" => $playlist_info]);
+                    } else notification("Playlist not found", "/", "red");
                     break;
                 }
             }
@@ -148,12 +156,12 @@
     });
 
     $router->all("/(.*)", function($url) {
-        require_once "_includes/init.php";
+        global $api, $engine;
 
         $url_chk = strtolower($url);
         $static_page = "static/pages/$url.md";
         $system_page = "$url.php";
-        $profile_page = (bool)$DB->query("SELECT count(*) from users where username = '".explode("/", $url)[0]."' or displayname = '".explode("/", $url)[0]."'")["data"][0]["count(*)"];
+        $profile_page = (bool)$api->db("SELECT count(*) from users where username = '".explode("/", $url)[0]."' or displayname = '".explode("/", $url)[0]."'")["data"][0]["count(*)"];
         
         if($profile_page) {
             $_GET["user"] = $url;
@@ -168,23 +176,12 @@
                 $title = "Static";
             }
 
-            $_PAGE->set_variables(array(
-                "Page_Title" => "$title - VidLii",
-                "Page" => "Static",
-                "Content" => $content,
-                "Page_Type" => "Static"
-            ));
-            require_once "_templates/page_structure.php";
+            $engine->template("page.html", ["title" => $title, "content" => $content, "page_type" => "Static"]);
         } else {
             if(file_exists($system_page)) include_once $system_page;
             else {
                 $feed = new \Vidlii\Vidlii\API\Feed($_SERVER["DOCUMENT_ROOT"]);
-
-                $twig = true;
-                $title = "404 - Page Not Found | VidLii";
-                $page = "nouveau/error.html";
-                $args["featured"] = $feed->index(["show" => "featured"]);
-                require_once "_templates/page_structure.php";
+                $engine->template("nouveau/error.html", ["featured" => $feed->index(["show" => "featured"])]);
             }
         }
     });

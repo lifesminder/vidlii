@@ -23,8 +23,9 @@
         <ul>
             <li><a href="https://github.com/bramus/router">Router</a> by Bramus for flexible URL management</li>
             <li><a href="https://github.com/erusev/parsedown">Parsedown</a> for markdowns</li>
-            <li><a href="#">DBAL Doctrine</a> for databases workaround</li>
-            <li><a href="https://github.com/php-ffmpeg/php-ffmpeg">FFMpeg wrapper for PHP</a> to convert and manage videos</li>
+            <li><a href="https://www.doctrine-project.org/projects/dbal.html">Doctrine Database Abstraction Layer</a> for databases workaround</li>
+            <li><a href="https://github.com/php-ffmpeg/php-ffmpeg">FFMpeg wrapper</a> to convert and manage videos</li>
+            <li><a href="https://github.com/vlucas/phpdotenv"><code>.env</code></a> by Vance Lucas for handling environment variables</li>
         </ul>
     </p>
 </div>

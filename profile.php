@@ -89,6 +89,11 @@ if (isset($_GET["user"])) {
             
             // Stuff
             $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc", true);
+            if($args["videos"]["count"] > 0) {
+                $args["featured_video"] = $args["videos"]["data"][0];
+                $args["featured_video"]["autoplay"] = 1;
+                $args["featured_video"]["uploaded"] = get_time_ago($args["featured_video"]["uploaded_on"]);
+            }
 
             if(isset($_POST["save_channel_branding"])) {
                 $channel_title = (isset($_POST["channel_title"]) && $_POST["channel_title"] != "") ? $_POST["channel_title"] : "";

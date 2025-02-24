@@ -84,7 +84,7 @@
                     <p class="feed-unavailable-message">No recent activity.</p>
                     {%endif%}
                 {%elseif filter == 1%}
-                    {% if owner or (profile.c_comments == 1) %}
+                    {% if owner or (profile.c_comments == 1 and session.session != -1) %}
                     <form action="/user/{{profile.displayname}}/feed?filter=1" method="POST" style="display: flex; margin: 8px 0 8px 0;">
                         <textarea name="comment" id="comment" placeholder="Write your comment"></textarea>
                         <button type="submit" name="channel_comment" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Publish</button>

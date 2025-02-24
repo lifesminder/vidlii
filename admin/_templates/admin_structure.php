@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<script>adblock_installed = false; zd = false; </script>
     <title><?= $Page_Title ?> - VidLii Admin</title>
     <link rel="stylesheet" type="text/css" href="<?= CSS_FILE ?>">
-    <!-- script src='https://www.google.com/recaptcha/api.js'></script -->
     <script src="/js/jquery.js"></script>
     <style>
         .panel_box {
@@ -44,11 +42,21 @@
 </head>
 <body>
 <div class="wrapper">
-    <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>
-    <? if (isset($_SESSION["notification"])) : ?>
-        <div style="border: 1.5px solid <?= $_SESSION["n_color"] ?>;padding:6px;text-align:center;margin-bottom:11px;font-size:14px;font-weight:bold"><?= $_SESSION["notification"] ?></div>
-        <? unset($_SESSION["notification"]); unset($_SESSION["n_color"]); ?>
-    <? endif ?>
+    <?php
+        require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php";
+
+        if(isset($_COOKIE["notification"])) {
+            $_msg = explode(";", $_COOKIE["notification"]);
+            $message = $_msg[0];
+            $color = (count($_msg) > 1) ? $_msg[1] : null;
+    ?>
+        <div class="notification<?php echo ($color != "") ? " $color" : null; ?>">
+            <?php echo $message; ?>
+        </div>
+    <?php
+            setcookie('notification', '', -1, '/', $_SERVER['SERVER_NAME']); 
+        }
+    ?>
     <main class="bottom_wrapper">
         <div style="word-spacing:20px;text-align:center;padding-bottom:8px;margin-bottom:13px;border-bottom:1px solid #e2e2e2">
             <a href="/admin/dashboard"<? if ($Page == "dashboard") : ?> style="font-weight:bold;color:black"<? endif ?>>Dashboard</a> <? if ($_USER->Is_Admin) : ?>| <a href="/admin/statistics"<? if ($Page == "statistics") : ?> style="font-weight:bold;color:black"<? endif ?>>Charts</a> <? endif ?>| <a href="/admin/users"<? if ($Page == "Users") : ?> style="font-weight:bold;color:black"<? endif ?>>Users</a> | <a href="/admin/videos" <? if ($Page == "Videos") : ?> style="font-weight:bold;color:black"<? endif ?>>Videos</a> | <a href="/admin/misc" <? if ($Page == "misc") : ?> style="font-weight:bold;color:black"<? endif ?>>Misc</a>

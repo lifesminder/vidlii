@@ -1,33 +1,39 @@
-<div style="width:90%;margin:37px auto 0">
-    <div style="width:45%;float:left">
-        <img src="/img/404.jpg" style="width:344px;position:relative;top:9px">
-    </div>
-    <div style="float:left;width:55%">
-        <div style="font-size:33px;font-weight:bold;text-align:center;color:#404040">404 - Page Not Found</div>
-        <div style="font-size:23px;font-weight:bold;text-align:center;color:#606060">Sorry about that. :(</div>
+{%extends "base.html"%}
 
-        {%if featured.count > 0%}
-        <div class="wdg" id="ft_widget" style="margin-top:15px">
-            <div style="background-color: #dae9fe; justify-content: flex-start; align-items: center;">
-                <img src="/img/ft.png" alt="Featured Videos">
-                <span>Featured Videos</span>
-                <span></span>
-            </div>
-            <div>
-                <div class="v_v_bx">
-                    {%for video in featured.data%}
-                    <div>
-                        <a href="/watch?v={{video.url}}">
-                            <img class="vid_th" src="/vi/{{video.url}}/hqresdefault.jpg" width="140" height="88">
-                        </a>
-                        <a href="/watch?v={{video.url}}" class="ba">{{video.title}}</a>
-                        <div class="vw s">{{video.views}} views</div>
-                        <a href="/user/{{video.uploaded_by}}" class="ch_l s">{{video.uploaded_by}}</a>
+{%block title%}404 - Page Not Found - VidLii{%endblock%}
+
+{%block body%}
+    <div style="width:90%;margin:37px auto 0">
+        <div style="width:45%;float:left">
+            <img src="/img/404.jpg" style="width:344px;position:relative;top:9px">
+        </div>
+        <div style="float:left;width:55%">
+            <div style="font-size:33px;font-weight:bold;text-align:center;color:#404040">404 - Page Not Found</div>
+            <div style="font-size:23px;font-weight:bold;text-align:center;color:#606060">Sorry about that. :(</div>
+
+            {%if featured.count > 0%}
+            <div class="wdg" id="ft_widget" style="margin-top:15px">
+                <div style="background-color: #dae9fe; justify-content: flex-start; align-items: center;">
+                    <img src="/img/ft.png" alt="Featured Videos">
+                    <span>Featured Videos</span>
+                    <span></span>
+                </div>
+                <div>
+                    <div class="v_v_bx">
+                        {%for video in featured.data%}
+                        <div>
+                            <a href="/watch?v={{video.url}}">
+                                <img class="vid_th" src="/vi/{{video.url}}/hqresdefault.jpg" width="140" height="88">
+                            </a>
+                            <a href="/watch?v={{video.url}}" class="ba">{{video.title}}</a>
+                            <div class="vw s">{{video.views}} views</div>
+                            <a href="/user/{{video.uploaded_by}}" class="ch_l s">{{video.uploaded_by}}</a>
+                        </div>
+                        {%endfor%}
                     </div>
-                    {%endfor%}
                 </div>
             </div>
+            {%endif%}
         </div>
-        {%endif%}
     </div>
-</div>
+{%endblock%}
