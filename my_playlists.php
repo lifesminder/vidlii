@@ -24,10 +24,11 @@ if (isset($_POST["create_playlist"])) {
         $Playlist_Title = (string)$Validation["playlist_name"];
         $PURL           = (string)random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_",11);
 
-        $Create = $DB->modify("INSERT INTO playlists (purl,title,created_by,thumbnail,created_on) VALUES (:PURL,:TITLE,:USERNAME,:THUMBNAIL,NOW())",
+        $Create = $DB->modify("INSERT INTO playlists (purl,title,description,created_by,thumbnail,created_on) VALUES (:PURL,:TITLE,:description,:USERNAME,:THUMBNAIL,NOW())",
                              [
                                  ":PURL"        => $PURL,
                                  ":TITLE"       => $Playlist_Title,
+                                 ":description" => "",
                                  ":THUMBNAIL"   => "",
                                  ":USERNAME"    => $_USER->username
                              ]);

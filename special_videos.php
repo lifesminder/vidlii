@@ -5,7 +5,6 @@ require_once "_includes/init.php";
 //- Requires ($_GET["t"])
 if (!isset($_GET["t"])) { redirect("/"); exit(); }
 
-
 $Categories = return_categories();
 $Header = array("f" => "Featured", "b" => "Being Watched Now");
 $_PAGINATION = new Pagination(16,20);

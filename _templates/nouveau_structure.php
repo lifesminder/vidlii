@@ -263,21 +263,31 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                     break;
                 }
                 case 4: {
+                    $args["bg_cover"] = (strlen($Profile["cover"]) > 0) ? "/vi/cover/".$Profile["displayname"].".jpg" : null;
                     $page = ($page != "" && file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/4/$page.html")) ? strtolower($page) : "index";
+
+                    // Grid or sort show
+                    $args["flow"] = (isset($_GET["flow"]) && $_GET["flow"] == "list") ? "list" : "grid";
+                    $args["sort"] = (isset($_GET["sort"]) && $_GET["sort"] != "") ? strtolower($_GET["sort"]) : "dd";
+
+                    // Sorting
+                    if($args["sort"] == "da") $sort = "order by uploaded_on asc";
+                    else if($args["sort"] == "p" && $view == 0) $sort = "order by displayviews desc";
+                    else $sort = "order by uploaded_on desc";
+
+                    // Featured channels block existence
                     $args["featuredblock"] = "true";
+
+                    // Understand the page
                     switch($page) {
-                        case "videos": {
-                            $args["featuredblock"] = "false";
-
-                            // Showing methods
-                            $args["flow"] = (isset($_GET["flow"]) && $_GET["flow"] == "list") ? "list" : "grid";
-                            $args["sort"] = (isset($_GET["sort"]) && $_GET["sort"] != "") ? strtolower($_GET["sort"]) : "dd";
-                            if($args["sort"] == "da") $sort = "order by uploaded_on asc";
-                            else if($args["sort"] == "p" && $view == 0) $sort = "order by displayviews desc";
-                            else $sort = "order by uploaded_on desc";
-
-                            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $sort", true);
+                        case "index": {
+                            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and title like \"%$query%\" and uploaded_by = '".$Profile["displayname"]."' order by uploaded_on desc limit 5", true);
                             if($args["videos"]["count"] > 0) {
+                                // Get featured video
+                                $args["featured_video"] = $args["videos"]["data"][0];
+                                $args["featured_video"]["autoplay"] = 1;
+                                $args["featured_video"]["uploaded"] = get_time_ago($args["featured_video"]["uploaded_on"]);
+                                // Go through other videos
                                 for($i = 0; $i < $args["videos"]["count"]; $i++) {
                                     $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
                                     $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
@@ -285,7 +295,92 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                             }
                             break;
                         }
+                        case "videos": {
+                            $args["featuredblock"] = "false";
+                            $args["favorites_count"] = $api->db("SELECT count(*) from video_favorites where favorite_by = \"".$Profile["displayname"]."\"")["data"]["count(*)"];
+
+                            // Parse view type
+                            if(isset($_GET["view"]) && (int)$_GET["view"] > 0) {
+                                $view = (int)$_GET["view"];
+                                switch($view) {
+                                    case 2: {
+                                        // Favorite videos
+                                        $args["videos"] = [];
+                                        $args["view"] = "favorite";
+                                        $args["viewn"] = $view;
+                                        $favorites = $api->db("SELECT * from video_favorites where favorite_by = \"".$Profile["displayname"]."\"", true);
+                                        if($favorites["count"] > 0) {
+                                            $i = 0;
+                                            $args["videos"]["count"] = $favorites["count"];
+                                            foreach($favorites["data"] as $favorite) {
+                                                $url = $favorite["url"];
+                                                $args["videos"]["data"][$i] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and url = \"$url\" $sort", true);
+                                                if($args["videos"]["data"][$i]["count"] == 1) {
+                                                    $args["videos"]["data"][$i] = $args["videos"]["data"][$i]["data"][0];
+                                                    $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
+                                                    $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
+                                                }
+                                                $i++;
+                                            }
+                                        } else {
+                                            header("Location: /user/".$Profile["displayname"]."/videos");
+                                        }
+                                        break;
+                                    }
+                                    case 57: {
+                                        $args["view"] = "all";
+                                        // All shields, including both uploads and favorites
+                                        $favorites = $api->db("SELECT * from video_favorites where favorite_by = \"".$Profile["displayname"]."\"", true);
+                                        if($favorites["count"] > 0) {
+                                            $i = 0;
+                                            $args["favorites"]["count"] = $favorites["count"];
+                                            foreach($favorites["data"] as $favorite) {
+                                                $url = $favorite["url"];
+                                                $args["favorites"]["data"][$i] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and url = \"$url\" $sort", true);
+                                                if($args["favorites"]["data"][$i]["count"] == 1) {
+                                                    $args["favorites"]["data"][$i] = $args["videos"]["data"][$i]["data"][0];
+                                                    $args["favorites"]["data"][$i]["length"] = seconds_to_time($args["favorites"]["data"][$i]["length"]);
+                                                    $args["favorites"]["data"][$i]["uploaded_on"] = get_time_ago($args["favorites"]["data"][$i]["uploaded_on"]);
+                                                }
+                                                $i++;
+                                            }
+                                        }
+                                        $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $sort", true);
+                                        if($args["videos"]["count"] > 0) {
+                                            for($i = 0; $i < $args["videos"]["count"]; $i++) {
+                                                $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
+                                                $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                    default: {
+                                        $args["view"] = "uploads";
+                                        $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $sort", true);
+                                        if($args["videos"]["count"] > 0) {
+                                            for($i = 0; $i < $args["videos"]["count"]; $i++) {
+                                                $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
+                                                $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
+                                            }
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $args["view"] = "uploads";
+                                $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $sort", true);
+                                if($args["videos"]["count"] > 0) {
+                                    for($i = 0; $i < $args["videos"]["count"]; $i++) {
+                                        $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
+                                        $args["videos"]["data"][$i]["uploaded_on"] = get_time_ago($args["videos"]["data"][$i]["uploaded_on"]);
+                                    }
+                                }
+                            }
+                            
+                            break;
+                        }
                         case "playlists": {
+                            $args["featuredblock"] = "false";
                             $args["playlists"] = $api->db("SELECT * FROM playlists WHERE created_by = '".$Profile["displayname"]."'", true);
                             if($args["playlists"]["count"] > 0) {
                                 for($i = 0; $i < $args["playlists"]["count"]; $i++) {
@@ -294,6 +389,28 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                                     if($args["playlists"]["data"][$i]["videos"]["count"] > 0)
                                         $args["playlists"]["data"][$i]["videos"] = $args["playlists"]["data"][$i]["videos"]["data"];
                                 }
+                            }
+                            break;
+                        }
+                        case "community": {
+                            $args["featuredblock"] = "false";
+                            break;
+                        }
+                        case "channels": {
+                            $args["featuredblock"] = "false";
+                            $args["view"] = (isset($_GET["view"]) && (int)$_GET["view"] != 60) ? (int)$_GET["view"] : 60;
+                            if(strlen($Profile["featured_channels"]) > 0) {
+                                $featured_channels = [];
+                                $args["featured_channels"] = explode(",", $Profile["featured_channels"]);
+                                foreach($args["featured_channels"] as $channel) {
+                                    $channel = $api->db("SELECT displayname, channel_title, channel_description, (select count(*) from subscriptions where subscription = '$channel') as subscribers, partner, is_admin, is_mod from users where username = '$channel'");
+                                    if($channel["count"] == 1) {
+                                        $channel = $channel["data"];
+                                        $channel["videos"] = $api->db("SELECT count(*) from videos where uploaded_by = \"".$channel["displayname"]."\" and status > 0")["data"]["count(*)"];
+                                    }
+                                    array_push($featured_channels, $channel);
+                                }
+                                $args["featured_channels"] = $featured_channels;
                             }
                             break;
                         }

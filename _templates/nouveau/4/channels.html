@@ -1,9 +1,152 @@
 {% extends "nouveau/4/base.html" %}
 
 {% block body %}
-    <p>Channels, including:</p>
-    <ul>
-        <li>Featured Channels</li>
-        <li>Subscriptions</li>
+    <ul id="browse-items-primary">
+        <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
+            {%if featured_channels|length > 0%}
+            <button onclick=";return false;" aria-expanded="false" type="button" aria-haspopup="true" class="subnav-flow-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" data-button-menu-indicate-selected="true">
+                <span class="yt-uix-button-content">{%if flow == "list"%}List{%else%}Grid{%endif%}</span>
+                <span class="yt-uix-button-arrow yt-sprite"></span>
+                <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
+                    <li role="menuitem">
+                        {%if flow == "list"%}
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=grid" class="yt-uix-button-menu-item spf-link">Grid</span>
+                        {%else%}
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=list" class="yt-uix-button-menu-item spf-link">List</span>
+                        {%endif%}
+                    </li>
+                </ul>
+            </button>
+            {%endif%}
+            <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
+                <span class="yt-uix-button-icon-wrapper">
+                    <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
+                </span>
+            </a>
+            {%if featured_channels|length > 0%}
+            <span class="branded-page-module-title">
+                {{profile.featured_title}}
+            </span>
+            {%endif%}
+        </li>
+        {%if featured_channels|length > 0%}
+        {%if flow == "list"%}
+        {%for channel in featured_channels%}
+        <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box">
+            <div class="feed-item-dismissable">
+                <div class="feed-item-main feed-item-no-author">
+                    <div class="feed-item-main-content">
+                        <div class="yt-lockup clearfix yt-lockup-channel yt-lockup-tile">
+                            <div class="yt-lockup-thumbnail">
+                                <a href="/user/{{channel.displayname}}" class="ux-thumb-wrap yt-uix-sessionlink spf-link" aria-hidden="true">
+                                    <span class="video-thumb yt-thumb yt-thumb-110 g-hovercard">
+                                    <span class="yt-thumb-square">
+                                        <span class="yt-thumb-clip">
+                                            <img alt="" height="110" aria-hidden="true" width="110" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" src="/vi/ava/{{channel.displayname}}.jpg" data-ytimg="1">
+                                            <span class="vertical-align"></span>
+                                        </span>
+                                    </span>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="yt-lockup-content">
+                                <h3 class="yt-lockup-title">
+                                    <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}" aria-describedby="description-id-36705" href="/user/{{channel.displayname}}">{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}</a>
+                                    <span class="accessible-description" id="description-id-36705"> - Channel</span>
+                                </h3>
+                                <div class="yt-lockup-meta">
+                                    <ul class="yt-lockup-meta-info">
+                                        <li>{{channel.videos}} video{%if channel.videos != 1%}s{%endif%}</li>
+                                    </ul>
+                                </div>
+                                {%if channel.channel_description != ""%}
+                                <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2">
+                                    {{channel.channel_description}}
+                                </div>
+                                {%endif%}
+                            </div>
+                            <div class="yt-lockup-badges">
+                                <ul class="yt-badge-list">
+                                    <li class="yt-lockup-badge-item">
+                                        <span class="yt-badge">CHANNEL</span>
+                                    </li>
+                                </ul>
+                                <span class="yt-uix-button-subscription-container">
+                                    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-unbranded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button" onclick=";return false;" aria-busy="false" aria-live="polite" aria-role="button" data-params="GAA%3D" data-href="#" data-style-type="unbranded">
+                                        <span class="yt-uix-button-content">
+                                            <span class="subscribe-label" aria-label="Subscribe">Subscribe</span>
+                                            <span class="subscribed-label" aria-label="Unsubscribe">Subscribed</span>
+                                            <span class="unsubscribe-label" aria-label="Unsubscribe">Unsubscribe</span>
+                                        </span>
+                                    </button>
+                                    {%if channel.subscribers > 0%}
+                                    <span class="yt-subscription-button-subscriber-count-unbranded-horizontal yt-uix-tooltip" title="{{channel.subscribers}}" tabindex="0" aria-label="{{channel.subscribers}} subscribers">{{channel.subscribers}}</span>
+                                    <span class="yt-subscription-button-disabled-mask" title=""></span>
+                                    {%endif%}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {%endfor%}
+        {%else%}
+        <li>
+            <ul id="channels-browse-content-grid" class="channels-browse-content-grid branded-page-gutter-padding grid-lockups-container">
+                {%for channel in featured_channels%}
+                <li class="channels-content-item yt-shelf-grid-item">
+                    <div class="yt-lockup clearfix yt-lockup-channel yt-lockup-grid">
+                        <div class="yt-lockup-thumbnail">
+                            <a href="/user/{{channel.displayname}}" class="ux-thumb-wrap yt-uix-sessionlink spf-link" aria-hidden="true">
+                                <span class="video-thumb  yt-thumb yt-thumb-110">
+                                    <span class="yt-thumb-square">
+                                        <span class="yt-thumb-clip">
+                                            <img data-ytimg="1" width="110" aria-hidden="true" height="110" alt="" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" src="/vi/ava/{{channel.displayname}}.jpg">
+                                            <span class="vertical-align"></span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="yt-lockup-content">
+                            <h3 class="yt-lockup-title">
+                                <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="VidLii" aria-describedby="description-id-397939" href="/user/{{channel.displayname}}">
+                                    {%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}
+                                    {%if channel.partner == 1 or channel.is_admin == 1 or channel.is_mod == 1%}
+                                    <span class="qualified-channel-title-badge">
+                                        <span aria-label="Verified" data-tooltip-text="Verified" class="yt-channel-title-icon-verified yt-uix-tooltip yt-sprite"></span>
+                                    </span>
+                                    {%endif%}
+                                </a>
+                                <span class="accessible-description" id="description-id-397939"> - Channel</span>
+                            </h3>
+                            <span class="yt-uix-button-subscription-container">
+                                <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-unbranded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button" onclick=";return false;" aria-busy="false" aria-live="polite" aria-role="button" data-params="GAA%3D" data-href="#" data-style-type="unbranded">
+                                    <span class="yt-uix-button-content">
+                                        <span class="subscribe-label" aria-label="Subscribe">Subscribe</span>
+                                        <span class="subscribed-label" aria-label="Unsubscribe">Subscribed</span>
+                                        <span class="unsubscribe-label" aria-label="Unsubscribe">Unsubscribe</span>
+                                    </span>
+                                </button>
+                                {%if channel.subscribers > 0%}
+                                <span class="yt-subscription-button-subscriber-count-unbranded-horizontal yt-uix-tooltip" title="{{channel.subscribers}}" tabindex="0" aria-label="{{channel.subscribers}} subscribers">{{channel.subscribers}}</span>
+                                <span class="yt-subscription-button-disabled-mask" title=""></span>
+                                {%endif%}
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                {%endfor%}
+            </ul>
+        </li>
+        {%endif%}
+        {%else%}
+        <li>
+            <p class="display-message">
+                This channel doesn't feature any other channels.
+            </p>
+        </li>
+        {%endif%}
     </ul>
 {% endblock %}

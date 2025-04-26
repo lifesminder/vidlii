@@ -12,17 +12,20 @@
                     <div class="branded-page-v2-top-row">
                         <div class="branded-page-v2-header channel-header yt-card">
                             <div id="gh-banner">
+                                {% if bg_cover == "" %}
+                                {% set bg_cover = "http://youtube.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png" %}
+                                {% endif %}
                                 <style>
                                     #c4-header-bg-container {
-                                        background-image: url(http://youtube.com/yts/img/channels/c4/default_banner-vfl7DRgTn.png);
+                                        background-image: url("{{bg_cover}}");
                                     }
                                     @media screen and (-webkit-min-device-pixel-ratio: 1.5), screen and (min-resolution: 1.5dppx) {
                                         #c4-header-bg-container {
-                                            background-image: url(http://youtube.com/yts/img/channels/c4/default_banner_hq-vfl4dpY8T.png);
+                                            background-image: url("{{bg_cover}}");
                                         }
                                     }
                                     #c4-header-bg-container .hd-banner-image {
-                                        background-image: url(http://youtube.com/yts/img/channels/c4/default_banner_hq-vfl4dpY8T.png);
+                                        background-image: url("{{bg_cover}}");
                                     }
                                 </style>
                                 <div id="c4-header-bg-container" class="c4-visible-on-hover-container">
@@ -64,10 +67,19 @@
                                     <div class="primary-header-upper-section">
                                         <div class="primary-header-upper-section-block">
                                             <h1 class="branded-page-header-title">
+                                                {%if profile.is_admin == 1 or profile.is_mod == 1 or profile.partner == 1%}
+                                                <span class="qualified-channel-title ellipsized has-badge">
+                                                {%else%}
                                                 <span class="qualified-channel-title ellipsized">
+                                                {%endif%}
                                                     <span class="qualified-channel-title-wrapper">
                                                         <span dir="ltr" class="qualified-channel-title-text">
                                                             <a dir="ltr" href="/user/{{profile.displayname}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ''%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
+                                                            {%if profile.is_admin == 1 or profile.is_mod == 1 or profile.partner == 1%}
+                                                            <a href="//web.archive.org/web/20170629041507/http://support.google.com/youtube/answer/3046484?hl=en" target="_blank" class="qualified-channel-title-badge" style="margin-left: 16px;">
+                                                                <span aria-label="Verified" class="yt-channel-title-icon-verified yt-uix-tooltip yt-sprite" data-tooltip-text="Verified"></span>
+                                                            </a>
+                                                            {%endif%}
                                                         </span>
                                                     </span>
                                                 </span>
@@ -89,7 +101,7 @@
                                                         </span>
                                                     </button>
                                                     {% if profile.subscribers > 0 %}
-                                                    <span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed yt-uix-tooltip" title="{{profile.subscribers}}" tabindex="0" aria-label="{{profile.subscribers}} subscribers">{{profile.subscribers}}</span>
+                                                    <span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed yt-uix-tooltip" style="height: 24px; margin-left: -4px;" title="{{profile.subscribers}}" tabindex="0" aria-label="{{profile.subscribers}} subscribers">{{profile.subscribers}}</span>
                                                     {% endif %}
                                                 </span>
                                             </div>
@@ -175,13 +187,6 @@
                                 <div class="yt-card clearfix">
                                     <div class="branded-page-v2-body branded-page-v2-primary-column-content">
                                         {% block body %}{% endblock %}
-                                        {#
-                                        <ul id="browse-items-primary">
-                                            <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box vve-check">
-                                                
-                                            </li>
-                                        </ul>
-                                        #}
                                     </div>
                                 </div>
                             </div>

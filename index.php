@@ -101,24 +101,11 @@
         global $api;
         if(!$_USER->logged_in) {
             redirect("/");
+        } else {
+            $_USER->logout();
+            $api->session(null, "logout");
+            redirect((isset($_GET["next"]) && $_GET["next"] != "") ? "/".$_GET["next"] : previous_page());
         }
-        $_USER->logout();
-        $api->session(null, "logout");
-        redirect((isset($_GET["next"]) && $_GET["next"] != "") ? "/".$_GET["next"] : previous_page());
-    });
-
-    // Portations!
-    $router->get("/test", function() {
-        require_once "_includes/init.php";
-        $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
-
-        echo "<pre>";
-        print_r($db->query("SHOW CREATE TABLE users"));
-        echo "</pre>";
-    });
-    $router->get("/nouveau", function() {
-        global $engine;
-        $engine->template("page.html", ["title" => "NouVeau", "content" => "## Nouveau\nWe implemented newer Nouveau style in order to replace PHP-based templating engine of VidLii. Hope you understood us..."]);
     });
     $router->get("/playlist", function() {
         global $engine, $session;

@@ -1,5 +1,22 @@
 {% extends "nouveau/4/base.html" %}
 
 {% block body %}
-    <p>Community</p>
+    <div class="branded-page-box-padding">
+        <div id="comment-section-renderer" class="comment-section-renderer vve-check comment-section-renderer-constrained" data-child-tracking="">
+            <div class="comments-header-renderer vve-check" data-visibility-types="0">
+                <h2 class="comment-section-header-renderer" tabindex="0"></h2>
+                <div class="yt-alert yt-alert-naked yt-alert-success hid zero-step-tooltip">  <div class="yt-alert-icon">
+            <span class="icon master-sprite yt-sprite"></span>
+            </div>
+            <div class="yt-alert-content" role="alert"></div>
+                </div>
+            </div>
+            <div class="comment-section-renderer-items" id="comment-section-renderer-items">
+                <span class="yt-spinner-img comment-section-items-loading yt-sprite" title="Loading icon"></span>
+                <div class="display-message vve-check">
+                    This channel hasn't posted yet
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

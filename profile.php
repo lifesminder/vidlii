@@ -287,7 +287,6 @@
                                     $args["featured_video"]["autoplay"] = 1;
                                     $args["featured_video"]["uploaded"] = get_time_ago($args["featured_video"]["uploaded_on"]);
                                 }
-                                print_r($args["videos"]);
                             }
                             break;
                         }

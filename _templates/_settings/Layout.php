@@ -1,3 +1,10 @@
+<?php
+    if($api->session()["user"]["id"] != -1) {
+        $is_nouveau = (bool)($api->db("SELECT nouveau from users where id = ".$api->session()["user"]["id"])["data"]["nouveau"] == 1);
+    } else {
+        $is_nouveau = false;
+    }
+?>
 <form action="/channel_version" method="POST">
     <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden;margin-bottom:15px">
         <img src="/img/channel10.png" style="float:left;height:85px;margin-right:15px">
@@ -25,7 +32,7 @@
             <input class="search_button" type="submit" style="padding:34px 4px" name="switch_2" value="Switch!"<? if ($Info["channel_version"] == 2) : ?> disabled<? else : ?>onclick="return confirm('Are you sure you want to switch? Your current channel colors and settings will be reset!')"<? endif ?>>
         </div>
     </div>
-    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden">
+    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden<?php if($is_nouveau) { ?>;margin-bottom:15px;<?php } ?>">
         <img src="/img/nermals_favorite_layout.png" style="float:left;height:85px;margin-right:15px">
         <div style="float:left;width:450px">
             <strong style="display:block;margin:0 0 5px">Cosmic Panda (BETA)</strong>
@@ -38,4 +45,23 @@
             <input class="search_button" type="submit" style="padding:34px 4px" name="switch_3" value="Switch!"<? if ($Info["channel_version"] == 3) : ?> disabled<? else : ?>onclick="return confirm('Are you sure you want to switch? Your current channel colors and settings will be reset!')"<? endif ?>>
         </div>
     </div>
+    <?php
+        if($is_nouveau) {
+    ?>
+    <div style="padding:5px 10px;border:1px solid #cccccc;border-radius:5px;overflow:hidden">
+        <img src="/img/nermals_favorite_layout.png" style="float:left;height:85px;margin-right:15px">
+        <div style="float:left;width:450px">
+            <strong style="display:block;margin:0 0 5px">One Layout</strong>
+            - The layout from YouTube 2014-2020<br>
+            - Everything shielded into blocks<br>
+            - Simple and minimalistic layout<br>
+            - Brings nostalgia to Channel 1.0
+        </div>
+        <div style="float:right">
+            <input class="search_button" type="submit" style="padding:34px 4px" name="switch_4" value="Switch!"<? if ($Info["channel_version"] == 4) : ?> disabled<? else : ?>onclick="return confirm('Are you sure you want to switch? Your current channel colors and settings will be reset!')"<? endif ?>>
+        </div>
+    </div>
+    <?php
+        }
+    ?>
 </form>

@@ -182,16 +182,24 @@ if (isset($_POST["switch_3"])) {
     $DB->modify("DELETE FROM channel_banners WHERE username = :USERNAME", [":USERNAME" => $_USER->username]);
 }
 
+if(isset($_POST["switch_4"])) {
+    $is_nouveau = (bool)($api->db("SELECT nouveau from users where id = ".$api->session()["user"]["id"])["data"]["nouveau"] == 1);
+    if($is_nouveau) {
+        $update_layout = $api->db("UPDATE users set channel_version = 4 where id = ".$api->session()["user"]["id"]);
+        if($update_layout["status"] >= 1) {
+            notification("Layout changed successfully", "/channel_version", "green");
+        } else {
+            notification($update_layout["message"], "/channel_version", "red");
+        }
+    } else {
+        notification("You are not eligible for this layout", "/channel_version", "red");
+    }
+}
 
 //GET INFO
 $Info = $_USER->get_profile();
-
-
-$Channel_Version    = $Info["channel_version"];
-
-
-$Account_Title      = "Channel Version";
-
+$Channel_Version = $Info["channel_version"];
+$Account_Title = "Channel Version";
 
 $_PAGE->set_variables(array(
     "Page_Title"        => "Channel Version - VidLii",

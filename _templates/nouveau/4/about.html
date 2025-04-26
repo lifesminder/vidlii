@@ -6,7 +6,7 @@
             <div class="about-metadata-container">
                 <div class="about-metadata-stats branded-page-box-padding">
                     <div class="about-stats">
-                    <span class="about-stat"><b>{{profile.subscribers}}</b> subscribers • <b>{{profile.video_views}}</b> video views</span>
+                    <span class="about-stat"><b>{{profile.subscribers}}</b> subscriber{%if profile.subscribers != 1%}s{%endif%} • <b>{{profile.video_views}}</b> video views</span>
                     {% if profile.a_reg == 1 %}
                     <br>
                     <span class="about-stat">Joined {{profile.reg_date|date("M d, Y")}}</span>
@@ -22,6 +22,7 @@
                 <pre>{{profile.channel_description}}</pre>
             </div>
             {% endif %}
+            {%if profile.a_country == 1%}
             <div class="about-metadata-label about-metadata-label-border-top branded-page-box-padding">
                 <span>Details</span>
             </div>
@@ -31,6 +32,7 @@
                     {{profile.country}}
                 </span>
             </div>
+            {%endif%}
             {% if website|length > 0 %}
             <div class="about-metadata-label about-metadata-label-border-top branded-page-box-padding">
                 <span>Links</span>

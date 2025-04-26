@@ -1,8 +1,109 @@
 {% extends "nouveau/4/base.html" %}
 
 {% block body %}
-    <h1>Channel 4</h1>
-    <p>
-        Cosmic Panda's improvement, often undiscovered at all...
-    </p>
+    <ul id="browse-items-primary">
+        {%if profile.c_featured == 1%}
+        <li>
+            <div class="video-player-view-component branded-page-box">
+                <div class="video-content clearfix">
+                    <div class="c4-player-container c4-flexible-player-container">
+                        <div class="c4-flexible-height-setter"></div>
+                        <div id="upsell-video" class="c4-flexible-player-box">
+                            {%set player_video = featured_video%}
+                            {%set player_skin = "2012"%}
+                            {%include "nouveau/player.html"%}
+                        </div>
+                    </div>
+                    <div class="video-detail">
+                        <h3 class="title yt-ui-ellipsis yt-ui-ellipsis-2">
+                            <a href="/watch?v={{featured_video.url}}" class="yt-uix-sessionlink spf-link">{{featured_video.title}}</a>
+                        </h3>
+                        <div class="view-count">
+                            <span class="count">
+                                {{featured_video.displayviews}} views
+                            </span>
+                            <span class="content-item-time-created">
+                                {{featured_video.uploaded}}
+                            </span>
+                        </div>
+                        <div class="description yt-uix-expander yt-uix-expander-ellipsis yt-ui-ellipsis-10 yt-uix-expander-collapsed">
+                            {%if featured_video.description != ""%}
+                            <div class="yt-ui-ellipsis yt-ui-ellipsis-10">
+                                {{featured_video.description}}
+                            </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div class="video-content-info"></div>
+                </div>
+            </div>
+        </li>
+        {%endif%}
+        <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box vve-check">
+            <div class="feed-item-dismissable">
+                <div class="feed-item-main feed-item-no-author">
+                    <div class="feed-item-main-content">
+                        <div class="shelf-wrapper clearfix">
+                            {% if videos.count > 0 %}
+                            <div class="expanded-shelf shelf-item vve-check yt-uix-expander yt-uix-expander-collapsed yt-section-hover-container">
+                                <h2 class="branded-page-module-title">
+                                    <a href="/user/{{profile.displayname}}/videos?view=0&amp;sort=dd&amp;shelf_id=1" class="yt-uix-sessionlink branded-page-module-title-link spf-nolink">
+                                        <span class="branded-page-module-title-text">
+                                            <span class="">Uploads</span>
+                                        </span>
+                                    </a>
+                                </h2>
+                                <ul class="expanded-shelf-content-list clearfix">
+                                    {% for video in videos.data %}
+                                    <li class="expanded-shelf-content-item-wrapper">
+                                        <div class="yt-lockup clearfix expanded-shelf-content-item yt-lockup-video yt-lockup-tile fluid vve-check">
+                                            <div class="yt-lockup-dismissable">
+                                                <div class="yt-lockup-thumbnail">
+                                                    <span class="spf-link ux-thumb-wrap contains-addto">
+                                                        <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink yt-fluid-thumb-link" aria-hidden="true">
+                                                            <span class="video-thumb yt-thumb yt-thumb-196 yt-thumb-fluid">
+                                                                <span class="yt-thumb-default">
+                                                                    <span class="yt-thumb-clip">
+                                                                        <img alt="" aria-hidden="true" data-thumb="/vi/{{video.url}}/hqresdefault.jpg" data-ytimg="1" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" src="http://youtube.com/yts/img/pixel-vfl3z5WfW.gif" width="196">
+                                                                        <span class="vertical-align"></span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </a>
+                                                        <span class="video-time" aria-hidden="true">
+                                                            <span aria-label="{{video.length}}">{{video.length}}</span>
+                                                        </span>
+                                                        <span class="thumb-menu dark-overflow-action-menu video-actions"></span>
+                                                            <button class="yt-uix-button yt-uix-button-size-small yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon no-icon-markup addto-button video-actions spf-nolink hide-until-delayloaded addto-watch-later-button-sign-in yt-uix-tooltip" type="button" onclick=";return false;" role="button" title="Watch later" data-button-menu-id="shared-addto-watch-later-login" data-video-ids="???">
+                                                                <span class="yt-uix-button-arrow yt-sprite"></span>
+                                                            </button>
+                                                    </span>
+                                                </div>
+                                                <div class="yt-lockup-content">
+                                                    <h3 class="yt-lockup-title">
+                                                        <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{{video.title}}" aria-describedby="description-id-913017" href="/watch?v={{video.url}}" rel="nofollow">{{video.title}}</a>
+                                                    </h3>
+                                                    <div class="yt-lockup-meta">
+                                                        <ul class="yt-lockup-meta-info">
+                                                            <li>{{video.uploaded_on}}</li>
+                                                            <li>{{video.displayviews}} views</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2">
+                                                    Description to the Video...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
 {% endblock %}
