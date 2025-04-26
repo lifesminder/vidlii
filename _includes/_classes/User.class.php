@@ -39,6 +39,7 @@
                     if($this->session["user"]["count"] >= 1)
                         $this->session["user"] = $this->session["user"]["data"][0];
                     $this->logged_in = true;
+                    setcookie("session", $this->session["session"], time() + (86400 * 30), "/", null, null, true);
                 }
             }
 
