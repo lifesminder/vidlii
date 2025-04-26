@@ -38,7 +38,6 @@ $failed_logins = (int) $failed_logins_res["wrong_login_count"];
 $require_captcha = $failed_logins > $failed_logins_attempts;
 
 if (isset($_POST["submit_login"])) {
-
     $_GUMP->validation_rules(array(
         "v_username" => "required|max_len,128",
         $login_secret . "_password" => "required|max_len,128"
@@ -90,11 +89,11 @@ if (isset($_POST["submit_login"])) {
     }
 
     // Check IP against banned IP ranges
-    if ($continue) {
+    if($continue) {
         $ipRanges = $DB->execute("SELECT ip_range FROM iprange_bans", false);
         if ($DB->RowNum > 0) {
-            foreach ($ipRanges as $ipRange) {
-                if (strpos(user_ip(), $ipRange["ip_range"]) === 0) {
+            foreach($ipRanges as $ipRange) {
+                if(strpos(user_ip(), $ipRange["ip_range"]) === 0) {
                     notification("You cannot log in if you've been banned already!", "/login");
                     exit();
                 }
@@ -102,24 +101,25 @@ if (isset($_POST["submit_login"])) {
         }
     }
 
-    if ($continue) {
+    if($continue) {
         // Check credentials
         $Username = $Validation["v_username"];
         $Password = $Validation[$login_secret . "_password"];
 
         $Query = $DB->execute("SELECT username, password, banned FROM users WHERE (displayname = :USERNAME or email = :USERNAME)", true, [":USERNAME" => $Username]);
 
-        if ($DB->RowNum == 1) {
+        if($DB->RowNum == 1) {
             $Username = $Query["username"];
             $Hash = $Query["password"];
             $Banned = $Query["banned"];
+            $remember = (isset($_POST["remember"])) ? true : false;
 
             // Check if the user is banned and verify password so that the message will be the same regardless of whether they're wrong or the user is simply banned
-            if ($Banned == 0 && password_verify($Password, $Hash)) {
+            if($Banned == 0 && password_verify($Password, $Hash)) {
                 $_USER->username = $Username;
 
                 // Log the user in
-                if ($_USER->login()) {
+                if($_USER->login($remember)) {
                     // Redirect to activation page if the account needs to be activated, otherwise go to the previous page the user was on
                     if(!isset($_GET["activate"])) {
                         redirect(previous_page());

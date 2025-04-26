@@ -1,5 +1,5 @@
 
-<div style="width:40%;margin-right:2%;float:left;">
+<div style="">
     <div class="panel_box">
         <strong>Pages</strong>
         <form action="/admin/misc" method="POST" style="line-height:27px">
@@ -21,7 +21,7 @@
         </table>
     </div>
     </div>
-    <div style="float:left;width:58%">
+    <div style="">
         <div class="panel_box">
             <strong>Logo</strong>
             <form action="/admin/misc" method="POST" enctype="multipart/form-data">
@@ -56,5 +56,4 @@
             </table>
         </div>
     </div>
-
-
+</div>

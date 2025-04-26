@@ -29,8 +29,10 @@
             }
         ?>
         <main class="bottom_wrapper" id="st">
-        <div style="font-size:20px;padding-bottom:9px;border-bottom:1px solid #ccc">
-            <a href="/my_account">My Account</a><span style="word-spacing:10px"> / </span><?= $Account_Title ?>
+        <div class="crumb-header">
+            <a href="/my_account">My Account</a>
+            <span class="spacer">/</span>
+            <?= $Account_Title ?>
         </div>
             <div class="settings_menu">
                 <a href="/my_account" <? if ($_PAGE->Page == "my_account") : ?>id="nav_sel"<? endif ?>>Overview</a>

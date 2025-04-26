@@ -39,7 +39,7 @@ if (isset($_POST["create_playlist"])) {
 //GET PLAYLISTS
 
 if (!isset($_GET["pl"])) {
-    $Playlists = $DB->execute("SELECT playlists.purl, playlists.title, playlists.created_on, playlists.thumbnail, videos.privacy FROM playlists LEFT JOIN videos ON playlists.thumbnail = videos.url WHERE playlists.created_by = :USERNAME", false, [":USERNAME" => $_USER->username]);
+    $Playlists = $DB->execute("SELECT playlists.purl, playlists.title, playlists.created_on, playlists.thumbnail, videos.privacy FROM playlists LEFT JOIN videos ON playlists.thumbnail COLLATE utf8mb4_general_ci = videos.url COLLATE utf8mb4_general_ci WHERE playlists.created_by = :USERNAME", false, [":USERNAME" => $_USER->username]);
 
     $Page = "Playlists";
 } else {

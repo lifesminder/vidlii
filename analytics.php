@@ -192,6 +192,7 @@ if ($Analytics_Page == "Default") {
             break;
     }
 
+    // At some point, `SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));` must be executed only once.
     $Watchtime_Per_Day = $DB->execute("SELECT (SUM(videos_watched.watchtime) / 60) as amount, videos_watched.submit_date FROM videos_watched INNER JOIN videos ON videos_watched.vid = videos.url WHERE videos.uploaded_by = :USERNAME $Watch_Date GROUP BY DATE(videos_watched.submit_date)", false,
                                     [
                                         ":USERNAME" => $_USER->username

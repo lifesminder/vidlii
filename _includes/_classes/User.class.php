@@ -13,103 +13,77 @@
                 $Is_Activated,
                 $Theme,
                 $Shadowbanned,
-                $Header;
+                $Header,
+                $session;
 
         protected $api, $DB;
 
         function __construct($ID = NULL, \Vidlii\Vidlii\DB $Database, $re = NULL) {
-			$this->api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]); 
-			if (!isset($_SESSION["token"])) $_SESSION["token"] = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 11);
-
+			$this->api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+            $this->session = $this->api->session();
             $this->DB = $Database;
 
-            if (isset($ID)) {                                                                       //IF ID HAS BEEN SET WHEN CREATING NEW USER CLASS (Means it's not the main Users class)
+            // Try to fetch out sessions which are marked from this IP as rememberable
+            if(!isset($this->session["remembered"])) {
+                $ip = user_ip();
+                $browser = browser_name();
+                $last_remembered = $this->api->db("SELECT * from sessions where ip = \"$ip\" and remembered = 1 and browser = \"$browser\"");
+                if($last_remembered["count"] >= 1) {
+                    // We fetched remembered sessions!
+                    // Only first in occurance will be selected (at least, for now)
+                    $last_remembered = ($last_remembered["count"] > 1) ? $last_remembered = $last_remembered["data"][0] : $last_remembered["data"];
 
-                $this->username     = (string)clean($ID);
-                $this->logged_in    = false;
-
-            } elseif (isset($_SESSION["username"]) && !empty($_SESSION["username"])) {              //IF ID IS NOT SET BUT THE USER ID IS STORED IN $_SESSION (Basically means the user has logged in before)
-
-                $this->username     = (string)clean($_SESSION["username"]);
-                $this->logged_in    = true;
-
-                if (!isset($_SESSION["watched_videos"])) { $_SESSION["watched_videos"] = []; }
-                else                                     { $this->Viewed_Videos = $_SESSION["watched_videos"]; }
-
-                if (isset($_SESSION["viewed_channels"])) { $this->Viewed_Channels = $_SESSION["viewed_channels"]; }
-                else                                     { $_SESSION["viewed_channels"] = []; }
-
-                if (!$this->get_status()) {
-
-                    $this->logout();
-                    redirect("/"); exit();
-
+                    // Automatically log in to the last remembered session.
+                    $this->session["session"] = $last_remembered["session"];
+                    $this->session["user"] = $this->api->db("SELECT id, username, displayname from users where id = ".$last_remembered["user"], true);
+                    if($this->session["user"]["count"] >= 1)
+                        $this->session["user"] = $this->session["user"]["data"][0];
+                    $this->logged_in = true;
                 }
-
-            } else {                                                                                //IF ID HAS NOT BEEN SET AND THE USER ISN'T LOGGED IN YET DURING THIS SESSION
-
-                $this->logged_in = false;
-
-                if (!isset($_SESSION["watched_videos"])) { $_SESSION["watched_videos"] = []; }
-                else                                     { $this->Viewed_Videos = $_SESSION["watched_videos"]; }
-
-                if (isset($_SESSION["viewed_channels"])) { $this->Viewed_Channels = $_SESSION["viewed_channels"]; }
-                else                                     { $_SESSION["viewed_channels"] = []; }
-
-
-                if (isset($_COOKIE["re"])) {                                                        //CHECK IF REMEMBER ME COOKIE IS SET AND VALIDATE IF IT'S VALID
-
-                    $Browser = browser_name();
-
-                    $Remember = $this->DB->execute("SELECT * FROM users_remembers WHERE code = BINARY :CODE AND browser = :BROWSER", true,
-                                                  [
-                                                      ":CODE"       => $_COOKIE["re"],
-                                                      ":BROWSER"    => $Browser
-                                                  ]);
-
-                    if ($this->DB->RowNum > 0 && (strtotime($Remember["last_login"]) < strtotime('-102 days')) == false) {                              //IF THE COOKIE WAS SUCCESSFULLY VALIDATED AND CHECKED IF IT HAS BEEN USED LESS THAN 102 DAYS AGO
-
-                        $Code               = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 32);
-                        $this->username     = clean($Remember["uid"]);
-
-                        if (!$this->get_status()) {                                                 //GET USER INFORMATION AND LOG OUT IF HE'S BANNED
-
-                            redirect("/"); exit();
-
-                        }
-
-                        $this->login(false);                                              //LOG THE USER IN
-
-                        $this->DB->modify("UPDATE users_remembers SET code = :NEW_CODE WHERE code = BINARY :CODE AND browser = :BROWSER",               //UPDATE THE VALIDATION CODE INSIDE THE DATABASE
-                            [
-                                ":NEW_CODE" => $Code,
-                                ":CODE"     => $Remember["code"],
-                                ":BROWSER"  => $Browser
-                            ]);
-
-                        setcookie("re", $Code, time() + 90 * 60 * 24 * 100, "/", null, null, true);  //UPDATE THE REMEMBER ME CODE COOKIE
-
-                    } else {
-
-                        setcookie("re", NULL, -1, "/");
-
-                        $this->DB->modify("DELETE FROM users_remembers WHERE code = BINARY :CODE AND browser = :BROWSER",           //IF ITS NOT VALID, DELETE THE COOKIE AND THE CODE INSIDE THE DATABASE IF IT WAS CORRECT BUT THE BROWSER WASN'T (FOR SECURITY)
-                                         [
-                                             ":CODE"    => $_COOKIE["re"],
-                                             ":BROWSER" => $Browser
-                                         ]);
-
-                        unset($_COOKIE["re"]);
-
-                    }
-
-                }
-
             }
 
+            if(isset($ID)) {
+                // IF ID HAS BEEN SET WHEN CREATING NEW USER CLASS (Means it's not the main Users class)
+                $this->username = (string)clean($ID);
+                $this->logged_in = false;
+            } else if($this->session["user"]["id"] != -1) {
+                // If user actually logged in with valid user (can be possible to log in via deleted one)
+                $this->username = (string)clean($this->session["user"]["username"]);
+                $this->logged_in = true;
 
+                // Watched videos and channels will be moved into separate DB.
+                if(!isset($_SESSION["watched_videos"]))
+                    $_SESSION["watched_videos"] = [];
+                else
+                    $this->Viewed_Videos = $_SESSION["watched_videos"];
+
+                if(isset($_SESSION["viewed_channels"]))
+                    $this->Viewed_Channels = $_SESSION["viewed_channels"];
+                else
+                    $_SESSION["viewed_channels"] = [];
+
+                // If status is unfetchable, then log out
+                if(!$this->get_status()) {
+                    $this->logout();
+                    redirect("/");
+                    exit();
+                }
+            } else {
+                // IF ID HAS NOT BEEN SET AND THE USER ISN'T LOGGED IN YET DURING THIS SESSION
+                $this->logged_in = false;
+
+                // Watched videos and channels will be moved into separate DB.
+                if(!isset($_SESSION["watched_videos"]))
+                    $_SESSION["watched_videos"] = [];
+                else
+                    $this->Viewed_Videos = $_SESSION["watched_videos"];
+
+                if(isset($_SESSION["viewed_channels"]))
+                    $this->Viewed_Channels = $_SESSION["viewed_channels"];
+                else
+                    $_SESSION["viewed_channels"] = [];
+            }
         }
-
 
         public function owns_video($URL) {
             return (bool)($this->api->db("SELECT count(*) from videos where url = \"$URL\" and uploaded_by = \"".$session["user"]["username"]."\"")["data"]["count(*)"] == 1);
@@ -126,21 +100,15 @@
             if(!in_array($URL,$this->Viewed_Videos)) {
                 $_SESSION["watched_videos"][] = $URL;
                 $this->Viewed_Videos[] = $URL;
-
                 $this->DB->modify("UPDATE users SET videos_watched = videos_watched + 1 WHERE username = :USERNAME", [":USERNAME" => $this->username]);
             }
         }
 
-
-        //GET STATUS INFORMATION ABOUT THE MAIN USER
-        //RETURNS FALSE IF THE USER IS BANNED | TRUE IF NOT
+        // GET STATUS INFORMATION ABOUT THE MAIN USER
+        // RETURNS FALSE IF THE USER IS BANNED | TRUE IF NOT
         private function get_status(): bool {
-
-
             $Status = $this->DB->execute("SELECT username, banned, partner, is_mod, is_admin, displayname, shadowbanned, activated FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
-
-            if ($this->DB->RowNum == 1 && $Status["banned"] == 0) {
-
+            if($this->DB->RowNum == 1 && $Status["banned"] == 0) {
                 $this->username     = (string)$Status["username"];
                 $this->displayname  = (string)clean($Status["displayname"]);
                 $this->Shadowbanned = (int)$Status["shadowbanned"];
@@ -148,25 +116,21 @@
                 $this->Is_Mod       = (bool)$Status["is_mod"];
                 $this->Is_Partner   = (bool)$Status["partner"];
                 $this->Is_Activated = (bool)$Status["activated"];
-                
                 return true;
-
             }
             return false;
-
-
         }
 
         private function ban() {
-            if ($this->logged_in) {
+            if($this->logged_in) {
                 $this->logout();
                 redirect("/?bn=1"); exit();
             }
         }
-        
+
         //LOG THE MAIN USER IN
         public function login($Remember = true): bool {
-            if (!$this->logged_in && isset($this->username) && !empty($this->username)) {
+            if(!$this->logged_in && isset($this->username) && !empty($this->username)) {
                 $this->logged_in = true;
 
                 $IP_Address = user_ip(); $Browser = browser_name();
@@ -186,29 +150,14 @@
                 }
 
                 if($authorize["status"] >= 1) {
-                    setcookie("session", $session, time() + 90 * 60 * 24 * 100, "/", null, null, true);
-                } /* else {
-                    print_r($authorize);
-                    exit(0);
-                } */
-
-                if($Info["is_admin"] || $Info["is_mod"]) {
+                    // Set session cookie
+                    setcookie("session", $session, time() + (86400 * 30), "/", null, null, true);
+                    // Refresh user logon information
                     $this->DB->modify("UPDATE users SET last_login = NOW(), 1st_latest_ip = :FIRST_IP, 2nd_latest_ip = :SECOND_IP WHERE username = :UID AND banned = 0", [
                         ":UID" => $this->username,
                         ":FIRST_IP" => $IP_Address,
                         ":SECOND_IP" => $Info["first_lastest_ip"]
                     ]);
-                }
-
-                if ($Remember) {
-                    $Code = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_", 32);
-                    $this->DB->modify("INSERT INTO users_remembers (uid, code, browser, last_login) VALUES (:UID, :CODE, :BROWSER, NOW())",
-                                     [
-                                         ":UID"          => $this->username,
-                                         ":CODE"         => $Code,
-                                         ":BROWSER"      => $Browser
-                                     ]);
-                    setcookie("re", $Code, time() + 90 * 60 * 24 * 100, "/", null, null, true);
                 }
 
                 return true;
@@ -226,6 +175,7 @@
                     setcookie('h', null, -1, '/');
                     setcookie('po', null, -1, '/');
                     setcookie('re', null, -1, '/');
+                    setcookie('session', null, -1, '/');
                     $this->logged_in = false;
                     $this->username = NULL;
                     $this->displayname = NULL;
@@ -236,7 +186,6 @@
 
         public function check_password($Password) {
             $Hash = $this->DB->execute("SELECT password FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
-
             if (password_verify($Password,$Hash["password"]))   { return true;  }
             else                                                { return false; }
         }

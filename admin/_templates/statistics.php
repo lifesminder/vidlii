@@ -1,4 +1,4 @@
-<div style="width:48%;margin-right:2%;float:left;">
+<div style="">
     <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
     <script src="https://www.amcharts.com/lib/3/serial.js"></script>
     <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
@@ -231,7 +231,7 @@
         <!-- HTML -->
         <div id="chartdiv5"></div>
     </div>
-    <div class="panel_box" style="overflow-y:auto;max-height:450px">
+    <div class="panel_box" style="">
         <strong>Channel Comments Graph</strong>
         <script>
             var chart = AmCharts.makeChart("chartdiv4", {
@@ -333,7 +333,7 @@
     </div>
 </div>
 <div style="width:50%;float:left;">
-    <div class="panel_box" style="overflow-y:auto;max-height:450px">
+    <div class="panel_box" style="">
         <strong>Video Uploads Graph</strong>
         <script>
             var chart = AmCharts.makeChart("chartdiv", {
@@ -533,7 +533,7 @@
         <!-- HTML -->
         <div id="chartdiv6"></div>
     </div>
-    <div class="panel_box" style="overflow-y:auto;max-height:450px">
+    <div class="panel_box" style="">
         <strong>Video Comments Graph</strong>
         <script>
             var chart = AmCharts.makeChart("chartdiv3", {

@@ -34,45 +34,53 @@
                 }
             ?>
             <form action="/login<?php echo $next; ?>" method="POST">
-            <img src="/img/vidlii.png" height="37" width="92" alt="VidLii" title="VidLii - Display Yourself.">
-            <? if ($_PAGE->has_errors()) : ?>
-                <div style="color:red;text-align: center"><?= $_PAGE->return_errors()[0] ?></div>
-            <? endif ?>
-            <table cellpadding="3">
-                <? if (mt_rand(0,1) == 1) : ?>
-                <tr style="display:none"><input type="text" style="display:none"><input type="password" style="display:none"</tr>
+                <img src="/img/vidlii.png" height="37" width="92" alt="VidLii" title="VidLii - Display Yourself.">
+                <? if ($_PAGE->has_errors()) : ?>
+                    <div style="color:red;text-align: center"><?= $_PAGE->return_errors()[0] ?></div>
                 <? endif ?>
-                <tr>
-                    <input type="hidden" name="jf1" value="acnla">
-                    <td align="right"><label for="lg_username">Username:</label></td>
-                    <td align="left"><input type="text" name="v_username" id="lg_username" <? if (isset($Username)) : ?>value="<?= $Username ?>"<? endif ?> required <? if (!isset($Username)) : ?>autofocus<? endif ?>></td>
-                </tr>
-                <tr>
-                    <input type="hidden" name="<?= mt_rand(0,1000) ?>" value="<?= mt_rand(0,1000) ?>">
-                    <td align="right"><label for="<?= substr($_SESSION["secret_id"], 1, 2) ?>_password">Password:</label></td>
-                    <td align="left"><input id="<?= $login_secret ?>_password" name="<?= $login_secret ?>_password" type="password" <? if (isset($Username)) : ?>autofocus<? endif ?> required></td>
-                </tr>
-                <? if (mt_rand(0,1) == 1) : ?>
-                    <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                    <input type="hidden" name="gaa87" value="g16Ah4">
-                    <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                <? else : ?>
-                    <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                    <input type="hidden" name="gaa87" value="<?= mt_rand(0,1000) ?>">
-                    <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                <? endif ?>
-                <? if (mt_rand(0,1) == 1) : ?>
-                <tr style="display:none"><input type="text" style="display:none"><input type="password" style="display:none"</tr>
-                <? endif ?>
-                <tr>
-                    <td></td>
-                    <td align="left"><input type="submit" class="search_button" style="padding:2.5px 10px" name="submit_login" value="Sign In"></td>
-                </tr>
-            </table>
-            <? if($require_captcha): ?>
-                <?= captcha(5,10,8, true) ?>
-            <? endif; ?>
-            <div class="log_fgt"><a href="javascript:void(0)" onclick="alert('You can also log in with your email instead of your username!')">Forgot Username</a> | <a href="/forgot_password">Forgot Password</a></div>
+                <table cellpadding="3">
+                    <? if (mt_rand(0,1) == 1) : ?>
+                    <tr style="display:none"><input type="text" style="display:none"><input type="password" style="display:none"</tr>
+                    <? endif ?>
+                    <tr>
+                        <input type="hidden" name="jf1" value="acnla">
+                        <td align="right"><label for="lg_username">Username:</label></td>
+                        <td align="left"><input type="text" name="v_username" id="lg_username" <? if (isset($Username)) : ?>value="<?= $Username ?>"<? endif ?> required <? if (!isset($Username)) : ?>autofocus<? endif ?>></td>
+                    </tr>
+                    <tr>
+                        <input type="hidden" name="<?= mt_rand(0,1000) ?>" value="<?= mt_rand(0,1000) ?>">
+                        <td align="right"><label for="<?= substr($_SESSION["secret_id"], 1, 2) ?>_password">Password:</label></td>
+                        <td align="left"><input id="<?= $login_secret ?>_password" name="<?= $login_secret ?>_password" type="password" <? if (isset($Username)) : ?>autofocus<? endif ?> required></td>
+                    </tr>
+                    <? if (mt_rand(0,1) == 1) : ?>
+                        <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
+                        <input type="hidden" name="gaa87" value="g16Ah4">
+                        <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
+                    <? else : ?>
+                        <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
+                        <input type="hidden" name="gaa87" value="<?= mt_rand(0,1000) ?>">
+                        <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
+                    <? endif ?>
+                    <? if (mt_rand(0,1) == 1) : ?>
+                    <tr style="display:none"><input type="text" style="display:none"><input type="password" style="display:none"></tr>
+                    <? endif ?>
+                    <tr>
+                        <td></td>
+                        <td align="left">
+                            <div style="margin-bottom: 8px">
+                                <input type="checkbox" id="remember" name="remember"<?php if(isset($_POST["remember"])) { ?> value=""<?php } ?>>
+                                <label for="remember">Remember Me</label>
+                            </div>
+                            <input type="submit" class="search_button" style="padding:2.5px 10px" name="submit_login" value="Sign In">
+                        </td>
+                    </tr>
+                </table>
+                <? if($require_captcha): ?>
+                    <?= captcha(5,10,8, true) ?>
+                <? endif; ?>
+                <div class="log_fgt">
+                    <a href="javascript:void(0)" onclick="alert('You can also log in with your email instead of your username!')">Forgot Username</a> | <a href="/forgot_password">Forgot Password</a>
+                </div>
             </form>
         </div>
     </div>

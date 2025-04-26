@@ -5,43 +5,18 @@
 
     //REQUIREMENTS / PERMISSIONS
     //- Requires Login
-    if (!$_USER->logged_in)         { redirect("/login"); exit(); }
+    if(!$_USER->logged_in) {
+        redirect("/login");
+        exit();
+    }
+
     $Info = $_USER->get_profile();
-
-if (isset($_POST["update_holiday"])) {
-
-    if ($_POST["ch_privacy"] == 0) {
-
-        $Snow = 0;
-
-    } else {
-
-        $Snow = 1;
-
+    if(isset($_POST["update_holiday"])) {
+        $Snow = ($_POST["ch_privacy"] == 0) ? 0 : 1;
+        $Mondo = (isset($_POST["ch_mondo"]) && $_POST["ch_mondo"] == 1) ? 1 : 0;
+        $DB->modify("UPDATE users SET snow = $Snow, mondo = $Mondo WHERE username = '$_USER->username'");
+        notification("Holiday settings updated!","/channel_setup","green"); exit();
     }
-    
-    if (isset($_POST["ch_mondo"])) {
-        
-        if ($_POST["ch_mondo"] == 0) {
-    
-            $Mondo = 0;
-     
-        } else {
-    
-            $Mondo = 1;
-    
-        }
-        
-    } else {
-        
-        $Mondo = 0;
-        
-    }
-
-    $DB->modify("UPDATE users SET snow = $Snow, mondo = $Mondo WHERE username = '$_USER->username'");
-    notification("Holiday settings updated!","/channel_setup","green"); exit();
-
-}
 
 if (isset($_POST["update_channel"])) {
     $_GUMP->validation_rules(array(
@@ -109,7 +84,7 @@ if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {
 
     if ($Validation) {
         $user = $_USER->username;
-        if (!empty($_FILES["avatar_upload"]["name"])) {
+        if(!empty($_FILES["avatar_upload"]["name"])) {
             /*
                 NEW Avatar uploading logic, which includes getting rid of `usfi` save and placing it into DB instead.
                 Avatar will be fetched via CDN newer modules.
@@ -117,7 +92,7 @@ if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {
             $imgsize = getimagesize($_FILES["avatar_upload"]["tmp_name"]);
             if($imgsize) {
                 $avatar = base64_encode(file_get_contents($_FILES["avatar_upload"]["tmp_name"]));
-                $upload = $api->db("UPDATE users SET avatar = '$avatar' WHERE username = '$user'");
+                $upload = $api->db("UPDATE users SET avatar = \"$avatar\" WHERE username = '$user'");
                 if($upload["status"] == 1) {
                     notification("Avatar have been updated!", "/channel_setup", "green");
                 } else {
@@ -132,20 +107,25 @@ if (isset($_POST["update_avatar"]) || isset($_POST["delete_avatar"])) {
             if($upload["status"] == 1) notification("Avatar have been removed!", "/channel_setup", "red");
             else notification($upload["message"], "/channel_setup", "red");
         } elseif (isset($_POST["v_url"]) && !file_exists("usfi/avt/$Avatar_FURL.jpg")) {
-            if (!empty($Validation["v_url"])) {
-                if (strpos($Validation["v_url"], "watch") !== false) {
+            if(!empty($Validation["v_url"])) {
+                if(strpos($Validation["v_url"], "watch") !== false) {
+                    // Since thumbnails of videos are now stored directly in DB, we simply fetch it, if it isn't empty
                     $URL = url_parameter($Validation["v_url"], "v");
-                    $Video = new Video($URL, $DB);
-                    if ($Video->exists()) {
-                        $Video->get_info();
-                        if ($Video->Info["uploaded_by"] === $_USER->username) {
-                            $DB->modify("UPDATE users SET avatar = :AVATAR WHERE username = :USERNAME",
-                                       [
-                                           ":AVATAR"    => $Video->Info["url"],
-                                           ":USERNAME"  => $_USER->username
-                                       ]);
-                            redirect("/channel_setup"); exit();
+                    $thumbnail = $api->db("SELECT thumbnail from videos where url = \"$URL\"");
+                    if($thumbnail["count"] == 1) {
+                        $thumbnail = $thumbnail["data"]["thumbnail"];
+                        if(!empty($thumbnail)) {
+                            $upload = $api->db("UPDATE users SET avatar = \"$thumbnail\" WHERE username = '$user'");
+                            if($upload["status"] == 1) {
+                                notification("Avatar have been updated!", "/channel_setup", "green");
+                            } else {
+                                notification($upload["message"], "/channel_setup", "red");
+                            }
+                        } else {
+                            notification("Thumbnail of video doesn't exist", "/channel_setup", "red");
                         }
+                    } else {
+                        notification("Video doesn't exist", "/channel_setup", "red");
                     }
                 } else {
                     $_PAGE->add_error(array("vidlii_av" => "You must use a vidlii video!"));

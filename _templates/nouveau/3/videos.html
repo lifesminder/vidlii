@@ -103,18 +103,23 @@
         </ol>
         {%elseif view == 1%}
         <ol class="playlists-wide">
-            {%for playlist in playlists.data%}
+            {%for playlist in playlists%}
             <div class="playlist yt-tile-visible yt-uix-tile">
                 <div class="playlist-metadata">
                     <h3 dir="ltr" style="margin-bottom: 0;">
                         <a class="yt-uix-tile-link" href="/playlist?p={{playlist.purl}}">{{playlist.title}}</a>
                     </h3>
                 </div>
-                <a href="/watch?v={{playlist.videos[0].url}}&pl={{playlist.purl}}" class="play-all yt-uix-sessionlink">
+                {% if playlist.videos.count > 0 %}
+                {% set playlist_watch_url = "/watch?v=#{playlist.videos.data[0].url}&pl=#{playlist.purl}" %}
+                {% else %}
+                {% set playlist_watch_url = "/playlist?p=#{playlist.purl}" %}
+                {% endif %}
+                <a href="{{playlist_watch_url}}" class="play-all yt-uix-sessionlink">
                     <span class="playlist-thumb-strip playlist-thumb-strip-350">
-                        <span class="videos videos-{%if playlist.videos|length > 5%}5{%else%}{{playlist.videos|length}}{%endif%} vertical-cutoff">
-                            {%set thumbs_count = (playlist.videos|length > 5) ? 5 : playlist.videos|length%}
-                            {% for video in playlist.videos %}
+                        <span class="videos videos-{%if playlist.videos.count > 5%}5{%else%}{{playlist.videos.count}}{%endif%} vertical-cutoff">
+                            {%set thumbs_count = (playlist.videos|length > 5) ? 5 : playlist.videos.count%}
+                            {% for video in playlist.videos.data %}
                                 <span class="clip">
                                     <span class="centering-offset">
                                         <span class="centering">
@@ -128,7 +133,7 @@
                         <span class="resting-overlay">
                             <img src="https://s.ytimg.com/yt/img/channels/play-icon-resting-vflXxuFB8.png" class="play-button" alt="Play all">
                             <span class="video-count-box">
-                                {{playlist.videos|length}} video{%if playlist.videos|length != 1%}s{%endif%}
+                                {{playlist.videos.count}} video{%if playlist.videos.count != 1%}s{%endif%}
                             </span>
                         </span>
                         <span class="hover-overlay">

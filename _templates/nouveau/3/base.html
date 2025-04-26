@@ -1,124 +1,198 @@
+<style>
+    .branded-page.channel {
+        {% if bg_cover != null %}
+        background-image: url("{{bg_cover}}");
+        {% if profile.bg_fixed == 1 %}
+        background-attachment: fixed;
+        {% endif %}
+        {% if profile.bg_repeat == 1 %}
+        background-repeat: no-repeat;
+        {% elseif profile.bg_repeat == 2 %}
+        background-repeat: repeat;
+        {% elseif profile.bg_repeat == 3 %}
+        background-repeat: repeat-x;
+        {% elseif profile.bg_repeat == 4 %}
+        background-repeat: repeat-y;
+        {% endif %}
+        {% if profile.bg_position == 1 %}
+        background-position: center top;
+        {% elseif profile.bg_position == 2 %}
+        background-position: center center;
+        {% elseif profile.bg_position == 3 %}
+        background-position: center bottom;
+        {% endif %}
+        {% endif %}
+        {% if bg_color is defined %}
+        background-color: {{bg_color}};
+        {% endif %}
+    }
+</style>
+
 <div id="page" class="branded-page channel">
+    {% if notification is defined %}
+    {% if notification_type is defined %}
+        {% set not_class = notification_type %}
+    {% else %}
+        {% set not_class = "info" %}
+    {% endif %}
+    <div id="alerts" style="margin-top: 1rem;">
+        <div class="yt-alert yt-alert-default yt-alert-{{not_class}}" style="display: flex; justify-content: space-between;">
+            <div style="width: 100%;">
+                <div class="yt-alert-icon">
+                    <img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" class="icon master-sprite" alt="Alert icon">
+                </div>
+                <div class="yt-alert-content">
+                    <span class="yt-alert-vertical-trick"></span>
+                    <div class="yt-alert-message">
+                        {{notification}}
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="_hidediv(this.parentNode);yt.www.privacynotice.dismiss()" class="close"></button>
+        </div>
+    </div>
+    {% endif %}
     <div id="content-container">
         <div id="content">
             <div id="branded-page-default-bg" class="ytg-base">
                 {%if owner%}
-                <div class="cosmic_edit hddn" id="gbg" style="width: 970px; margin: 0 auto; text-align: left; border-radius: 4px; box-shadow: 0 2px 4px #ccc;">
-                    <form action="/user/{{profile.displayname}}" method="POST" enctype="multipart/form-data">
-                        <div style="border-bottom:1px solid #ccc; position: relative">
-                            <div style="padding:12px;font-size:18px;color:#555">
-                                Edit Channel
-                            </div>
-                            <div style="position:absolute;right:6px;top:6px">
-                                <button type="submit" class="yt-uix-button yt-uix-button-primary" name="save_channel_branding">Save</button>
-                                <button type="button" class="yt-uix-button yt-uix-button-default" onclick="$('.cosmic_edit').toggleClass('hddn')">Cancel</button>
-                            </div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; text-align: left; padding:12px;color:#666;overflow:hidden; background-color: #fafafa;">
-                            <div>
-                                <h2>Info</h2>
-                                <div>
-                                    <label for="channel_title">Channel Title: </label><br>
-                                    <input type="text" name="channel_title" id="channel_title" placeholder="Your Channel Title" style="width: 100%"{% if profile.channel_title != ""%} value="{{profile.channel_title}}"{% endif %}>
+                <div class="cosmic_edit hddn" id="gbg" style="background-color: #f0f0f0; text-align: left; box-shadow: 0 2px 4px #ccc;">
+                    <div style="width: 970px; margin: 0 auto;">
+                        <form action="/user/{{profile.displayname}}" method="POST" enctype="multipart/form-data">
+                            <div style="background-color: #f0f0f0; position: relative;">
+                                <div style="padding:12px;font-size:18px;color:#555">
+                                    Edit Channel
                                 </div>
-                                <div>
-                                    <label for="ch_description">Channel Description: </label>
-                                    <textarea name="channel_description" id="channel_description" placeholder="Your Channel Description" style="width: 100%">{% if profile.channel_description != ""%}{{profile.channel_description}}{% endif %}</textarea>
-                                </div>
-                                <div>
-                                    <label for="channel_tags">Channel Tags: </label><br>
-                                    <input type="text" name="channel_tags" id="channel_tags" placeholder="Your Channel Tags" style="width: 100%"{% if profile.channel_tags != ""%} value="{{profile.channel_tags}}"{% endif %}>
-                                </div>
-                                <div>
-                                    <label for="website">Website: </label><br>
-                                    <input type="text" name="website" id="website" placeholder="Your Website" style="width: 100%"{% if profile.website != ""%} value="{{profile.website}}"{% endif %}>
+                                <div style="position:absolute;right:6px;top:6px">
+                                    <button type="submit" class="yt-uix-button yt-uix-button-primary" name="save_channel_branding">Save</button>
+                                    <button type="button" class="yt-uix-button yt-uix-button-default" onclick="$('.cosmic_edit').toggleClass('hddn')">Cancel</button>
                                 </div>
                             </div>
-                            <div>
-                                <h2>Available Pages</h2>
+                            <div style="display: flex; justify-content: space-between; text-align: left; padding:12px;color:#666;overflow:hidden; background-color: #fafafa;">
                                 <div>
-                                    <h3>Feed</h3>
-                                    <label for="csm_edit_act">
-                                        <input type="checkbox" name="c_recent" id="csm_edit_act"{% if profile.c_recent == 1 %}checked=""{% endif %}>
-                                        Activity
-                                    </label>
-                                    <label for="csm_edit_cmt">
-                                        <input type="checkbox" name="c_comments" id="csm_edit_cmt"{% if profile.c_comments == 1 %}checked=""{% endif %}>
-                                        Comments
-                                    </label>
-
-                                    <h3>Videos</h3>
-                                    <label for="csm_edit_vid">
-                                        <input type="checkbox" name="c_videos" id="csm_edit_vid"{% if profile.c_videos == 1 %}checked=""{% endif %}>
-                                        Videos
-                                    </label>
-                                    <label for="csm_edit_fav">
-                                        <input type="checkbox" name="c_favorites" id="csm_edit_fav"{% if profile.c_favorites == 1 %}checked=""{% endif %}>
-                                        Favorites
-                                    </label>
-                                    <label for="csm_edit_ply">
-                                        <input type="checkbox" name="c_playlists" id="csm_edit_ply"{% if profile.c_playlists == 1 %}checked=""{% endif %}>
-                                        Playlists
-                                    </label>
-
-                                    <h3>Profile</h3>
-                                    <label for="csm_last_login">
-                                        <input type="checkbox" name="last_login" id="csm_last_login"{% if profile.a_last == 1 %}checked=""{% endif %}>
-                                        Last Login
-                                    </label>
-                                    <label for="csm_age">
-                                        <input type="checkbox" name="age" id="csm_age"{% if profile.a_age == 1 %}checked=""{% endif %}>
-                                        Age
-                                    </label>
-                                    <label for="csm_country">
-                                        <input type="checkbox" name="country" id="csm_country"{% if profile.a_country == 1 %}checked=""{% endif %}>
-                                        Country
-                                    </label>
-
-                                    <h3>Featured</h3>
-                                    <label for="csm_side_playlists">
-                                        <input type="checkbox" name="c_featured_playlists" id="csm_side_playlists"{% if profile.c_featured_playlists == 1 %}checked=""{% endif %}>
-                                        Playlists
-                                    </label>
-                                    <label for="csm_side_channels">
-                                        <input type="checkbox" name="c_featured_channels" id="csm_side_channels"{% if profile.c_featured_channels == 1 %}checked=""{% endif %}>
-                                        Channels
-                                    </label>
+                                    <h2>Info</h2>
+                                    <div>
+                                        <label for="channel_title">Channel Title: </label><br>
+                                        <input type="text" name="channel_title" id="channel_title" placeholder="Your Channel Title" style="width: 100%"{% if profile.channel_title != ""%} value="{{profile.channel_title}}"{% endif %}>
+                                    </div>
+                                    <div>
+                                        <label for="ch_description">Channel Description: </label>
+                                        <textarea name="channel_description" id="channel_description" placeholder="Your Channel Description" style="width: 100%">{% if profile.channel_description != ""%}{{profile.channel_description}}{% endif %}</textarea>
+                                    </div>
+                                    <div>
+                                        <label for="channel_tags">Channel Tags: </label><br>
+                                        <input type="text" name="channel_tags" id="channel_tags" placeholder="Your Channel Tags" style="width: 100%"{% if profile.channel_tags != ""%} value="{{profile.channel_tags}}"{% endif %}>
+                                    </div>
+                                    <div>
+                                        <label for="website">Website: </label><br>
+                                        <input type="text" name="website" id="website" placeholder="Your Website" style="width: 100%"{% if profile.website != ""%} value="{{profile.website}}"{% endif %}>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2>Available Pages</h2>
+                                    <div>
+                                        <h3>Feed</h3>
+                                        <label for="csm_edit_act">
+                                            <input type="checkbox" name="c_recent" id="csm_edit_act"{% if profile.c_recent == 1 %}checked=""{% endif %}>
+                                            Activity
+                                        </label>
+                                        <label for="csm_edit_cmt">
+                                            <input type="checkbox" name="c_comments" id="csm_edit_cmt"{% if profile.c_comments == 1 %}checked=""{% endif %}>
+                                            Comments
+                                        </label>
+    
+                                        <h3>Videos</h3>
+                                        <label for="csm_edit_vid">
+                                            <input type="checkbox" name="c_videos" id="csm_edit_vid"{% if profile.c_videos == 1 %}checked=""{% endif %}>
+                                            Videos
+                                        </label>
+                                        <label for="csm_edit_fav">
+                                            <input type="checkbox" name="c_favorites" id="csm_edit_fav"{% if profile.c_favorites == 1 %}checked=""{% endif %}>
+                                            Favorites
+                                        </label>
+                                        <label for="csm_edit_ply">
+                                            <input type="checkbox" name="c_playlists" id="csm_edit_ply"{% if profile.c_playlists == 1 %}checked=""{% endif %}>
+                                            Playlists
+                                        </label>
+    
+                                        <h3>Profile</h3>
+                                        <label for="csm_last_login">
+                                            <input type="checkbox" name="last_login" id="csm_last_login"{% if profile.a_last == 1 %}checked=""{% endif %}>
+                                            Last Login
+                                        </label>
+                                        <label for="csm_age">
+                                            <input type="checkbox" name="age" id="csm_age"{% if profile.a_age == 1 %}checked=""{% endif %}>
+                                            Age
+                                        </label>
+                                        <label for="csm_country">
+                                            <input type="checkbox" name="country" id="csm_country"{% if profile.a_country == 1 %}checked=""{% endif %}>
+                                            Country
+                                        </label>
+    
+                                        <h3>Featured</h3>
+                                        <label for="csm_side_playlists">
+                                            <input type="checkbox" name="c_featured_playlists" id="csm_side_playlists"{% if profile.c_featured_playlists == 1 %}checked=""{% endif %}>
+                                            Playlists
+                                        </label>
+                                        <label for="csm_side_channels">
+                                            <input type="checkbox" name="c_featured_channels" id="csm_side_channels"{% if profile.c_featured_channels == 1 %}checked=""{% endif %}>
+                                            Channels
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h2>Background</h2>
+                                    <div style="margin-bottom: 4px;">
+                                        <label for="bg_cover">Background Cover: </label>
+                                        <div id="bg_cover_box" style="display: inline-block;">
+                                            {% if bg_cover != null %}
+                                            <button type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="bg_cover_remove">Remove</button>
+                                            {% else %}
+                                            <input type="file" name="bg_cover" id="bg_cover">
+                                            {% endif %}
+                                            {#
+                                            <p style="font-size: 12px;">
+                                                <i>Maximum size of cover is 5MB.</i>
+                                            </p>
+                                            #}
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 4px;">
+                                        <label for="bg_color">Background Color: </label>
+                                        <span><b>#</b></span>
+                                        <input type="text" name="bg_color" value="{{profile.bg}}" id="bg_color">
+                                    </div>
+                                    <div style="margin-bottom: 4px;">
+                                        <label for="bg_fixed">Is Fixed: </label>
+                                        <select name="bg_fixed" id="bg_fixed">
+                                            <option value="1"{% if profile.bg_fixed == 1 %} selected{% endif %}>Yes</option>
+                                            <option value="0"{% if profile.bg_fixed == 0 %} selected{% endif %}>No</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-bottom: 4px;">
+                                        <label for="bg_repeat">Repeat: </label>
+                                        <select name="bg_repeat" id="bg_repeat">
+                                            <option value="1"{% if profile.bg_repeat == 1 %} selected{% endif %}>No Repeat</option>
+                                            <option value="2"{% if profile.bg_repeat == 2 %} selected{% endif %}>Repeat</option>
+                                            <option value="3"{% if profile.bg_repeat == 3 %} selected{% endif %}>Only X</option>
+                                            <option value="4"{% if profile.bg_repeat == 4 %} selected{% endif %}>Only Y</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-bottom: 4px;">
+                                        <label for="bg_position">Position: </label>
+                                        <select name="bg_position" id="bg_position">
+                                            <option value="1"{% if profile.bg_position == 1 %} selected{% endif %}>Top</option>
+                                            <option value="2"{% if profile.bg_position == 2 %} selected{% endif %}>Middle</option>
+                                            <option value="3"{% if profile.bg_position == 3 %} selected{% endif %}>Bottom</option>
+                                        </select>
+                                    </div>
+                                    <div style="text-align: center; margin: 12px 0 6px 0;">
+                                        <a href="/channel_setup">More Account Customization Options</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <h2>Background</h2>
-                                <div>
-                                    <label for="bg_color">Color: </label>
-                                    <input type="text" name="bg_color" value="#{{profile.bg}}" id="bg_color">
-                                </div>
-                                <div>
-                                    <label for="bg_fixed">Is Fixed: </label>
-                                    <select name="bg_repeat" id="bg_repeat">
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="bg_repeat">Repeat: </label>
-                                    <select name="bg_repeat" id="bg_repeat">
-                                        <option value="1">No Repeat</option>
-                                        <option value="2">Repeat</option>
-                                        <option value="3">Only X</option>
-                                        <option value="4">Only Y</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="bg_position">Position: </label>
-                                    <select name="bg_position" id="bg_position">
-                                        <option value="1">Top</option>
-                                        <option value="2">Middle</option>
-                                        <option value="3">Bottom</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
                 {%endif%}
                 <div id="branded-page-body-container" class="ytg-base clearfix enable-fancy-subscribe-button">
@@ -142,7 +216,7 @@
                                         <button class="yt-uix-button yt-uix-button-primary" style="margin: -5px 0 -5px 10px" onclick="$('.cosmic_edit').toggleClass('hddn')">
                                             Edit Channel
                                         </button>
-                                        {%elseif session != -1%}
+                                        {%elseif authorized == false%}
                                         <div class="yt-subscription-button-hovercard yt-uix-hovercard">
                                             <span class="yt-uix-button-context-light yt-uix-button-subscription-container">
                                                 <button onclick="window.location.replace('/login?next=/user/{{profile.displayname}}')" class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip{%if subscribed%} subscribed{%endif%}">
@@ -211,8 +285,8 @@
                                         {%endif%}
                                     </ul>
                                     {% if videos.count > 0 %}
-                                    <form id="channel-search" action="#">
-                                        <input name="query" type="text" autocomplete="off" class="search-field label-input-label" maxlength="100" style="height: 24px;" placeholder="Search Channel" value="">
+                                    <form id="channel-search" action="/user/{{profile.displayname}}/videos">
+                                        <input name="query" type="text" autocomplete="off" class="search-field label-input-label" maxlength="100" style="height: 24px;" placeholder="Search Channel" value="{% if query is defined%}{{query}}{% endif %}">
                                         <button class="search-btn" type="submit">
                                             <span class="search-btn-content">Search</span>
                                         </button>
@@ -305,26 +379,26 @@
                                             </div>
                                             <div id="playlists_add" class="hddn" style="background-color:#7696e6;padding:52px 13px 13px 13px;font-size:14px;border-radius:5px;margin-top:5px;margin-bottom:25px;position:relative;border:1px solid #4f87d4;color:white;font-weight:bold">
                                                 <form action="{{request_url}}" method="POST" style="position:absolute;top:12px;left:12px">
-                                                    <input type="hidden" id="playlists_small_input" value="{{profile.playlists}}," name="playlists">
+                                                    <input type="hidden" id="playlists_small_input" value="{{profile.playlists}}" name="playlists">
                                                     <button type="submit" class="yt-uix-button yt-uix-button-primary yt-uix-button-short" name="save_playlists">Save</button>
                                                     <button type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" onclick="$('#playlists_add').toggleClass('hddn');$('#edit_playlists').toggleClass('hddn');$('.cosmic_featured_playlists > a').toggleClass('hddn')">Cancel</button>
                                                 </form>
                                                 <div style="border-radius:3px;background-color:white;padding:6px">
                                                     <select id="select_playlist" style="background: #f5f5f5;padding:6px;width:166px">
-                                                        {% if playlists.count > 0 %}
-                                                            {% for playlist in playlists.data %}
-                                                            <option value="{{playlist.purl}}">{{playlist.title}}</option>
-                                                            {% endfor %}
-                                                        {% else %}
-                                                            <option>No Playlists...</option>
-                                                        {% endif %}
-                                                    </select>
-                                                    <button onclick="{% if playlists.count > 0 %}cosmic_add_playlist(){% else %}alert('You have no playlists to add!'){% endif %}" type="button" class="cosmic_button" style="height:31px;position:relative;left:12px;bottom:0.9px">Add</button>
-                                                </div>
-                                                <div id="featured_playlists_small">
                                                     {% if playlists.count > 0 %}
                                                         {% for playlist in playlists.data %}
-                                                        <div id="pl_{{playlist.purl}}" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
+                                                        <option value="{{playlist.purl}}">{{playlist.title}}</option>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <option>No Playlists...</option>
+                                                    {% endif %}
+                                                    </select>
+                                                    <button onclick="{% if playlists.count > 0 %}cosmic_add_playlist(){% else %}alert('You have no playlists to add!'){% endif %}" type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" style="position:relative;left:12px;bottom:0.9px">Add</button>
+                                                </div>
+                                                <div id="featured_playlists_small">
+                                                    {% if profile.playlists.count > 0 %}
+                                                        {% for playlist in profile.playlists.data %}
+                                                        <div id="pl_{{playlist.purl}}" style="overflow:hidden;background-color: #fff;border-radius: 4px;padding:4px;margin-top:11px">
                                                             <div style="float:left;color:black;font-weight:bold">{{playlist.title}}</div>
                                                             <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_pl('{{playlist.purl}}')">Remove</a></div>
                                                         </div>
@@ -337,11 +411,11 @@
                                             {% endif %}
                                             {% for playlist in featured_playlists %}
                                             <div class="playlist yt-tile-visible yt-uix-tile">
-                                                <a href="/watch?v={{playlist.videos[0].url}}&pl={{playlist.purl}}" class="play-all yt-uix-sessionlink">
+                                                <a href="/watch?v={{playlist.data.videos[0].url}}&pl={{playlist.data.purl}}" class="play-all yt-uix-sessionlink">
                                                     <span class="playlist-thumb-strip playlist-thumb-strip-252">
-                                                        <span class="videos videos-{%if playlist.videos|length > 5%}5{%else%}{{playlist.videos|length}}{%endif%} horizontal-cutoff">
-                                                            {%set thumbs_count = (playlist.videos|length > 5) ? 5 : playlist.videos|length%}
-                                                            {% for video in playlist.videos %}
+                                                        <span class="videos videos-{%if playlist.data.videos|length > 5%}5{%else%}{{playlist.data.videos|length}}{%endif%} horizontal-cutoff">
+                                                            {%set thumbs_count = (playlist.data.videos|length > 5) ? 5 : playlist.data.videos|length%}
+                                                            {% for video in playlist.data.videos %}
                                                                 <span class="clip">
                                                                     <span class="centering-offset">
                                                                         <span class="centering">
@@ -355,10 +429,10 @@
                                                         <span class="resting-overlay">
                                                             <img src="http://s.ytimg.com/yt/img/channels/play-icon-resting-vflXxuFB8.png" class="play-button" alt="Play all">
                                                             <span class="video-count-box">
-                                                                {{playlist.videos|length}} video{%if playlist.videos|length != 1%}s{%endif%}
+                                                                {{playlist.data.videos|length}} video{%if playlist.data.videos|length != 1%}s{%endif%}
                                                             </span>
                                                         </span>
-                                                        {% if playlist.videos|length > 0 %}
+                                                        {% if playlist.data.videos|length > 0 %}
                                                         <span class="hover-overlay">
                                                             <span class="play-all-container">
                                                                 <strong>
@@ -372,7 +446,7 @@
                                                 </a>
                                                 <h3>
                                                     <a href="/playlist?p={{playlist.purl}}" title="See all videos in playlist." class="yt-uix-tile-link">
-                                                        {{playlist.title}}
+                                                        {{playlist.data.title}}
                                                     </a>
                                                 </h3>
                                                 <span class="playlist-author-attribution">by {%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</span>
@@ -396,23 +470,23 @@
                                                 <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="edit_featured" onclick="$(this).toggleClass('hddn');$('.cosmic_featured_channels > a').toggleClass('hddn');$('#featured_users_add').toggleClass('hddn')">Edit</button></div>
                                             </div>
                                             <div id="featured_users_add" class="hddn" style="background-color:#7696e6; padding: 13px; font-size:14px;border-radius:5px;margin: 5px 0 5px 0; border:1px solid #4f87d4;color:white;font-weight:bold">
-                                                <form action="/user/{{profile.displayname}}" method="POST">
+                                                <form class="yt-uix-form" action="/user/{{profile.displayname}}" method="POST">
+                                                    <input type="text" class="yt-uix-form-input-text" style="width: 122px" maxlength="64" name="featured_title" style="padding:7px;width:238px;margin-top:7px" placeholder="Featured Channels" value="{% if featured_title != '' %}{{featured_title}}{% else %}Featured Channels{% endif %}">
                                                     <button type="submit" name="save_featured_channels" class="yt-uix-button yt-uix-button-primary yt-uix-button-short">Save</button>
-                                                    <input type="hidden" id="featured_channels_small_input" value="{{profile.featured_channels}}," name="featured_channels">
+                                                    <input type="hidden" id="featured_channels_small_input" value="{{profile.featured_channels}}" name="featured_channels">
                                                     <button type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" onclick="$('#featured_users_add').toggleClass('hddn');$('#edit_featured').toggleClass('hddn');$('.cosmic_featured_channels > a').toggleClass('hddn')">Cancel</button>
+                                                    <hr>
                                                     <div>
-                                                        <input type="yt-text" maxlength="64" name="featured_title" style="padding:7px;width:238px;margin-top:7px" placeholder="Featured Channels" value="{% if featured_title != '' %}{{featured_title}}{% else %}Featured Channels{% endif %}">
-                                                        <hr>
                                                         <div>
-                                                            <input type="yt-text" maxlength="64" style="padding: 7px;" placeholder="Channel Name" id="ft_channel_name">
-                                                            <button onclick="cosmic_add_channel()" type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" style="height:31px;position:relative;left:12px;bottom:0.9px">Add</button>
+                                                            <input type="text" class="yt-uix-form-input-text" style="width: 188px" maxlength="64" style="padding: 7px;" placeholder="Channel Name" id="ft_channel_name">
+                                                            <button onclick="cosmic_add_channel()" type="button" class="yt-uix-button yt-uix-button-default yt-uix-button-short" style="position:relative;bottom:0.9px">Add</button>
                                                         </div>
                                                         <div id="featured_channels_small">
                                                             {% if profile.featured_channels != "" %}
                                                                 {% for channel in featured_channels %}
-                                                                    <div id="fc_{{channel}}" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
-                                                                        <div style="float:left;color:black;font-weight:bold"><?= $Featured_Channel["displayname"] ?></div>
-                                                                        <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_ft('{{channel}}')">Remove</a></div>
+                                                                    <div id="fc_{{channel.displayname}}" style="overflow:hidden;background:white;border-radius:3px;padding:4px;margin-top:11px">
+                                                                        <div style="float:left;color:black;font-weight:bold">{{channel.displayname}}</div>
+                                                                        <div style="float:right"><a href="javascript:void(0)" onclick="cosmic_remove_ft('{{channel.displayname}}')">Remove</a></div>
                                                                     </div>
                                                                 {% endfor %}
                                                             {% endif %}

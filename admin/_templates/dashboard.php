@@ -1,4 +1,4 @@
-<div style="width:48%;margin-right:2%;float:left;">
+<div style="">
 	<div class="panel_box">
 		<strong>Statistics</strong>
 		<div style="width:150px;float:left;font-weight:bold;margin-bottom:3px">
@@ -100,7 +100,7 @@
 		</div>
 		<div style="clear:both"></div>
 	</div>
-	<div class="panel_box" style="max-height:300px;overflow-y:auto">
+	<div class="panel_box">
 		<strong>Recent Bulletins</strong>
 		<? foreach ($Bulletins as $Bulletin) : ?>
 			<div style="font-weight:bold"><a href="/user/<?= $Bulletin["by_user"] ?>"><?= $Bulletin["displayname"] ?></a> wrote:</div>
@@ -108,7 +108,7 @@
 			<div style="margin-bottom:10px"><?= get_time_ago($Bulletin["date"]) ?></div>
 		<? endforeach ?>
 	</div>
-	<div class="panel_box" style="max-height:300px;overflow-y:auto">
+	<div class="panel_box">
 		<strong>Channel Comments</strong>
 		<div style="padding-bottom:7px;margin-bottom:7px;border-bottom: 1px solid #cccccc;text-align:center">
 			<form action="/admin/dashboard" method="POST">
@@ -122,7 +122,7 @@
 		<? endforeach ?>
 	</div>
 </div>
-<div style="width:50%;float:left;">
+<div style="">
 	<div class="panel_box">
 		<strong>Write Blog Post</strong>
 		<form action="/admin/dashboard" method="POST">
@@ -216,7 +216,7 @@
 			</script>
 		</div>
 	</div>
-	<div class="panel_box" style="max-height:300px;overflow-y:auto">
+	<div class="panel_box">
 		<strong>Feature Suggestions</strong>
 		<? foreach ($Suggestions as $Suggestion) : ?>
 			<div id="suggestion<?=$Suggestion["id"]?>">
@@ -254,7 +254,7 @@
 			}
 		</script>
 	</div>
-	<div class="panel_box" style="max-height:300px;overflow-y:auto">
+	<div class="panel_box">
 		<strong>Converting Videos</strong>
 		<? if (count($Converting) > 0) : ?>
 			<table style="width:100%">

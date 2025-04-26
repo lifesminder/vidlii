@@ -3,7 +3,10 @@
 
     if($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
         if(file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/admin/blog.html")) {
-            $Page_Title = "Blog"; $twig = true;
+            $Page_Title = "Blog";
+            $twig = true;
+            $twig_dest = "nouveau/admin/blog.html";
+            $twig_args = [];
 
             require_once "_templates/admin_structure.php";
             if(isset($_GET["id"]) && (int)$_GET["id"] >= 0) {
@@ -20,7 +23,7 @@
                         $content = $_POST["blog_content"];
 
                         if($title != "" && $content != "") {
-                            echo "UPDATE blog set title = \"$title\" and content = \"$content\" where id = $id";
+                            // echo "UPDATE blog set title = \"$title\" and content = \"$content\" where id = $id";
                             $update_post = $api->db("UPDATE blog set title = \"$title\", content = \"$content\" where id = $id");
                             if($update_post["status"] == 1)
                                 notification("Post edited successfully", "/admin/blog", "green");
@@ -32,14 +35,14 @@
                         }
                     }
 
-                    $engine->template("nouveau/admin/blog.html", ["post" => $post["data"]]);
+                    $twigs_args = ["post" => $post["data"]];
                 } else {
                     notification("There are no such post", "/admin/blog", "red"); exit();
                 }
             } else {
                 // Retrieve all blog posts
                 $posts = $api->db("SELECT id, title, date from blog order by id desc", true);
-                $engine->template("nouveau/admin/blog.html", ["posts" => $posts]);
+                $twigs_args = ["posts" => $posts];
             }
         } else {
             redirect("/admin/dashboard");

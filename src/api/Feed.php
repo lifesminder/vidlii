@@ -38,5 +38,22 @@
 
 			return $data;
 		}
+
+		function comment($args = [], $files = []) {
+			$data = $this->api_message(-1, "Forbidden");
+			if(isset($args["action"]) && !empty($args["action"])) {
+				switch(strtolower($args["action"])) {
+					case "remove": {
+						if(isset($args["id"]) && !empty($args["id"])) {
+							$id = (int)$args["id"];
+							$removeComment = $this->db("DELETE from channel_comments where id = $id"); // To-Do: add unsanctioned comment removal
+							$data = $removeComment;
+						}
+						break;
+					}
+				}
+			}
+			return $data;
+		}
 	}
 ?>

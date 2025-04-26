@@ -1,5 +1,5 @@
 <form action="/channel_setup" method="POST" enctype="multipart/form-data">
-    <div style="position: relative; font-weight: bold; text-align: center;overflow:hidden;<? if ($Channel_Version == 1) : ?>margin: 0 0 11px 0;<? endif ?> width:771px">
+    <div style="position: relative; font-weight: bold; text-align: center;overflow:hidden; padding: 0 0 10px 0; width:771px">
         <div style="float: left"><?= user_avatar2($_USER->displayname,100,100,$Info["avatar"]) ?><? if ($Is_Uploaded_Avatar === true) : ?><a href="javascript:void(0)" onclick="filter_box()" style="display: block; font-weight: normal">Filters</a><? endif ?></div>
         <div style="float: left;margin: 0 0 0 15px;font-weight:normal;width: 442px;text-align: left">Video: <input style="width:280px" type="url" name="v_url" id="st_em" <? if ($Is_Uploaded_Avatar === false) : ?>value="<?= $Avatar ?>" <? endif ?>placeholder="/watch?v=..." maxlength="100" size="40"<? if ($Is_Uploaded_Avatar === true) : ?> disabled<? endif ?>> <button class="search_button" type="button" onclick="latest_video()"<? if ($Is_Uploaded_Avatar === true) : ?> disabled<? endif ?>>Latest Video</button></div>
         <div style="float: left;font-weight:normal;margin: 59px 0 0 15px;width: 442px;text-align: left">Upload: <? if ($Is_Uploaded_Avatar === false) : ?><input type="file" name="avatar_upload"><? else : ?><input type="submit" name="delete_avatar" class="search_button" value="Delete Avatar"><? endif ?></div>
@@ -37,7 +37,6 @@
                     <option value="1" <?= $Info["snow"] == 1 ? "selected" : "" ?>>Enabled</option>
                 </select></td>
         </tr>
-        <? if ($Info["mondo"] == 1) : ?>
         <tr>
             <td><label for="ch_title">Mondo:</label></td>
             <td><select name="ch_mondo">
@@ -45,7 +44,6 @@
                     <option value="1" <?= $Info["mondo"] == 1 ? "selected" : "" ?>>Enabled</option>
                 </select></td>
         </tr>
-        <? endif ?>
         <tr>
             <td colspan="2"><input type="submit" value="Update" name="update_holiday"></td>
         </tr>

@@ -138,5 +138,17 @@
 			} else $data = $this->api_message(-1, "Forbidden");
 			return $data;
 		}
+
+		function featureds($args, $files = []) {
+			$data = []; $session = $this->session($_COOKIE["session"]);
+			if($session["session"] != -1) {
+				$username = $session["user"]["username"];
+				$featured_stuff = $this->db("SELECT featured_channels as channels, playlists from users where displayname = \"$username\"");
+				$data = $featured_stuff;
+			} else {
+				$data = $this->api_message(-1, "Forbidden");
+			}
+			return $data;
+		}
 	}
 ?>

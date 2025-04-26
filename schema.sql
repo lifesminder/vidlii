@@ -335,12 +335,12 @@ CREATE TABLE `playlists` (
   `purl` varchar(11) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `title` varchar(128) NOT NULL,
-  `description` text DEFAULT NULL,
+  `description` text(2048) NOT NULL,
   `created_by` varchar(20) NOT NULL,
   `thumbnail` varchar(11) NOT NULL,
   `created_on` datetime NOT NULL,
   PRIMARY KEY (`purl`),
-  UNIQUE KEY `title` (`title`,`description`,`created_by`)
+  UNIQUE KEY `title` (`title`,`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

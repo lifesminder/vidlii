@@ -58,13 +58,28 @@
         }
     ?>
     <main class="bottom_wrapper">
-        <div style="word-spacing:20px;text-align:center;padding-bottom:8px;margin-bottom:13px;border-bottom:1px solid #e2e2e2">
-            <a href="/admin/dashboard"<? if ($Page == "dashboard") : ?> style="font-weight:bold;color:black"<? endif ?>>Dashboard</a> <? if ($_USER->Is_Admin) : ?>| <a href="/admin/statistics"<? if ($Page == "statistics") : ?> style="font-weight:bold;color:black"<? endif ?>>Charts</a> <? endif ?>| <a href="/admin/users"<? if ($Page == "Users") : ?> style="font-weight:bold;color:black"<? endif ?>>Users</a> | <a href="/admin/videos" <? if ($Page == "Videos") : ?> style="font-weight:bold;color:black"<? endif ?>>Videos</a> | <a href="/admin/misc" <? if ($Page == "misc") : ?> style="font-weight:bold;color:black"<? endif ?>>Misc</a>
+        <div class="crumb-header">
+            <a href="/my_account">My Account</a>
+            <span class="spacer">/</span>
+            Admin Panel
         </div>
-        <?php
-            if(!isset($twig) || !$twig)
-                require_once $_SERVER['DOCUMENT_ROOT']."/admin/_templates/$Page.php";
-        ?>
+        <div class="settings_menu">
+            <a href="/admin/dashboard"<? if ($Page == "dashboard") : ?> id="nav_sel"<? endif ?>>Dashboard</a>
+            <a href="/admin/statistics"<? if ($Page == "statistics") : ?> id="nav_sel"<? endif ?>>Charts</a>
+            <a href="/admin/users"<? if ($Page == "Users") : ?> id="nav_sel"<? endif ?>>Users</a>
+            <a href="/admin/videos"<? if ($Page == "Videos") : ?> id="nav_sel"<? endif ?>>Videos</a>
+            <a href="/admin/misc"<? if ($Page == "misc") : ?> id="nav_sel"<? endif ?>>Misc</a>
+        </div>
+        <div class="subpage">
+            <div class="subpage-content">
+                <?php
+                    if(isset($twig) && isset($twig_dest) && isset($twig_args))
+                        echo "D";
+                    else
+                        require_once $_SERVER['DOCUMENT_ROOT']."/admin/_templates/$Page.php";
+                ?>
+            </div>
+        </div>
     </main>
 </div>
 <script src="<?= MAIN_JS_FILE ?>"></script>

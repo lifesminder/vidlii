@@ -38,7 +38,7 @@
                     {%if bulletins.count > 0%}
                     <div class="feed-item-list">
                         {%for bulletin in bulletins.data%}
-                        <div>
+                        <div id="bulletin_{{bulletin.id}}">
                             <div class="feed-item-container yt-uix-expander yt-uix-expander-collapsed">
                                 <div class="feed-item-outer">
                                     <div class="feed-item-main">
@@ -58,6 +58,9 @@
                                         </div>
                                         <div class="feed-item-time">
                                             {{bulletin.date}}
+                                            {%if owner%}
+                                            · <a href="/user/{{profile.displayname}}/feed?remove_post={{bulletin.id}}">Delete</a>
+                                            {%endif%}
                                         </div>
                                         <div class="feed-item-content">
                                             <div class="feed-item-actions-line user">
@@ -84,7 +87,7 @@
                     <p class="feed-unavailable-message">No recent activity.</p>
                     {%endif%}
                 {%elseif filter == 1%}
-                    {% if owner or (profile.c_comments == 1 and session.session != -1) %}
+                    {% if owner or (authorized and profile.c_comments == 1 and session.session != -1) %}
                     <form action="/user/{{profile.displayname}}/feed?filter=1" method="POST" style="display: flex; margin: 8px 0 8px 0;">
                         <textarea name="comment" id="comment" placeholder="Write your comment"></textarea>
                         <button type="submit" name="channel_comment" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Publish</button>
@@ -119,7 +122,7 @@
                                                 Report Spam
                                             </button>
                                             {%if owner or comment.by_user == user%}
-                                            <button onclick="window.location.replace('/user/{{profile.displayname}}/feed?filter=1&remove={{comment.id}}')" class="remove-comment" title="Remove Comment">
+                                            <button onclick="remove_comment('{{comment.id}}')" class="remove-comment" title="Remove Comment">
                                                 Remove Comment
                                             </button>
                                             {%endif%}

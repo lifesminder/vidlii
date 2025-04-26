@@ -327,7 +327,8 @@ dd {
 }
 
 .bottom_wrapper {
-    font-size: 14px
+    font-size: 14px;
+    margin: 1rem 0;
 }
 
 .pr_hd1 {
@@ -342,13 +343,13 @@ dd {
 .n_head .pr_hd_bar {
     border-radius: 8px!important;
     border: .5px solid #ccc;
-    border-top: 0
+    border-top: 0;
 }
 
 .pr_hd_wrapper {
     margin: 0 auto;
     padding: 34px 0 0;
-    width: 1000px;
+    max-width: 1000px;
 }
 
 #pr_hd ul,
@@ -529,7 +530,7 @@ button, input[type="button"], input[type="submit"], input[type="reset"], .btn {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e4e5de', GradientType=0);
 }
 
-button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, .btn:hover {
+button:hover:not(.yt-uix-button, .show-search), input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, .btn:hover {
     text-decoration: none;
     border: 1px solid #b9b9b9;
     background: #f4f4f4;
@@ -539,7 +540,7 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#edeee7', GradientType=0)
 }
 
-button:active, input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active, .btn:active {
+button:active:not(.yt-uix-button, .show-search), input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active, .btn:active {
     text-decoration: none;
     border: 1px solid #a6a6a6;
     background: #f4f4f4;
@@ -549,11 +550,22 @@ button:active, input[type="button"]:active, input[type="submit"]:active, input[t
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e4e5de', endColorstr='#f4f4f4', GradientType=0)
 }
 
-button:disabled, input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled, .btn:disabled {
-    cursor: not-allowed
+button:disabled:not(.yt-uix-button, .show-search), input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled, .btn:disabled {
+    font-size: 13px;
+    color: #999;
+    padding: 3px 7.5px;
+    border-radius: 4px;
+    cursor: not-allowed;
+    border: 1px solid #c7c7c7;
+    outline: 0;
+    background: #f4f4f4;
+    background: -moz-linear-gradient(top, #f4f4f4 0, #e4e5de 100%);
+    background: -webkit-linear-gradient(top, #f4f4f4 0, #e4e5de 100%);
+    background: linear-gradient(to bottom, #f4f4f4 0, #e4e5de 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#e4e5de', GradientType=0);
 }
 
-button:disabled:hover, input[type="button"]:disabled:hover, input[type="submit"]:disabled:hover, input[type="reset"]:disabled:hover, .btn:disabled:hover {
+button:disabled:hover:not(.yt-uix-button, .show-search), input[type="button"]:disabled:hover, input[type="submit"]:disabled:hover, input[type="reset"]:disabled:hover, .btn:disabled:hover {
     text-decoration: none;
     background: #ddded7;
     background: -moz-linear-gradient(top, #f0f0f0 0, #ddded7 100%);
@@ -3254,7 +3266,7 @@ select {
     border: 1.5px solid #ccc;
     padding: 6px;
     text-align: center;
-    margin-bottom: 11px;
+    margin: 11px 0 11px 0;
     font-size: 14px;
     font-weight: bold;
 } .notification.green {
@@ -3264,7 +3276,7 @@ select {
 }
 
 #page {
-    margin: 0 auto;
+    margin: 10px auto !important;
     position: relative;
 }
 
@@ -3378,4 +3390,15 @@ select {
 
 #vtbl_pl {
     padding: 0 !important;
+}
+
+.crumb-header {
+    font-size: 20px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #ccc;
+} .crumb-header .spacer {
+    margin: 0 6px 0 6px;
+    user-select: none;
+    text-align: center;
+    color: #666;
 }

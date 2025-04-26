@@ -18,7 +18,7 @@
 	}
 </script>
 <? if (!isset($_GET["u"])) : ?>
-<div style="width:48%;margin-right:2%;float:left;">
+<div style="">
 	<div class="panel_box">
 		<strong>Edit Channel</strong>
 		<form action="/admin/users" method="GET">
@@ -35,7 +35,7 @@
 			</div>
 		</form>
 	</div>
-	<div class="panel_box" style="overflow-y:auto;max-height:390px">
+	<div class="panel_box" style="">
 		<strong>New Users</strong>
 		<? foreach ($New_Users as $User) : ?>
 			<div style="margin-bottom: 5px;overflow:hidden">
@@ -53,8 +53,8 @@
 		<? endforeach ?>
 	</div>
 </div>
-<div style="width:50%;float:left;">
-	<div class="panel_box" style="overflow-y:auto;max-height:450px">
+<div style="">
+	<div class="panel_box" style="">
 		<strong>Partner Applications</strong>
 		<? foreach ($Applications as $Application) : ?>
 			<div class="u_sct">
@@ -87,7 +87,7 @@
 	</div>
 </div>
 <? else : ?>
-	<div style="padding-bottom:11px;margin-bottom:11px;border-bottom:1px solid #e2e2e2;overflow:hidden">
+	<div style="">
 		<div style="float:left">
 			<?= user_avatar3($User_Info["username"],69,69,$User_Info["avatar"]) ?>
 		</div>
