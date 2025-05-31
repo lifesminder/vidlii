@@ -1,6 +1,20 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add `is_granted_for_user()` Twig function
+ * Add `field_id()` Twig form helper function
+ * Add a `Twig` constraint that validates Twig templates
+ * Make `lint:twig` collect all deprecations instead of stopping at the first one
+ * Add `name` argument to `email.image` to override the attachment file name being set as the file path
+
+7.2
+---
+
+ * Deprecate passing a tag to the constructor of `FormThemeNode`
+
 7.1
 ---
 

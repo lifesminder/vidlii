@@ -121,6 +121,8 @@ class Response
      * (last updated 2021-10-01).
      *
      * Unless otherwise noted, the status code is defined in RFC2616.
+     *
+     * @var array<int, string>
      */
     public static array $statusTexts = [
         100 => 'Continue',
@@ -217,7 +219,7 @@ class Response
     public function __toString(): string
     {
         return
-            sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText)."\r\n".
+            \sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText)."\r\n".
             $this->headers."\r\n".
             $this->getContent();
     }
@@ -315,6 +317,11 @@ class Response
     {
         // headers have already been sent by the developer
         if (headers_sent()) {
+            if (!\in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+                $statusCode ??= $this->statusCode;
+                header(\sprintf('HTTP/%s %s %s', $this->version, $statusCode, $this->statusText), true, $statusCode);
+            }
+
             return $this;
         }
 
@@ -365,7 +372,7 @@ class Response
         $statusCode ??= $this->statusCode;
 
         // status
-        header(sprintf('HTTP/%s %s %s', $this->version, $statusCode, $this->statusText), true, $statusCode);
+        header(\sprintf('HTTP/%s %s %s', $this->version, $statusCode, $this->statusText), true, $statusCode);
 
         return $this;
     }
@@ -470,7 +477,7 @@ class Response
     {
         $this->statusCode = $code;
         if ($this->isInvalid()) {
-            throw new \InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
+            throw new \InvalidArgumentException(\sprintf('The HTTP status code "%s" is not valid.', $code));
         }
 
         if (null === $text) {
@@ -973,7 +980,7 @@ class Response
     public function setCache(array $options): static
     {
         if ($diff = array_diff(array_keys($options), array_keys(self::HTTP_RESPONSE_CACHE_CONTROL_DIRECTIVES))) {
-            throw new \InvalidArgumentException(sprintf('Response does not support the following options: "%s".', implode('", "', $diff)));
+            throw new \InvalidArgumentException(\sprintf('Response does not support the following options: "%s".', implode('", "', $diff)));
         }
 
         if (isset($options['etag'])) {

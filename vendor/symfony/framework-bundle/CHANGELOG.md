@@ -1,6 +1,83 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add `errors.php` and `webhook.php` routing configuration files (use them instead of their XML equivalent)
+
+   Before:
+
+   ```yaml
+   when@dev:
+       _errors:
+           resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
+           prefix: /_error
+
+   webhook:
+       resource: '@FrameworkBundle/Resources/config/routing/webhook.xml'
+       prefix: /webhook
+   ```
+
+   After:
+
+   ```yaml
+   when@dev:
+       _errors:
+           resource: '@FrameworkBundle/Resources/config/routing/errors.php'
+           prefix: /_error
+
+   webhook:
+       resource: '@FrameworkBundle/Resources/config/routing/webhook.php'
+       prefix: /webhook
+   ```
+
+ * Add support for the ObjectMapper component
+ * Add support for assets pre-compression
+ * Rename `TranslationUpdateCommand` to `TranslationExtractCommand`
+ * Add JsonStreamer services and configuration
+ * Add new `framework.property_info.with_constructor_extractor` option to allow enabling or disabling the constructor extractor integration
+ * Deprecate the `--show-arguments` option of the `container:debug` command, as arguments are now always shown
+ * Add autowiring alias for `RateLimiterFactoryInterface`
+ * Add `framework.validation.disable_translation` option
+ * Add support for signal plain name in the `messenger.stop_worker_on_signals` configuration
+ * Deprecate the `framework.validation.cache` option
+ * Add `--method` option to the `debug:router` command
+ * Auto-exclude DI extensions, test cases, entities and messenger messages
+ * Add DI alias from `ServicesResetterInterface` to `services_resetter`
+ * Add `methods` argument in `#[IsCsrfTokenValid]` attribute
+ * Allow configuring the logging channel per type of exceptions
+ * Enable service argument resolution on classes that use the `#[Route]` attribute,
+   the `#[AsController]` attribute is no longer required
+ * Deprecate setting the `framework.profiler.collect_serializer_data` config option to `false`
+ * Set `framework.rate_limiter.limiters.*.lock_factory` to `auto` by default
+ * Deprecate `RateLimiterFactory` autowiring aliases, use `RateLimiterFactoryInterface` instead
+ * Allow configuring compound rate limiters
+ * Make `ValidatorCacheWarmer` use `kernel.build_dir` instead of `cache_dir`
+ * Make `SerializeCacheWarmer` use `kernel.build_dir` instead of `cache_dir`
+ * Support executing custom workflow validators during container compilation
+
+7.2
+---
+
+ * Add support for `--sort` option when extracting translations with `translation:extract` command and `--force` option
+ * Add support for setting `headers` with `Symfony\Bundle\FrameworkBundle\Controller\TemplateController`
+ * Add `--resolve-env-vars` option to `lint:container` command
+ * Derivate `kernel.secret` from the decryption secret when its env var is not defined
+ * Make the `config/` directory optional in `MicroKernelTrait`, add support for service arguments in the
+   invokable Kernel class, and register `FrameworkBundle` by default when the `bundles.php` file is missing
+ * [BC BREAK] The `secrets:decrypt-to-local` command terminates with a non-zero exit code when a secret could not be read
+ * Deprecate making `cache.app` adapter taggable, use the `cache.app.taggable` adapter instead
+ * Enable `json_decode_detailed_errors` in the default serializer context in debug mode by default when `seld/jsonlint` is installed
+ * Register `Symfony\Component\Serializer\NameConverter\SnakeCaseToCamelCaseNameConverter` as a service named `serializer.name_converter.snake_case_to_camel_case` if available
+ * Add `framework.csrf_protection.stateless_token_ids`, `.cookie_name`, and `.check_header` options to use stateless headers/cookies-based CSRF protection
+ * Add `framework.form.csrf_protection.field_attr` option
+ * Deprecate `session.sid_length` and `session.sid_bits_per_character` config options
+ * Add the ability to use an existing service as a lock/semaphore resource
+ * Add support for configuring multiple serializer instances via the configuration
+ * Add support for `SYMFONY_TRUSTED_PROXIES`, `SYMFONY_TRUSTED_HEADERS`, `SYMFONY_TRUST_X_SENDFILE_TYPE_HEADER` and `SYMFONY_TRUSTED_HOSTS` env vars
+ * Add `--no-fill` option to `translation:extract` command
+
 7.1
 ---
 

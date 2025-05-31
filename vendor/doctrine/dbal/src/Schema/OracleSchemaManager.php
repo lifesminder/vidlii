@@ -55,8 +55,6 @@ class OracleSchemaManager extends AbstractSchemaManager
 
     /**
      * {@inheritDoc}
-     *
-     * @link http://ezcomponents.org/docs/api/trunk/DatabaseSchema/ezcDbSchemaPgsqlReader.html
      */
     protected function _getPortableTableIndexesList(array $tableIndexes, string $tableName): array
     {
@@ -146,6 +144,13 @@ class OracleSchemaManager extends AbstractSchemaManager
                     $type = 'boolean';
                 } elseif ($scale > 0) {
                     $type = 'decimal';
+                }
+
+                break;
+
+            case 'float':
+                if ($precision === 63) {
+                    $type = 'smallfloat';
                 }
 
                 break;

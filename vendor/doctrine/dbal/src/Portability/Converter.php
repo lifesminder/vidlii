@@ -11,6 +11,8 @@ use function array_map;
 use function array_reduce;
 use function is_string;
 use function rtrim;
+use function strtolower;
+use function strtoupper;
 
 use const CASE_LOWER;
 use const CASE_UPPER;
@@ -26,6 +28,7 @@ final class Converter
     private readonly Closure $convertAllNumeric;
     private readonly Closure $convertAllAssociative;
     private readonly Closure $convertFirstColumn;
+    private readonly Closure $convertColumnName;
 
     /**
      * @param bool                                   $convertEmptyStringToNull Whether each empty string should
@@ -48,6 +51,12 @@ final class Converter
         $this->convertAllNumeric     = $this->createConvertAll($convertNumeric);
         $this->convertAllAssociative = $this->createConvertAll($convertAssociative);
         $this->convertFirstColumn    = $this->createConvertAll($convertValue);
+
+        $this->convertColumnName = match ($case) {
+            null => static fn (string $name) => $name,
+            self::CASE_LOWER => strtolower(...),
+            self::CASE_UPPER => strtoupper(...),
+        };
     }
 
     /**
@@ -105,6 +114,11 @@ final class Converter
         return ($this->convertFirstColumn)($data);
     }
 
+    public function convertColumnName(string $name): string
+    {
+        return ($this->convertColumnName)($name);
+    }
+
     /**
      * @param T $value
      *
@@ -137,7 +151,7 @@ final class Converter
      * @param T $value
      *
      * @return T|string
-     * @psalm-return (T is string ? string : T)
+     * @phpstan-return (T is string ? string : T)
      *
      * @template T
      */
@@ -211,7 +225,7 @@ final class Converter
         return /**
                 * @param T $value
                 *
-                * @psalm-return (T is false ? false : T)
+                * @phpstan-return (T is false ? false : T)
                 *
                 * @template T
                 */
@@ -244,7 +258,7 @@ final class Converter
      *
      * @param Closure $function The function that maps each value of the array
      *
-     * @return Closure(array):array
+     * @return Closure(array<mixed>):array<mixed>
      */
     private function createMapper(Closure $function): Closure
     {

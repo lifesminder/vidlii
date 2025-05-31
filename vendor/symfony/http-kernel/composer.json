@@ -19,8 +19,8 @@
         "php": ">=8.2",
         "symfony/deprecation-contracts": "^2.5|^3",
         "symfony/error-handler": "^6.4|^7.0",
-        "symfony/event-dispatcher": "^6.4|^7.0",
-        "symfony/http-foundation": "^6.4|^7.0",
+        "symfony/event-dispatcher": "^7.3",
+        "symfony/http-foundation": "^7.3",
         "symfony/polyfill-ctype": "^1.8",
         "psr/log": "^1|^2|^3"
     },
@@ -47,7 +47,7 @@
         "symfony/var-dumper": "^6.4|^7.0",
         "symfony/var-exporter": "^6.4|^7.0",
         "psr/cache": "^1.0|^2.0|^3.0",
-        "twig/twig": "^3.0.4"
+        "twig/twig": "^3.12"
     },
     "provide": {
         "psr/log-implementation": "1.0|2.0|3.0"
@@ -69,7 +69,7 @@
         "symfony/twig-bridge": "<6.4",
         "symfony/validator": "<6.4",
         "symfony/var-dumper": "<6.4",
-        "twig/twig": "<3.0.4"
+        "twig/twig": "<3.12"
     },
     "autoload": {
         "psr-4": { "Symfony\\Component\\HttpKernel\\": "" },

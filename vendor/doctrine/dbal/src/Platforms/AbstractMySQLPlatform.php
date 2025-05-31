@@ -6,11 +6,11 @@ namespace Doctrine\DBAL\Platforms;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\InvalidColumnType\ColumnValuesRequired;
 use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Platforms\Keywords\MySQLKeywords;
 use Doctrine\DBAL\Schema\AbstractAsset;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
-use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\TableDiff;
@@ -19,12 +19,14 @@ use Doctrine\DBAL\SQL\Builder\SelectSQLBuilder;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
 
+use function array_map;
 use function array_merge;
 use function array_unique;
 use function array_values;
 use function count;
 use function implode;
 use function in_array;
+use function is_array;
 use function is_numeric;
 use function sprintf;
 use function str_replace;
@@ -335,7 +337,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      */
     public function getAlterTableSQL(TableDiff $diff): array
     {
-        $columnSql  = [];
         $queryParts = [];
 
         foreach ($diff->getAddedColumns() as $column) {
@@ -353,7 +354,7 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
             $queryParts[] =  'DROP ' . $column->getQuotedName($this);
         }
 
-        foreach ($diff->getModifiedColumns() as $columnDiff) {
+        foreach ($diff->getChangedColumns() as $columnDiff) {
             $newColumn = $columnDiff->getNewColumn();
 
             $newColumnProperties = array_merge($newColumn->toArray(), [
@@ -364,17 +365,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
 
             $queryParts[] =  'CHANGE ' . $oldColumn->getQuotedName($this) . ' '
                 . $this->getColumnDeclarationSQL($newColumn->getQuotedName($this), $newColumnProperties);
-        }
-
-        foreach ($diff->getRenamedColumns() as $oldColumnName => $column) {
-            $oldColumnName = new Identifier($oldColumnName);
-
-            $columnProperties = array_merge($column->toArray(), [
-                'comment' => $column->getComment(),
-            ]);
-
-            $queryParts[] = 'CHANGE ' . $oldColumnName->getQuotedName($this) . ' '
-                . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnProperties);
         }
 
         $addedIndexes    = $this->indexAssetsByLowerCaseName($diff->getAddedIndexes());
@@ -405,35 +395,31 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         if ($diffModified) {
             $diff = new TableDiff(
                 $diff->getOldTable(),
-                $diff->getAddedColumns(),
-                $diff->getModifiedColumns(),
-                $diff->getDroppedColumns(),
-                $diff->getRenamedColumns(),
-                array_values($addedIndexes),
-                array_values($modifiedIndexes),
-                $diff->getDroppedIndexes(),
-                $diff->getRenamedIndexes(),
-                $diff->getAddedForeignKeys(),
-                $diff->getModifiedForeignKeys(),
-                $diff->getDroppedForeignKeys(),
+                addedColumns: $diff->getAddedColumns(),
+                changedColumns: $diff->getChangedColumns(),
+                droppedColumns: $diff->getDroppedColumns(),
+                addedIndexes: array_values($addedIndexes),
+                modifiedIndexes: array_values($modifiedIndexes),
+                droppedIndexes: $diff->getDroppedIndexes(),
+                renamedIndexes: $diff->getRenamedIndexes(),
+                addedForeignKeys: $diff->getAddedForeignKeys(),
+                modifiedForeignKeys: $diff->getModifiedForeignKeys(),
+                droppedForeignKeys: $diff->getDroppedForeignKeys(),
             );
         }
 
-        $sql      = [];
         $tableSql = [];
 
         if (count($queryParts) > 0) {
-            $sql[] = 'ALTER TABLE ' . $diff->getOldTable()->getQuotedName($this) . ' '
+            $tableSql[] = 'ALTER TABLE ' . $diff->getOldTable()->getQuotedName($this) . ' '
                 . implode(', ', $queryParts);
         }
 
-        $sql = array_merge(
+        return array_merge(
             $this->getPreAlterTableIndexForeignKeySQL($diff),
-            $sql,
+            $tableSql,
             $this->getPostAlterTableIndexForeignKeySQL($diff),
         );
-
-        return array_merge($sql, $tableSql, $columnSql);
     }
 
     /**
@@ -649,9 +635,32 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     /**
      * {@inheritDoc}
      */
+    public function getSmallFloatDeclarationSQL(array $column): string
+    {
+        return 'FLOAT' . $this->getUnsignedDeclaration($column);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getDecimalTypeDeclarationSQL(array $column): string
     {
         return parent::getDecimalTypeDeclarationSQL($column) . $this->getUnsignedDeclaration($column);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEnumDeclarationSQL(array $column): string
+    {
+        if (! isset($column['values']) || ! is_array($column['values']) || $column['values'] === []) {
+            throw ColumnValuesRequired::new($this, 'ENUM');
+        }
+
+        return sprintf('ENUM(%s)', implode(', ', array_map(
+            $this->quoteStringLiteral(...),
+            $column['values'],
+        )));
     }
 
     /**
@@ -727,7 +736,8 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
             'datetime'   => Types::DATETIME_MUTABLE,
             'decimal'    => Types::DECIMAL,
             'double'     => Types::FLOAT,
-            'float'      => Types::FLOAT,
+            'enum'       => Types::ENUM,
+            'float'      => Types::SMALLFLOAT,
             'int'        => Types::INTEGER,
             'integer'    => Types::INTEGER,
             'json'       => Types::JSON,
@@ -838,5 +848,31 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         }
 
         return $result;
+    }
+
+    public function fetchTableOptionsByTable(bool $includeTableName): string
+    {
+        $sql = <<<'SQL'
+    SELECT t.TABLE_NAME,
+           t.ENGINE,
+           t.AUTO_INCREMENT,
+           t.TABLE_COMMENT,
+           t.CREATE_OPTIONS,
+           t.TABLE_COLLATION,
+           ccsa.CHARACTER_SET_NAME
+      FROM information_schema.TABLES t
+        INNER JOIN information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ccsa
+          ON ccsa.COLLATION_NAME = t.TABLE_COLLATION
+SQL;
+
+        $conditions = ['t.TABLE_SCHEMA = ?'];
+
+        if ($includeTableName) {
+            $conditions[] = 't.TABLE_NAME = ?';
+        }
+
+        $conditions[] = "t.TABLE_TYPE = 'BASE TABLE'";
+
+        return $sql . ' WHERE ' . implode(' AND ', $conditions);
     }
 }

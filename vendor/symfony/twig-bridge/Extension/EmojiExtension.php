@@ -38,7 +38,7 @@ final class EmojiExtension extends AbstractExtension
     }
 
     /**
-     * Converts emoji short code (:wave:) to real emoji (👋)
+     * Converts emoji short code (:wave:) to real emoji (👋).
      */
     public function emojify(string $string, ?string $catalog = null): string
     {
@@ -47,7 +47,7 @@ final class EmojiExtension extends AbstractExtension
         try {
             $tr = self::$transliterators[$catalog] ??= EmojiTransliterator::create($catalog, EmojiTransliterator::REVERSE);
         } catch (\IntlException $e) {
-            throw new \LogicException(sprintf('The emoji catalog "%s" is not available.', $catalog), previous: $e);
+            throw new \LogicException(\sprintf('The emoji catalog "%s" is not available.', $catalog), previous: $e);
         }
 
         return (string) $tr->transliterate($string);

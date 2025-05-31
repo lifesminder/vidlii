@@ -64,7 +64,7 @@ EOF
 
         $secrets = $this->vault->list(true);
 
-        $io->comment(sprintf('%d secret%s found in the vault.', \count($secrets), 1 !== \count($secrets) ? 's' : ''));
+        $io->comment(\sprintf('%d secret%s found in the vault.', \count($secrets), 1 !== \count($secrets) ? 's' : ''));
 
         $skipped = 0;
         if (!$input->getOption('force')) {
@@ -78,19 +78,25 @@ EOF
 
         if ($skipped > 0) {
             $io->warning([
-                sprintf('%d secret%s already overridden in the local vault and will be skipped.', $skipped, 1 !== $skipped ? 's are' : ' is'),
+                \sprintf('%d secret%s already overridden in the local vault and will be skipped.', $skipped, 1 !== $skipped ? 's are' : ' is'),
                 'Use the --force flag to override these.',
             ]);
         }
 
+        $hadErrors = false;
         foreach ($secrets as $k => $v) {
             if (null === $v) {
-                $io->error($this->vault->getLastMessage() ?? sprintf('Secret "%s" has been skipped as there was an error reading it.', $k));
+                $io->error($this->vault->getLastMessage() ?? \sprintf('Secret "%s" has been skipped as there was an error reading it.', $k));
+                $hadErrors = true;
                 continue;
             }
 
             $this->localVault->seal($k, $v);
             $io->note($this->localVault->getLastMessage());
+        }
+
+        if ($hadErrors) {
+            return 1;
         }
 
         return 0;

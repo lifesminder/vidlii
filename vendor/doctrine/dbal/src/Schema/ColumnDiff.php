@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Schema;
 
+use function strcasecmp;
+
 /**
  * Represents the change of a column.
  */
@@ -14,6 +16,22 @@ class ColumnDiff
     {
     }
 
+    public function countChangedProperties(): int
+    {
+        return (int) $this->hasUnsignedChanged()
+            + (int) $this->hasAutoIncrementChanged()
+            + (int) $this->hasDefaultChanged()
+            + (int) $this->hasFixedChanged()
+            + (int) $this->hasPrecisionChanged()
+            + (int) $this->hasScaleChanged()
+            + (int) $this->hasLengthChanged()
+            + (int) $this->hasNotNullChanged()
+            + (int) $this->hasNameChanged()
+            + (int) $this->hasTypeChanged()
+            + (int) $this->hasPlatformOptionsChanged()
+            + (int) $this->hasCommentChanged();
+    }
+
     public function getOldColumn(): Column
     {
         return $this->oldColumn;
@@ -22,6 +40,14 @@ class ColumnDiff
     public function getNewColumn(): Column
     {
         return $this->newColumn;
+    }
+
+    public function hasNameChanged(): bool
+    {
+        $oldColumn = $this->getOldColumn();
+
+        // Column names are case insensitive
+        return strcasecmp($oldColumn->getName(), $this->getNewColumn()->getName()) !== 0;
     }
 
     public function hasTypeChanged(): bool
@@ -96,6 +122,13 @@ class ColumnDiff
     {
         return $this->hasPropertyChanged(static function (Column $column): string {
             return $column->getComment();
+        });
+    }
+
+    public function hasPlatformOptionsChanged(): bool
+    {
+        return $this->hasPropertyChanged(static function (Column $column): array {
+            return $column->getPlatformOptions();
         });
     }
 

@@ -17,11 +17,13 @@ use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Types\Type;
 
 use function array_change_key_case;
+use function array_map;
 use function assert;
 use function explode;
 use function implode;
 use function is_string;
 use function preg_match;
+use function preg_match_all;
 use function str_contains;
 use function strtok;
 use function strtolower;
@@ -134,6 +136,8 @@ class MySQLSchemaManager extends AbstractSchemaManager
 
         $type = $this->platform->getDoctrineTypeMapping($dbType);
 
+        $values = [];
+
         switch ($dbType) {
             case 'char':
             case 'binary':
@@ -192,6 +196,10 @@ class MySQLSchemaManager extends AbstractSchemaManager
             case 'year':
                 $length = null;
                 break;
+
+            case 'enum':
+                $values = $this->parseEnumExpression($tableColumn['type']);
+                break;
         }
 
         if ($this->platform instanceof MariaDBPlatform) {
@@ -209,6 +217,7 @@ class MySQLSchemaManager extends AbstractSchemaManager
             'scale'         => $scale,
             'precision'     => $precision,
             'autoincrement' => str_contains($tableColumn['extra'], 'auto_increment'),
+            'values'        => $values,
         ];
 
         if (isset($tableColumn['comment'])) {
@@ -226,6 +235,18 @@ class MySQLSchemaManager extends AbstractSchemaManager
         }
 
         return $column;
+    }
+
+    /** @return list<string> */
+    private function parseEnumExpression(string $expression): array
+    {
+        $result = preg_match_all("/'([^']*(?:''[^']*)*)'/", $expression, $matches);
+        assert($result !== false);
+
+        return array_map(
+            static fn (string $match): string => strtr($match, ["''" => "'"]),
+            $matches[1],
+        );
     }
 
     /**
@@ -460,30 +481,12 @@ SQL;
      */
     protected function fetchTableOptionsByTable(string $databaseName, ?string $tableName = null): array
     {
-        $sql = <<<'SQL'
-    SELECT t.TABLE_NAME,
-           t.ENGINE,
-           t.AUTO_INCREMENT,
-           t.TABLE_COMMENT,
-           t.CREATE_OPTIONS,
-           t.TABLE_COLLATION,
-           ccsa.CHARACTER_SET_NAME
-      FROM information_schema.TABLES t
-        INNER JOIN information_schema.COLLATION_CHARACTER_SET_APPLICABILITY ccsa
-            ON ccsa.COLLATION_NAME = t.TABLE_COLLATION
-SQL;
+        $sql = $this->platform->fetchTableOptionsByTable($tableName !== null);
 
-        $conditions = ['t.TABLE_SCHEMA = ?'];
-        $params     = [$databaseName];
-
+        $params = [$databaseName];
         if ($tableName !== null) {
-            $conditions[] = 't.TABLE_NAME = ?';
-            $params[]     = $tableName;
+            $params[] = $tableName;
         }
-
-        $conditions[] = "t.TABLE_TYPE = 'BASE TABLE'";
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions);
 
         /** @var array<string,array<string,mixed>> $metadata */
         $metadata = $this->connection->executeQuery($sql, $params)

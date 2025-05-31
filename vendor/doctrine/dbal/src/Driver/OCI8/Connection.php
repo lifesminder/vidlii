@@ -47,15 +47,21 @@ final class Connection implements ConnectionInterface
         return $matches[1];
     }
 
-    /** @throws Parser\Exception */
+    /**
+     * @throws Parser\Exception
+     * @throws Error
+     */
     public function prepare(string $sql): Statement
     {
         $visitor = new ConvertPositionalToNamedPlaceholders();
 
         $this->parser->parse($sql, $visitor);
 
-        $statement = oci_parse($this->connection, $visitor->getSQL());
-        assert(is_resource($statement));
+        $statement = @oci_parse($this->connection, $visitor->getSQL());
+
+        if (! is_resource($statement)) {
+            throw Error::new($this->connection);
+        }
 
         return new Statement($this->connection, $statement, $visitor->getParameterMap(), $this->executionMode);
     }
@@ -95,7 +101,7 @@ final class Connection implements ConnectionInterface
 
     public function commit(): void
     {
-        if (! oci_commit($this->connection)) {
+        if (! @oci_commit($this->connection)) {
             throw Error::new($this->connection);
         }
 

@@ -9,7 +9,6 @@ use InvalidArgumentException;
 
 use function sprintf;
 
-/** @psalm-immutable */
 final class IndexNameInvalid extends InvalidArgumentException implements SchemaException
 {
     public static function new(string $indexName): self

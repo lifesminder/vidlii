@@ -73,22 +73,22 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     private static array $freshCache = [];
 
-    public const VERSION = '7.1.11';
-    public const VERSION_ID = 70111;
+    public const VERSION = '7.3.0';
+    public const VERSION_ID = 70300;
     public const MAJOR_VERSION = 7;
-    public const MINOR_VERSION = 1;
-    public const RELEASE_VERSION = 11;
+    public const MINOR_VERSION = 3;
+    public const RELEASE_VERSION = 0;
     public const EXTRA_VERSION = '';
 
-    public const END_OF_MAINTENANCE = '01/2025';
-    public const END_OF_LIFE = '01/2025';
+    public const END_OF_MAINTENANCE = '05/2025';
+    public const END_OF_LIFE = '01/2026';
 
     public function __construct(
         protected string $environment,
         protected bool $debug,
     ) {
         if (!$environment) {
-            throw new \InvalidArgumentException(sprintf('Invalid environment provided to "%s": the environment cannot be empty.', get_debug_type($this)));
+            throw new \InvalidArgumentException(\sprintf('Invalid environment provided to "%s": the environment cannot be empty.', get_debug_type($this)));
         }
     }
 
@@ -201,7 +201,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     public function getBundle(string $name): BundleInterface
     {
         if (!isset($this->bundles[$name])) {
-            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the "registerBundles()" method of your "%s.php" file?', $name, get_debug_type($this)));
+            throw new \InvalidArgumentException(\sprintf('Bundle "%s" does not exist or it is not enabled. Maybe you forgot to add it in the "registerBundles()" method of your "%s.php" file?', $name, get_debug_type($this)));
         }
 
         return $this->bundles[$name];
@@ -210,11 +210,11 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     public function locateResource(string $name): string
     {
         if ('@' !== $name[0]) {
-            throw new \InvalidArgumentException(sprintf('A resource name must start with @ ("%s" given).', $name));
+            throw new \InvalidArgumentException(\sprintf('A resource name must start with @ ("%s" given).', $name));
         }
 
         if (str_contains($name, '..')) {
-            throw new \RuntimeException(sprintf('File name "%s" contains invalid characters (..).', $name));
+            throw new \RuntimeException(\sprintf('File name "%s" contains invalid characters (..).', $name));
         }
 
         $bundleName = substr($name, 1);
@@ -228,7 +228,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             return $file;
         }
 
-        throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $name));
+        throw new \InvalidArgumentException(\sprintf('Unable to find file "%s".', $name));
     }
 
     public function getEnvironment(): string
@@ -250,7 +250,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             $r = new \ReflectionObject($this);
 
             if (!is_file($dir = $r->getFileName())) {
-                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+                throw new \LogicException(\sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
             }
 
             $dir = $rootDir = \dirname($dir);
@@ -284,7 +284,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     {
         trigger_deprecation('symfony/http-kernel', '7.1', 'The "%s()" method is deprecated since Symfony 7.1 and will be removed in 8.0.', __METHOD__);
 
-        file_put_contents(($this->warmupDir ?: $this->getBuildDir()).'/annotations.map', sprintf('<?php return %s;', var_export($annotatedClasses, true)));
+        file_put_contents(($this->warmupDir ?: $this->getBuildDir()).'/annotations.map', \sprintf('<?php return %s;', var_export($annotatedClasses, true)));
     }
 
     public function getStartTime(): float
@@ -339,7 +339,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         foreach ($this->registerBundles() as $bundle) {
             $name = $bundle->getName();
             if (isset($this->bundles[$name])) {
-                throw new \LogicException(sprintf('Trying to register two bundles with the same name "%s".', $name));
+                throw new \LogicException(\sprintf('Trying to register two bundles with the same name "%s".', $name));
             }
             $this->bundles[$name] = $bundle;
         }
@@ -366,7 +366,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         $class = str_replace('\\', '_', $class).ucfirst($this->environment).($this->debug ? 'Debug' : '').'Container';
 
         if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $class)) {
-            throw new \InvalidArgumentException(sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
+            throw new \InvalidArgumentException(\sprintf('The environment "%s" contains invalid characters, it can only contain characters allowed in PHP class names.', $this->environment));
         }
 
         return $class;
@@ -392,11 +392,15 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     {
         $class = $this->getContainerClass();
         $buildDir = $this->warmupDir ?: $this->getBuildDir();
-        $cache = new ConfigCache($buildDir.'/'.$class.'.php', $this->debug);
+        $skip = $_SERVER['SYMFONY_DISABLE_RESOURCE_TRACKING'] ?? '';
+        $skip = filter_var($skip, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE) ?? explode(',', $skip);
+        $cache = new ConfigCache($buildDir.'/'.$class.'.php', $this->debug, null, \is_array($skip) && ['*'] !== $skip ? $skip : ($skip ? [] : null));
+
         $cachePath = $cache->getPath();
 
         // Silence E_WARNING to ignore "include" failures - don't use "@" to prevent silencing fatal errors
-        $errorLevel = error_reporting(\E_ALL ^ \E_WARNING);
+        $errorLevel = error_reporting();
+        error_reporting($errorLevel & ~\E_WARNING);
 
         try {
             if (is_file($cachePath) && \is_object($this->container = include $cachePath)
@@ -530,7 +534,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
 
         $buildDir = $this->container->getParameter('kernel.build_dir');
         $cacheDir = $this->container->getParameter('kernel.cache_dir');
-        $preload = $this instanceof WarmableInterface ? (array) $this->warmUp($cacheDir, $buildDir) : [];
+        $preload = $this instanceof WarmableInterface ? $this->warmUp($cacheDir, $buildDir) : [];
 
         if ($this->container->has('cache_warmer')) {
             $cacheWarmer = $this->container->get('cache_warmer');
@@ -539,7 +543,7 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
                 $cacheWarmer->enableOptionalWarmers();
             }
 
-            $preload = array_merge($preload, (array) $cacheWarmer->warmUp($cacheDir, $buildDir));
+            $preload = array_merge($preload, $cacheWarmer->warmUp($cacheDir, $buildDir));
         }
 
         if ($preload && file_exists($preloadFile = $buildDir.'/'.$class.'.preload.php')) {
@@ -591,13 +595,13 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     protected function buildContainer(): ContainerBuilder
     {
-        foreach (['cache' => $this->getCacheDir(), 'build' => $this->warmupDir ?: $this->getBuildDir(), 'logs' => $this->getLogDir()] as $name => $dir) {
+        foreach (['cache' => $this->getCacheDir(), 'build' => $this->warmupDir ?: $this->getBuildDir()] as $name => $dir) {
             if (!is_dir($dir)) {
                 if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
-                    throw new \RuntimeException(sprintf('Unable to create the "%s" directory (%s).', $name, $dir));
+                    throw new \RuntimeException(\sprintf('Unable to create the "%s" directory (%s).', $name, $dir));
                 }
             } elseif (!is_writable($dir)) {
-                throw new \RuntimeException(sprintf('Unable to write in the "%s" directory (%s).', $name, $dir));
+                throw new \RuntimeException(\sprintf('Unable to write in the "%s" directory (%s).', $name, $dir));
             }
         }
 
@@ -742,11 +746,30 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         $container = $this->container;
 
         if ($container->hasParameter('kernel.trusted_hosts') && $trustedHosts = $container->getParameter('kernel.trusted_hosts')) {
-            Request::setTrustedHosts($trustedHosts);
+            Request::setTrustedHosts(\is_array($trustedHosts) ? $trustedHosts : preg_split('/\s*+,\s*+(?![^{]*})/', $trustedHosts));
         }
 
         if ($container->hasParameter('kernel.trusted_proxies') && $container->hasParameter('kernel.trusted_headers') && $trustedProxies = $container->getParameter('kernel.trusted_proxies')) {
-            Request::setTrustedProxies(\is_array($trustedProxies) ? $trustedProxies : array_map('trim', explode(',', $trustedProxies)), $container->getParameter('kernel.trusted_headers'));
+            $trustedHeaders = $container->getParameter('kernel.trusted_headers');
+
+            if (\is_string($trustedHeaders)) {
+                $trustedHeaders = array_map('trim', explode(',', $trustedHeaders));
+            }
+
+            if (\is_array($trustedHeaders)) {
+                $trustedHeaderSet = 0;
+
+                foreach ($trustedHeaders as $header) {
+                    if (!\defined($const = Request::class.'::HEADER_'.strtr(strtoupper($header), '-', '_'))) {
+                        throw new \InvalidArgumentException(\sprintf('The trusted header "%s" is not supported.', $header));
+                    }
+                    $trustedHeaderSet |= \constant($const);
+                }
+            } else {
+                $trustedHeaderSet = $trustedHeaders ?? (Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO);
+            }
+
+            Request::setTrustedProxies(\is_array($trustedProxies) ? $trustedProxies : array_map('trim', explode(',', $trustedProxies)), $trustedHeaderSet);
         }
 
         return $container;

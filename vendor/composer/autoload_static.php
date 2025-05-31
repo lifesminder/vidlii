@@ -11,14 +11,17 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        '5897ea0ac4cccf14d323035e65887801' => __DIR__ . '/..' . '/symfony/polyfill-php82/bootstrap.php',
         '89efb1254ef2d1c5d80096acd12c4098' => __DIR__ . '/..' . '/twig/twig/src/Resources/core.php',
         'ffecb95d45175fd40f75be8a23b34f90' => __DIR__ . '/..' . '/twig/twig/src/Resources/debug.php',
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
         'f844ccf1d25df8663951193c3fc307c8' => __DIR__ . '/..' . '/twig/twig/src/Resources/string_loader.php',
+        '8e92226780215d0ec758aa7b73e0ede9' => __DIR__ . '/..' . '/open-telemetry/context/fiber/initialize_fiber_handler.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        'c7b4a5d8b94d270f0f9a84f81e1dd63d' => __DIR__ . '/..' . '/open-telemetry/api/Trace/functions.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -36,6 +39,7 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         'S' => 
         array (
             'Symfony\\Polyfill\\Php83\\' => 23,
+            'Symfony\\Polyfill\\Php82\\' => 23,
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -71,6 +75,11 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
+        ),
+        'O' => 
+        array (
+            'OpenTelemetry\\Context\\' => 22,
+            'OpenTelemetry\\API\\' => 18,
         ),
         'H' => 
         array (
@@ -132,6 +141,10 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         'Symfony\\Polyfill\\Php83\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
+        ),
+        'Symfony\\Polyfill\\Php82\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php82',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -262,6 +275,14 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
+        'OpenTelemetry\\Context\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/open-telemetry/context',
+        ),
+        'OpenTelemetry\\API\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/open-telemetry/api',
+        ),
         'Http\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-http/promise/src',
@@ -316,7 +337,7 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         ),
         'Doctrine\\Deprecations\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/deprecations/lib/Doctrine/Deprecations',
+            0 => __DIR__ . '/..' . '/doctrine/deprecations/src',
         ),
         'Doctrine\\DBAL\\' => 
         array (
@@ -346,6 +367,7 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
     );
 
     public static $classMap = array (
+        'AllowDynamicProperties' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/AllowDynamicProperties.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
@@ -359,7 +381,15 @@ class ComposerStaticInitf0476b79b8c28111c86474f8bad1f5ad
         'DateRangeError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
         'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Random\\BrokenRandomEngineError' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/BrokenRandomEngineError.php',
+        'Random\\CryptoSafeEngine' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/CryptoSafeEngine.php',
+        'Random\\Engine' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/Engine.php',
+        'Random\\Engine\\Secure' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/Engine/Secure.php',
+        'Random\\RandomError' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/RandomError.php',
+        'Random\\RandomException' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/Random/RandomException.php',
         'SQLite3Exception' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',
+        'SensitiveParameter' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/SensitiveParameter.php',
+        'SensitiveParameterValue' => __DIR__ . '/..' . '/symfony/polyfill-php82/Resources/stubs/SensitiveParameterValue.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',

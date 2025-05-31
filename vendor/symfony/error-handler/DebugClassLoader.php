@@ -18,6 +18,7 @@ use Mockery\MockInterface;
 use Phake\IMock;
 use PHPUnit\Framework\MockObject\Matcher\StatelessInvocation;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Prophecy\Prophecy\ProphecySubjectInterface;
 use ProxyManager\Proxy\ProxyInterface;
 use Symfony\Component\DependencyInjection\Argument\LazyClosure;
@@ -69,12 +70,14 @@ class DebugClassLoader
         'iterable' => 'iterable',
         'object' => 'object',
         'string' => 'string',
+        'non-empty-string' => 'string',
         'self' => 'self',
         'parent' => 'parent',
         'mixed' => 'mixed',
         'static' => 'static',
         '$this' => 'static',
         'list' => 'array',
+        'non-empty-list' => 'array',
         'class-string' => 'string',
         'never' => 'never',
     ];
@@ -257,6 +260,7 @@ class DebugClassLoader
 
             for (; $i < \count($symbols); ++$i) {
                 if (!is_subclass_of($symbols[$i], MockObject::class)
+                    && !is_subclass_of($symbols[$i], Stub::class)
                     && !is_subclass_of($symbols[$i], ProphecySubjectInterface::class)
                     && !is_subclass_of($symbols[$i], Proxy::class)
                     && !is_subclass_of($symbols[$i], ProxyInterface::class)

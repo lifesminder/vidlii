@@ -53,6 +53,7 @@ class UnusedTagsPass implements CompilerPassInterface
         'form.type_guesser',
         'html_sanitizer',
         'http_client.client',
+        'json_streamer.value_transformer',
         'kernel.cache_clearer',
         'kernel.cache_warmer',
         'kernel.event_listener',
@@ -70,6 +71,7 @@ class UnusedTagsPass implements CompilerPassInterface
         'monolog.logger',
         'notifier.channel',
         'property_info.access_extractor',
+        'property_info.constructor_extractor',
         'property_info.initializable_extractor',
         'property_info.list_extractor',
         'property_info.type_extractor',
@@ -82,6 +84,7 @@ class UnusedTagsPass implements CompilerPassInterface
         'routing.route_loader',
         'scheduler.schedule_provider',
         'scheduler.task',
+        'security.access_token_handler.oidc.encryption_algorithm',
         'security.access_token_handler.oidc.signature_algorithm',
         'security.authenticator.login_linker',
         'security.expression_language_provider',
@@ -103,6 +106,8 @@ class UnusedTagsPass implements CompilerPassInterface
         'validator.group_provider',
         'validator.initializer',
         'workflow',
+        'object_mapper.transform_callable',
+        'object_mapper.condition_callable',
     ];
 
     public function process(ContainerBuilder $container): void
@@ -128,9 +133,9 @@ class UnusedTagsPass implements CompilerPassInterface
             }
 
             $services = array_keys($container->findTaggedServiceIds($tag));
-            $message = sprintf('Tag "%s" was defined on service(s) "%s", but was never used.', $tag, implode('", "', $services));
+            $message = \sprintf('Tag "%s" was defined on service(s) "%s", but was never used.', $tag, implode('", "', $services));
             if ($candidates) {
-                $message .= sprintf(' Did you mean "%s"?', implode('", "', $candidates));
+                $message .= \sprintf(' Did you mean "%s"?', implode('", "', $candidates));
             }
 
             $container->log($this, $message);

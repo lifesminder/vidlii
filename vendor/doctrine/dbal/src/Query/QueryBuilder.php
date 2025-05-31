@@ -37,7 +37,7 @@ use function substr;
  * underlying database vendor. Limit queries and joins are NOT applied to UPDATE and DELETE statements
  * even if some vendors such as MySQL support it.
  *
- * @psalm-import-type WrapperParameterTypeArray from Connection
+ * @phpstan-import-type WrapperParameterTypeArray from Connection
  */
 class QueryBuilder
 {
@@ -56,7 +56,7 @@ class QueryBuilder
     /**
      * The parameter type map of this query.
      *
-     * @psalm-var WrapperParameterTypeArray
+     * @phpstan-var WrapperParameterTypeArray
      */
     private array $types = [];
 
@@ -152,6 +152,13 @@ class QueryBuilder
      * @var array<string, mixed>
      */
     private array $values = [];
+
+    /**
+     * The QueryBuilder for the union parts.
+     *
+     * @var Union[]
+     */
+    private array $unionParts = [];
 
     /**
      * The query cache profile used for caching results.
@@ -336,6 +343,7 @@ class QueryBuilder
             QueryType::DELETE => $this->getSQLForDelete(),
             QueryType::UPDATE => $this->getSQLForUpdate(),
             QueryType::SELECT => $this->getSQLForSelect(),
+            QueryType::UNION  => $this->getSQLForUnion(),
         };
     }
 
@@ -380,7 +388,7 @@ class QueryBuilder
      * </code>
      *
      * @param list<mixed>|array<string, mixed> $params
-     * @psalm-param WrapperParameterTypeArray $types
+     * @phpstan-param WrapperParameterTypeArray $types
      *
      * @return $this This QueryBuilder instance.
      */
@@ -417,7 +425,7 @@ class QueryBuilder
     /**
      * Gets all defined query parameter types for the query being constructed indexed by parameter index or name.
      *
-     * @psalm-return WrapperParameterTypeArray
+     * @phpstan-return WrapperParameterTypeArray
      */
     public function getParameterTypes(): array
     {
@@ -495,6 +503,54 @@ class QueryBuilder
     public function forUpdate(ConflictResolutionMode $conflictResolutionMode = ConflictResolutionMode::ORDINARY): self
     {
         $this->forUpdate = new ForUpdate($conflictResolutionMode);
+
+        $this->sql = null;
+
+        return $this;
+    }
+
+    /**
+     * Specifies union parts to be used to build a UNION query.
+     * Replaces any previously specified parts.
+     *
+     * <code>
+     *     $qb = $conn->createQueryBuilder()
+     *         ->union('SELECT 1 AS field1', 'SELECT 2 AS field1');
+     * </code>
+     *
+     * @return $this
+     */
+    public function union(string|QueryBuilder $part): self
+    {
+        $this->type = QueryType::UNION;
+
+        $this->unionParts = [new Union($part)];
+
+        $this->sql = null;
+
+        return $this;
+    }
+
+    /**
+     * Add parts to be used to build a UNION query.
+     *
+     * <code>
+     *     $qb = $conn->createQueryBuilder()
+     *         ->union('SELECT 1 AS field1')
+     *         ->addUnion('SELECT 2 AS field1', 'SELECT 3 AS field1')
+     * </code>
+     *
+     * @return $this
+     */
+    public function addUnion(string|QueryBuilder $part, UnionType $type = UnionType::DISTINCT): self
+    {
+        $this->type = QueryType::UNION;
+
+        if (count($this->unionParts) === 0) {
+            throw new QueryException('No initial UNION part set, use union() to set one first.');
+        }
+
+        $this->unionParts[] = new Union($part, $type);
 
         $this->sql = null;
 
@@ -580,7 +636,7 @@ class QueryBuilder
      *
      * <code>
      *     $qb = $conn->createQueryBuilder()
-     *         ->delete('users', 'u')
+     *         ->delete('users u')
      *         ->where('u.id = :user_id')
      *         ->setParameter(':user_id', 1);
      * </code>
@@ -606,7 +662,7 @@ class QueryBuilder
      *
      * <code>
      *     $qb = $conn->createQueryBuilder()
-     *         ->update('counters', 'c')
+     *         ->update('counters c')
      *         ->set('c.value', 'c.value + 1')
      *         ->where('c.id = ?');
      * </code>
@@ -785,7 +841,7 @@ class QueryBuilder
      *
      * <code>
      *     $qb = $conn->createQueryBuilder()
-     *         ->update('counters', 'c')
+     *         ->update('counters c')
      *         ->set('c.value', 'c.value + 1')
      *         ->where('c.id = ?');
      * </code>
@@ -821,7 +877,7 @@ class QueryBuilder
      *     $or->add($qb->expr()->eq('c.id', 1));
      *     $or->add($qb->expr()->eq('c.id', 2));
      *
-     *     $qb->update('counters', 'c')
+     *     $qb->update('counters c')
      *         ->set('c.value', 'c.value + 1')
      *         ->where($or);
      * </code>
@@ -1307,6 +1363,30 @@ class QueryBuilder
         }
 
         return $query;
+    }
+
+    /**
+     * Converts this instance into a UNION string in SQL.
+     */
+    private function getSQLForUnion(): string
+    {
+        $countUnions = count($this->unionParts);
+        if ($countUnions < 2) {
+            throw new QueryException(
+                'Insufficient UNION parts give, need at least 2.'
+                . ' Please use union() and addUnion() to set enough UNION parts.',
+            );
+        }
+
+        return $this->connection->getDatabasePlatform()
+            ->createUnionSQLBuilder()
+            ->buildSQL(
+                new UnionQuery(
+                    $this->unionParts,
+                    $this->orderBy,
+                    new Limit($this->maxResults, $this->firstResult),
+                ),
+            );
     }
 
     /**

@@ -74,7 +74,7 @@ final class EasyConnectString
         return self::fromArray([
             'DESCRIPTION' => [
                 'ADDRESS' => [
-                    'PROTOCOL' => 'TCP',
+                    'PROTOCOL' => $params['driverOptions']['protocol'] ?? 'TCP',
                     'HOST' => $params['host'],
                     'PORT' => $params['port'] ?? 1521,
                 ],

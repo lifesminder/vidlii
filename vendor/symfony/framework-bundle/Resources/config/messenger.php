@@ -18,6 +18,7 @@ use Symfony\Component\Messenger\Bridge\Beanstalkd\Transport\BeanstalkdTransportF
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
 use Symfony\Component\Messenger\EventListener\AddErrorDetailsStampListener;
 use Symfony\Component\Messenger\EventListener\DispatchPcntlSignalListener;
+use Symfony\Component\Messenger\EventListener\ResetMemoryUsageListener;
 use Symfony\Component\Messenger\EventListener\ResetServicesListener;
 use Symfony\Component\Messenger\EventListener\SendFailedMessageForRetryListener;
 use Symfony\Component\Messenger\EventListener\SendFailedMessageToFailureTransportListener;
@@ -25,6 +26,7 @@ use Symfony\Component\Messenger\EventListener\StopWorkerOnCustomStopExceptionLis
 use Symfony\Component\Messenger\EventListener\StopWorkerOnRestartSignalListener;
 use Symfony\Component\Messenger\Handler\RedispatchMessageHandler;
 use Symfony\Component\Messenger\Middleware\AddBusNameStampMiddleware;
+use Symfony\Component\Messenger\Middleware\DeduplicateMiddleware;
 use Symfony\Component\Messenger\Middleware\DispatchAfterCurrentBusMiddleware;
 use Symfony\Component\Messenger\Middleware\FailedMessageProcessingMiddleware;
 use Symfony\Component\Messenger\Middleware\HandleMessageMiddleware;
@@ -72,7 +74,7 @@ return static function (ContainerConfigurator $container) {
             ])
 
         ->set('serializer.normalizer.flatten_exception', FlattenExceptionNormalizer::class)
-            ->tag('serializer.normalizer', ['priority' => -880])
+            ->tag('serializer.normalizer', ['built_in' => true, 'priority' => -880])
 
         ->set('messenger.transport.native_php_serializer', PhpSerializer::class)
         ->alias('messenger.default_serializer', 'messenger.transport.native_php_serializer')
@@ -85,6 +87,11 @@ return static function (ContainerConfigurator $container) {
             ])
             ->tag('monolog.logger', ['channel' => 'messenger'])
             ->call('setLogger', [service('logger')->ignoreOnInvalid()])
+
+        ->set('messenger.middleware.deduplicate_middleware', DeduplicateMiddleware::class)
+            ->args([
+                service('lock.factory'),
+            ])
 
         ->set('messenger.middleware.add_bus_name_stamp_middleware', AddBusNameStampMiddleware::class)
             ->abstract()
@@ -211,6 +218,9 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 service('services_resetter'),
             ])
+
+        ->set('messenger.listener.reset_memory_usage', ResetMemoryUsageListener::class)
+            ->tag('kernel.event_subscriber')
 
         ->set('messenger.routable_message_bus', RoutableMessageBus::class)
             ->args([

@@ -1,6 +1,21 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add `$key` argument to `#[MapQueryString]` that allows using a specific key for argument resolving
+ * Support `Uid` in `#[MapQueryParameter]`
+ * Add `ServicesResetterInterface`, implemented by `ServicesResetter`
+ * Allow configuring the logging channel per type of exceptions in ErrorListener
+ 
+7.2
+---
+
+ * Remove `@internal` flag and add `@final` to `ServicesResetter`
+ * Add support for `SYMFONY_DISABLE_RESOURCE_TRACKING` env var
+ * Add support for configuring trusted proxies/headers/hosts via env vars
+
 7.1
 ---
 

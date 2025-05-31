@@ -117,7 +117,14 @@ class RouterListener implements EventSubscriberInterface
                 $attributes = [];
 
                 foreach ($parameters as $parameter => $value) {
-                    $attribute = $mapping[$parameter] ?? $parameter;
+                    if (!isset($mapping[$parameter])) {
+                        $attribute = $parameter;
+                    } elseif (\is_array($mapping[$parameter])) {
+                        [$attribute, $parameter] = $mapping[$parameter];
+                        $mappedAttributes[$attribute] = '';
+                    } else {
+                        $attribute = $mapping[$parameter];
+                    }
 
                     if (!isset($mappedAttributes[$attribute])) {
                         $attributes[$attribute] = $value;
@@ -140,15 +147,15 @@ class RouterListener implements EventSubscriberInterface
             unset($parameters['_route'], $parameters['_controller']);
             $request->attributes->set('_route_params', $parameters);
         } catch (ResourceNotFoundException $e) {
-            $message = sprintf('No route found for "%s %s"', $request->getMethod(), $request->getUriForPath($request->getPathInfo()));
+            $message = \sprintf('No route found for "%s %s"', $request->getMethod(), $request->getUriForPath($request->getPathInfo()));
 
             if ($referer = $request->headers->get('referer')) {
-                $message .= sprintf(' (from "%s")', $referer);
+                $message .= \sprintf(' (from "%s")', $referer);
             }
 
             throw new NotFoundHttpException($message, $e);
         } catch (MethodNotAllowedException $e) {
-            $message = sprintf('No route found for "%s %s": Method Not Allowed (Allow: %s)', $request->getMethod(), $request->getUriForPath($request->getPathInfo()), implode(', ', $e->getAllowedMethods()));
+            $message = \sprintf('No route found for "%s %s": Method Not Allowed (Allow: %s)', $request->getMethod(), $request->getUriForPath($request->getPathInfo()), implode(', ', $e->getAllowedMethods()));
 
             throw new MethodNotAllowedHttpException($e->getAllowedMethods(), $message, $e);
         }

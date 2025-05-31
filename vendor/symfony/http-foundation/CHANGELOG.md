@@ -1,6 +1,24 @@
 CHANGELOG
 =========
 
+7.3
+---
+
+ * Add support for iterable of string in `StreamedResponse`
+ * Add `EventStreamResponse` and `ServerEvent` classes to streamline server event streaming
+ * Add support for `valkey:` / `valkeys:` schemes for sessions
+ * `Request::getPreferredLanguage()` now favors a more preferred language above exactly matching a locale
+ * Allow `UriSigner` to use a `ClockInterface`
+ * Add `UriSigner::verify()`
+
+7.2
+---
+
+ * Add optional `$requests` parameter to `RequestStack::__construct()`
+ * Add optional `$v4Bytes` and `$v6Bytes` parameters to `IpUtils::anonymize()`
+ * Add `PRIVATE_SUBNETS` as a shortcut for private IP address ranges to `Request::setTrustedProxies()`
+ * Deprecate passing `referer_check`, `use_only_cookies`, `use_trans_sid`, `trans_sid_hosts`, `trans_sid_tags`, `sid_bits_per_character` and `sid_length` options to `NativeSessionStorage`
+
 7.1
 ---
 
@@ -32,7 +50,7 @@ CHANGELOG
  * Add `UriSigner` from the HttpKernel component
  * Add `partitioned` flag to `Cookie` (CHIPS Cookie)
  * Add argument `bool $flush = true` to `Response::send()`
-* Make `MongoDbSessionHandler` instantiable with the mongodb extension directly
+ * Make `MongoDbSessionHandler` instantiable with the mongodb extension directly
 
 6.3
 ---
