@@ -41,7 +41,7 @@ if ($Current_Order == "re") {
 
 //CATEGORY
 if ($Current_Cat == 0) {
-    $WHERE = " videos.category <> 100 AND videos.url <> 'CndS9berMs3' ";
+    $WHERE = " videos.category <> 0 AND videos.url <> 'CndS9berMs3' ";
 } else {
     $WHERE = " videos.category = $Current_Cat ";
 }
