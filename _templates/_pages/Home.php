@@ -305,11 +305,13 @@
                     <?= user_avatar2($Recommended_Channel["username"], 56, 56, $Recommended_Channel["avatar"]) ?>
                 </div>
                 <div class="body">
-                    <a href="/user/<?= $Recommended_Channel["displayname"] ?>" style="font-weight:bold;font-size:16px"><?= ($Recommended_Channel["channel_title"] != "") ? $Recommended_Channel["channel_title"] : $Recommended_Channel["displayname"] ?></a>
+                    <a href="/user/<?= $Recommended_Channel["displayname"] ?>" style="font-weight:bold;font-size:16px">
+                        <?= urldecode(($Recommended_Channel["channel_title"] != "") ? $Recommended_Channel["channel_title"] : $Recommended_Channel["displayname"]) ?>
+                    </a>
                     <? if (!empty($Recommended_Channel["channel_description"])) : ?>
                         <p>
                             <?php
-                                echo (strlen($Recommended_Channel["channel_description"]) > 48) ? substr($Recommended_Channel["channel_description"], 0, 48)."..." : $Recommended_Channel["channel_description"];
+                                echo urldecode((strlen($Recommended_Channel["channel_description"]) > 48) ? substr($Recommended_Channel["channel_description"], 0, 48)."..." : $Recommended_Channel["channel_description"]);
                             ?>
                         </p>
                     <? endif ?>

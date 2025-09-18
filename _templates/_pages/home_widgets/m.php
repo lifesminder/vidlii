@@ -9,7 +9,7 @@
         </div>
     </div>
     <div>
-        <div class="mp_hr">
+        <div class="<?php !empty($feed["popular_videos"]["data"]) ? "mp_hr" : "" ?>">
             <?php
                 $categories = [
                     1 => "Film & Animation",
@@ -28,8 +28,9 @@
                     14 => "Science & Technology",
                     15 => "Nonprofits & Activism"
                 ];
+                if(!empty($feed["popular_videos"]["data"])) {
+                    foreach ($feed["popular_videos"]["data"] as $Video => $Info) {
             ?>
-            <? foreach ($feed["popular_videos"]["data"] as $Video => $Info) : ?>
                 <div>
                     <a href="/videos?c=<?= $Info["category"] ?>&o=re&t=0"><?= $categories[$Info["category"]] ?></a>
                     <div class="th">
@@ -43,7 +44,16 @@
                         <div class="s_r"><?= show_ratings($Info,14,13) ?></div>
                     </div>
                 </div>
-            <? endforeach ?>
+            <?php
+                    }
+                } else {
+            ?>
+            <div class="v_v_bx">
+                <p>There are no any popular videos</p>
+            </div>
+            <?php
+                }
+            ?>
         </div>
     </div>
 </div>

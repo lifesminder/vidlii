@@ -530,7 +530,7 @@ CREATE TABLE `users` (
   `country` varchar(5) NOT NULL DEFAULT '',
   `website` varchar(128) NOT NULL DEFAULT '',
   `about` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `avatar` text NULL DEFAULT '',
+  `avatar` mediumblob NULL DEFAULT '',
   `cover` mediumblob DEFAULT NULL,
   `bg_version` int NOT NULL DEFAULT '1',
   `banner_version` int NOT NULL DEFAULT '1',

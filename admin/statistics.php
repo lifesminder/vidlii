@@ -4,7 +4,7 @@
     if (!$_USER->Is_Admin) {
         redirect("/admin/login");
     } else {
-        if($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod) && isset($_SESSION["admin_panel"])) {
+        if($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
             $Users_Stats = $DB->execute("SELECT count(username) as amount, reg_date FROM users GROUP BY DATE(users.reg_date)");
             $Videos_Stats = $DB->execute("SELECT count(url) as amount, uploaded_on FROM videos GROUP BY DATE(uploaded_on)");
             $Video_Comments = $DB->execute("SELECT count(url) as amount, date_sent FROM video_comments GROUP BY DATE(date_sent)");

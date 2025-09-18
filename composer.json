@@ -12,7 +12,8 @@
         "erusev/parsedown": "^1.7",
         "php-ffmpeg/php-ffmpeg": "^1.2",
         "bramus/router": "^1.6",
-        "twig/extra-bundle": "^3.20"
+        "twig/extra-bundle": "^3.20",
+        "symfony/translation": "^7.3"
     },
     "license": "mit",
     "autoload": {

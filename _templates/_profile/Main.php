@@ -37,7 +37,7 @@
 			</div>
 			<div class="cl"></div>
 			<? if ($Profile["a_age"] != 0) : ?><div class="hl_st">Age: <strong><?= get_age($Profile["birthday"]) ?></strong></div><? else : ?><div style="height:4px"></div><? endif ?>
-			<? if (!empty($Profile["channel_description"])) : ?><div class="hl_d"><?= DoLinks(nl2br(htmlspecialchars($Profile["channel_description"]))) ?></div><? endif ?>
+			<? if (!empty($Profile["channel_description"])) : ?><div class="hl_d"><?= DoLinks(nl2br(urldecode($Profile["channel_description"]))) ?></div><? endif ?>
 			<? if (!empty($Profile["i_occupation"])) : ?><div class="hl_st">Occupation: <strong><?= htmlspecialchars($Profile["i_occupation"]) ?></strong></div><? endif ?>
 			<? if (!empty($Profile["i_schools"])) : ?><div class="hl_st">Schools: <strong><?= htmlspecialchars($Profile["i_schools"]) ?></strong></div><? endif ?>
 			<? if (!empty($Profile["i_interests"])) : ?><div class="hl_st">Interests: <strong><?= htmlspecialchars($Profile["i_interests"]) ?></strong></div><? endif ?>

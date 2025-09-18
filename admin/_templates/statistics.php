@@ -332,7 +332,7 @@
         <div id="chartdiv4"></div>
     </div>
 </div>
-<div style="width:50%;float:left;">
+<div style="width:100%;">
     <div class="panel_box" style="">
         <strong>Video Uploads Graph</strong>
         <script>

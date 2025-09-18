@@ -111,7 +111,8 @@
         </div>
     </div>
 </div>
-    <div style="width:48%;margin-right:2%;float:left;">
+<div style="display: flex; justify-content: space-between">
+<div style="width:48%;margin-right:2%;">
     <div class="panel_box">
         <strong>Edit Video</strong>
         <form action="/admin/videos" method="POST">
@@ -124,7 +125,7 @@
         </form>
     </div>
 </div>
-<div style="width:50%;float:left;">
+<div style="width:50%;">
     <div class="panel_box" style="overflow-y:auto;max-height:450px">
         <strong>Recent Ratings</strong>
         <? foreach ($Ratings as $Rating) : ?>
@@ -141,6 +142,7 @@
             </div>
         <? endforeach ?>
     </div>
+</div>
 </div>
 <? else : ?>
     <div style="padding-bottom:11px;margin-bottom:11px;border-bottom:1px solid #e2e2e2;overflow:hidden">

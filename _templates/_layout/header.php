@@ -4,10 +4,10 @@
         <a href="/"><img src="<?= $LOGO_VALUE ?>" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii"></a>
         <nav>
             <ul>
-                <a href="/"<? if ($_PAGE->Page_Type == "Home") : ?> id="pr_sel"<? endif ?>><li>Home</li></a>
-                <a href="/videos"<? if ($_PAGE->Page_Type == "Videos") : ?> id="pr_sel"<? endif ?>><li>Videos</li></a>
-                <a href="/channels"<? if ($_PAGE->Page_Type == "Channels") : ?> id="pr_sel"<? endif ?>><li>Channels</li></a>
-                <a href="/community"<? if ($_PAGE->Page_Type == "Community") : ?> id="pr_sel"<? endif ?>><li>Community</li></a>
+                <a href="/"<? if ($_PAGE->Page_Type == "Home") : ?> id="pr_sel"<? endif ?>><li><?php echo __("navbar_home", "Home"); ?></li></a>
+                <a href="/videos"<? if ($_PAGE->Page_Type == "Videos") : ?> id="pr_sel"<? endif ?>><li><?php echo __("navbar_videos", "Videos"); ?></li></a>
+                <a href="/channels"<? if ($_PAGE->Page_Type == "Channels") : ?> id="pr_sel"<? endif ?>><li><?php echo __("navbar_channels", "Channels"); ?></li></a>
+                <a href="/community"<? if ($_PAGE->Page_Type == "Community") : ?> id="pr_sel"<? endif ?>><li><?php echo __("navbar_community", "Community"); ?></li></a>
             </ul>
         </nav>
         <nav id="sm_nav">

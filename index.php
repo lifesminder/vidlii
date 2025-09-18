@@ -145,13 +145,14 @@
     $router->all("/(.*)", function($url) {
         global $api, $engine;
 
-        $url_chk = strtolower($url);
+        $url_chk = strtolower($url); $urls = str_contains($url, "/") ? explode("/", $url) : [$url];
         $static_page = "static/pages/$url.md";
         $system_page = "$url.php";
-        $profile_page = (bool)$api->db("SELECT count(*) from users where username = '".explode("/", $url)[0]."' or displayname = '".explode("/", $url)[0]."'")["data"][0]["count(*)"];
-        
+        $profile_page = (bool)$api->db("SELECT count(*) from users where username = '".$urls[0]."' or displayname = '".$urls[0]."'")["data"]["count(*)"];
+
         if($profile_page) {
-            $_GET["user"] = $url;
+            $_GET["user"] = $urls[0];
+            $_GET["page"] = (count($urls) > 1) ? $urls[1] : "";
             include_once "profile.php";
         } else if(file_exists($static_page)) {
             $content = file_get_contents($static_page);

@@ -247,7 +247,7 @@
                 <? if (!empty($Profile["channel_description"] && $Profile["a_description"])) : ?>
                 <div class="pr_inf_sct">
                     <div style="display:none"></div>
-                    <div style="float:none"><?= DoLinks(nl2br(htmlspecialchars($Profile["channel_description"]))) ?></div>
+                    <div style="float:none"><?= DoLinks(nl2br(urldecode($Profile["channel_description"]))) ?></div>
                 </div>
                 <? endif ?>
                 <? if (!empty($Profile["about"] && $Profile["about"])) : ?>

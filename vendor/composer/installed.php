@@ -3,7 +3,7 @@
         'name' => 'vidlii/vidlii',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'a35c56cc03fb01c3d97c8c21588570ffe64675a4',
+        'reference' => '4aeda4b751cb07121fb21bcbbf2eec9d1c48a749',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -541,6 +541,15 @@
                 0 => '1.1|2.0|3.0',
             ),
         ),
+        'symfony/translation' => array(
+            'pretty_version' => 'v7.3.3',
+            'version' => '7.3.3.0',
+            'reference' => 'e0837b4cbcef63c754d89a4806575cada743a38d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/translation',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'symfony/translation-contracts' => array(
             'pretty_version' => 'v3.6.0',
             'version' => '3.6.0.0',
@@ -549,6 +558,12 @@
             'install_path' => __DIR__ . '/../symfony/translation-contracts',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'symfony/translation-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '2.3|3.0',
+            ),
         ),
         'symfony/twig-bridge' => array(
             'pretty_version' => 'v7.3.0',
@@ -616,7 +631,7 @@
         'vidlii/vidlii' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a35c56cc03fb01c3d97c8c21588570ffe64675a4',
+            'reference' => '4aeda4b751cb07121fb21bcbbf2eec9d1c48a749',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -1,6 +1,7 @@
 <?php
     require_once $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
-    ini_set( 'session.cookie_httponly', 1 );
+
+    // ini_set('session.cookie_httponly', 1);
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
     // initializing environment
@@ -14,7 +15,7 @@
 	
     // Constraints
     define("ROOT_FOLDER", $_SERVER["DOCUMENT_ROOT"]);
-    define("UPLOAD_LIMIT", 1024 * 1024 * 1024 * 2.01);
+    define("UPLOAD_LIMIT", (int)$_ENV["uploadLimit"] ?? 1024 * 1024 * 1024 * 2.01);
     define("ALLOWED_FORMATS", ["FLV","MP4","WMV","AVI","MOV","M4V","MPG","MPEG","WEBM","MOV","MKV","3GP"]);
 
     define("DB_HOST", $_ENV["host"]);
@@ -68,22 +69,9 @@
     // VidLii Player Script/CSS Version
     $VLPVERSION = round(mt_rand(0,10000));
 
+    // Logo
     $LOGO_VALUE = $DB->execute("SELECT value FROM settings WHERE name = 'logo'", true)["value"] ?? 0;
-
-    if ($LOGO_VALUE == "0") { $LOGO_VALUE = "/img/Vidlii6.png"; } else { $LOGO_VALUE = "/img/$LOGO_VALUE.png"; }
-
-    /*
-    if (!isset($_SESSION["secret_id"])) {
-
-        $_SESSION["secret_id"] = random_string("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 14);
-
-    }
-
-    $_SESSION["ten2020Holiday"] = date("d", time());
-
-    //Load for traffic regulation
-    if ($_SESSION["ten2020Holiday"] > 20) { $_SESSION["ten2020Holiday"] = "Today"; }
-    */
+    $LOGO_VALUE = ($LOGO_VALUE == "0") ? "/img/Vidlii6.png" : "/img/$LOGO_VALUE.png";
 
     if($_USER->logged_in && $_USER->username == "VidLssii") {
         //session_destroy();
