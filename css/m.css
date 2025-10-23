@@ -3278,6 +3278,40 @@ select {
     border-color: #ff0000;
 }
 
+.account_dropdown {
+    display: inline-block;
+    position: relative;
+}
+.account_dropdown:hover .inner {
+    display: block;
+}
+.account_dropdown .inner {
+    display: none;
+    position: absolute;
+    z-index: 99;
+    background-color: #def2fd;
+    border: 1px solid #A0B1DC;
+    margin-top: -3px;
+    width: 200px;
+}
+.account_dropdown .first {
+    border-top: none;
+}
+.account_dropdown div {
+    display: block;
+    border-top: 1px solid #A0B1DC;
+}
+.account_dropdown .inner a {
+    font-size: 12px;
+    display: block;
+    padding: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.account_dropdown .inner a:hover {
+    background-color: #fff;
+}
+
 #page {
     margin: 10px auto !important;
     position: relative;

@@ -29,7 +29,19 @@
         ?>
         <main class="bottom_wrapper" id="st">
             <div style="font-size:20px;padding-bottom:9px;border-bottom:1px solid #ccc">
-                <a href="/inbox?page=messages">Inbox</a><span style="word-spacing:10px"> / </span><?= $Inbox_Title ?>
+                <div class="account_dropdown">
+                    <a href="/my_account" class="dropbtn">My Account <span style="font-size: 9px;">▼</span></a>
+                    <div class="inner">
+                        <div class="first"><a href="/inbox">Inbox</a></div>
+                        <div><a href="/my_videos">Videos, Favorites & Playlists</a></div>
+                        <div><a href="/my_subscriptions">Subscriptions</a></div>
+                        <div><a href="/channel_setup">My Channel</a></div>
+                        <div><a href="/my_account">Account Settings</a></div>
+                        <div><a href="/analytics">Insight: Statistics and Data</a></div>
+                    </div>
+                </div>
+                <span style="word-spacing:10px; margin: 0 10.56px 0 10.56px;">/</span>
+                <?= $Inbox_Title ?>
             </div>
             <div class="settings_menu">
                 <a href="/inbox?page=messages" <? if ($_PAGE->Page == "Messages" || $_PAGE->Page == "Send") : ?>id="nav_sel"<? endif ?>>Personal Messages<? if ($Inbox_Amounts["messages"] > 0) : ?><div style="float:right">(<?= $Inbox_Amounts["messages"] ?>)</div><? endif ?></a>
