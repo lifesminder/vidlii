@@ -3,7 +3,7 @@
 		<div style="display:none" id="ch_user"><?= $Profile["username"] ?></div>
 		<div style="display:none" id="ch_displayname"><?= $Profile["displayname"] ?></div>
 		<div class="prbx_hd hl_hd">
-			<div><? if (!empty($Profile["channel_title"])) : ?><?= $Profile["channel_title"] ?><? else : ?><?= $Profile["displayname"] ?> Channel<? endif ?></div>
+			<div><? if (!empty($Profile["channel_title"])) : ?><?= urldecode($Profile["channel_title"]) ?><? else : ?><?= $Profile["displayname"] ?> Channel<? endif ?></div>
 			<? if (!$Is_Blocked && !$Has_Blocked) : ?>
 			<div><div class="valign"><? if (!$Is_OWNER) : ?><?= subscribe_button2($Profile["username"]) ?><? else : ?><a href="/my_account" class="yel_btn">Edit Channel</a><? endif ?></div></div>
 			<? else : ?>
@@ -103,7 +103,7 @@
 	</section>
 	<section>
 		<div class="prbx_hd nm_hd">
-			<? if (empty($Profile["connect"])) : ?>Connect with <?= ($Profile["channel_title"] != "") ? $Profile["channel_title"] : $Profile["displayname"] ?><? else : ?><?= $Profile["connect"] ?><? endif ?>
+			<? if (empty($Profile["connect"])) : ?>Connect with <?= ($Profile["channel_title"] != "") ? urldecode($Profile["channel_title"]) : $Profile["displayname"] ?><? else : ?><?= $Profile["connect"] ?><? endif ?>
 		</div>
 		<div class="prbx_in nm_in">
 			<table class="connect" width="100%">

@@ -9,7 +9,7 @@
         </div>
     </div>
     <div>
-        <div class="<?php !empty($feed["popular_videos"]["data"]) ? "mp_hr" : "" ?>">
+        <div class="mp_hr">
             <?php
                 $categories = [
                     1 => "Film & Animation",

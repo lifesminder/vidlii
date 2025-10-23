@@ -2,7 +2,6 @@
 
 {% block body %}
     <ul id="browse-items-primary">
-        {% if videos.count > 0 %}
         <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
             <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
                 <span class="yt-uix-button-icon-wrapper">
@@ -38,9 +37,10 @@
                     {% endif %}
                 </ul>
             </button>
-            {%else%}
+            {%elseif videos.count > 0%}
             <span class="branded-page-module-title">Uploads</span>
             {%endif%}
+            {%if videos.count > 0 or favorites_count > 0%}
             <button class="subnav-flow-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" aria-haspopup="true" type="button" aria-expanded="false" onclick=";return false;" data-button-menu-indicate-selected="true">
                 <span class="yt-uix-button-content">{% if flow == "list" %}List{% else %}Grid{% endif %}</span>
                 <span class="yt-uix-button-arrow yt-sprite"></span>
@@ -56,6 +56,7 @@
                     {% endif %}
                 </ul>
             </button>
+            {%endif%}
             {%if videos.count > 1%}
             <button aria-expanded="false" onclick=";return false;" aria-haspopup="true" type="button" class="subnav-sort-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" data-button-menu-indicate-selected="true">
                 <span class="yt-uix-button-content">{%if sort == "da"%}Date added (oldest){%elseif sort == "p"%}Most popular{%else%}Date added (newest){%endif%}</span>
@@ -87,7 +88,6 @@
             </button>
             {%endif%}
         </li>
-        {% endif %}
         {% if videos.count > 0 %}
             {%if flow == "grid"%}
             <ul id="channels-browse-content-grid" class="channels-browse-content-grid branded-page-gutter-padding grid-lockups-container">
@@ -176,9 +176,9 @@
             {%endfor%}
             {%endif%}
         {% else %}
-        <center>
+        <p class="display-message">
             This channel doesn't have any videos
-        </center>
+        </p>
         {% endif %}
     </ul>
 {% endblock %}

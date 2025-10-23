@@ -11,10 +11,26 @@
         function template($file, $args = [], $return = false) {
             include_once "_includes/init.php";
 
+            // Custom filters and functionality
+            $filter = new \Twig\TwigFilter("url_decode", function($string) {
+                return urldecode($string);
+            });
+            $helpArticle = new \Twig\TwigFunction('help', function($article) {
+                $article = $this->api->db("SELECT id from help where guid = \"$article\"");
+                if($article["count"] == 1) {
+                    $id = $article["data"]["id"];
+                    return "/help/{$id}";
+                }
+                return "/help";
+            });
+
             $path = "_templates";
             $loader = new \Twig\Loader\FilesystemLoader("$path/");
             $twig = new \Twig\Environment($loader);
             $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
+            $twig->addFilter($filter);
+            $twig->addFunction($helpArticle);
+            $parsedown = new \Parsedown();
 			$fullfile = "$path/$file";
 
             // Fetch configuration
@@ -25,6 +41,7 @@
                     $args["config"][$key["name"]] = $key["value"];
                 }
             }
+            $args["config"]["top_text"] = $parsedown->text($args["config"]["top_text"]);
             $args["config"]["header"] = $_THEMES->Header;
             $args["config"]["title"] = (isset($_ENV["title"]) && $_ENV["title"] != "") ? $_ENV["title"] : "VidLii";
             $args["config"]["slogan"] = (isset($_ENV["slogan"]) && $_ENV["slogan"] != "") ? $_ENV["slogan"] : "VidLii - Display Yourself";
@@ -35,10 +52,9 @@
 
             // Modify some "keywords" defined by us
             if(isset($args["content"])) {
-                $parsedown = new \Parsedown();
                 $args["content"] = $parsedown->text($args["content"]);
             }
-            
+
             if(!$return) {
                 if(file_exists($fullfile)) echo $twig->render($file, $args);
                 else $this->template("error.html");

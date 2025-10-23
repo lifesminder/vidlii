@@ -20,13 +20,13 @@
 </head>
 <body>
     {%if config.top_text is defined%}
-    <div class="top">{{config.top_text}}</div>
+    <div class="top">{{config.top_text|raw}}</div>
     {%endif%}
     {%if config.header is defined and config.header == 2%}
         <div id="masthead-container">
             <div id="masthead" dir="ltr">
                 <a id="logo-container" href="/" title="{{config.title}} home">
-                    <img id="logo" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="{{config.title}} home">
+                    <img id="logo" src="/img/one/pixel.gif" alt="{{config.title}} home">
                 </a>
                 <div id="masthead-utility" class="">
                     <a href="/browse">Browse</a><a href="/upload" class="split">Upload</a>

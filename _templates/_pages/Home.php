@@ -311,7 +311,7 @@
                     <? if (!empty($Recommended_Channel["channel_description"])) : ?>
                         <p>
                             <?php
-                                echo urldecode((strlen($Recommended_Channel["channel_description"]) > 48) ? substr($Recommended_Channel["channel_description"], 0, 48)."..." : $Recommended_Channel["channel_description"]);
+                                echo urldecode((strlen($Recommended_Channel["channel_description"]) > 48) ? substr(urldecode($Recommended_Channel["channel_description"]), 0, 47)."..." : $Recommended_Channel["channel_description"]);
                             ?>
                         </p>
                     <? endif ?>

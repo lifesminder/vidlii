@@ -27,40 +27,30 @@
         }
         case 4: {
 ?>
-    <script src="https://www.youtube.com/yts/jslib/angular.min-vflsDVE7V.js"></script>
-    <script src="https://www.youtube.com/yts/jsbin/player-vflVZNDz1/en_US/remote.js"></script>
-    <script src="https://www.youtube.com/yts/jsbin/player-vflVZNDz1/en_US/annotations_module.js"></script>
-    <script src="https://www.youtube.com/yts/jsbin/player-vflVZNDz1/en_US/endscreen.js"></script>
-    <script src="https://www.youtube.com/yts/jsbin/player-vflVZNDz1/en_US/captions.js"></script>
-    <script src="https://www.youtube.com/yts/jsbin/player-vflVZNDz1/en_US/remote.js"></script>
+    <link rel="stylesheet" href="/css/r/font.css">
+    <script src="/js/one/angular.min-vflsDVE7V.js"></script>
+    <script src="/js/one/remote.js"></script>
+    <script src="/js/one/annotations_module.js"></script>
+    <script src="/js/one/endscreen.js"></script>
+    <script src="/js/one/captions.js"></script>
     <script>
         (function(){var b={a:"content-snap-width-1",b:"content-snap-width-2",c:"content-snap-width-3"};function f(){var a=[],c;for(c in b)a.push(b[c]);return a}
-function h(a){var c=f().concat(["guide-pinned","show-guide"]),e=c.length,g=[];a.replace(/\S+/g,function(a){for(var d=0;d<e;d++)if(a==c[d])return;g.push(a)});
-return g}
-;function k(a,c,e){var g=document.getElementsByTagName("html")[0],d=h(g.className);a&&1251<=(window.innerWidth||document.documentElement.clientWidth)&&(d.push("guide-pinned"),c&&d.push("show-guide"));e&&(e=(window.innerWidth||document.documentElement.clientWidth)-21-50,1251<=(window.innerWidth||document.documentElement.clientWidth)&&a&&c&&(e-=230),d.push(1262<=e?"content-snap-width-3":1056<=e?"content-snap-width-2":"content-snap-width-1"));g.className=d.join(" ")}
-var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!m.execScript||m.execScript("var "+l[0]);for(var n;l.length&&(n=l.shift());)l.length||void 0===k?m[n]&&m[n]!==Object.prototype[n]?m=m[n]:m=m[n]={}:m[n]=k;}).call(this);
-
-      try {window.ytbuffer = {};ytbuffer.handleClick = function(e) {var element = e.target || e.srcElement;while (element.parentElement) {if (/(^| )yt-can-buffer( |$)/.test(element.className)) {window.ytbuffer = {bufferedClick: e};element.className += ' yt-is-buffered';break;}element = element.parentElement;}};if (document.addEventListener) {document.addEventListener('click', ytbuffer.handleClick);} else {document.attachEvent('onclick', ytbuffer.handleClick);}} catch(e) {}
-
-    yt.www.masthead.sizing.runBeforeBodyIsReady(true,true,true);
-  </script>
-    <script src="https://www.youtube.com/yts/jsbin/scheduler-vfl2BcQXs/scheduler.js" type="text/javascript" name="scheduler/scheduler" class="js-httpswwwyoutubecomytsjsbinschedulervfl2BcQXsschedulerjs"></script>
-    <link rel="stylesheet" href="https://www.youtube.com/yts/cssbin/www-core-vflJlY1EV.css" name="www-core" class="css-httpswwwyoutubecomytscssbinwwwcorevflJlY1EVcss">
-    <link rel="stylesheet" href="https://www.youtube.com/yts/cssbin/player-vfl8_2Wov/www-player.css" name="player" class="css-httpswwwyoutubecomytscssbinplayervfl8_2Wovwwwplayercss">
-    <link rel="stylesheet" href="https://www.youtube.com/yts/cssbin/www-pageframe-vflBE-miK.css" name="www-pageframe" class="css-httpswwwyoutubecomytscssbinwwwpageframevflBEmiKcss">
-    <link rel="stylesheet" href="https://www.youtube.com/yts/cssbin/www-guide-vflY8baDX.css" name="www-guide" class="css-httpswwwyoutubecomytscssbinwwwguidevflY8baDXcss">
-    <link rel="stylesheet" href="https://www.youtube.com/yts/cssbin/www-home-c4-vflALM-TN.css" name="www-home-c4" class="css-httpswwwyoutubecomytscssbinwwwhomec4vflALMTNcss">
+        function h(a){var c=f().concat(["guide-pinned","show-guide"]),e=c.length,g=[];a.replace(/\S+/g,function(a){for(var d=0;d<e;d++)if(a==c[d])return;g.push(a)});
+        return g}
+        ;function k(a,c,e){var g=document.getElementsByTagName("html")[0],d=h(g.className);a&&1251<=(window.innerWidth||document.documentElement.clientWidth)&&(d.push("guide-pinned"),c&&d.push("show-guide"));e&&(e=(window.innerWidth||document.documentElement.clientWidth)-21-50,1251<=(window.innerWidth||document.documentElement.clientWidth)&&a&&c&&(e-=230),d.push(1262<=e?"content-snap-width-3":1056<=e?"content-snap-width-2":"content-snap-width-1"));g.className=d.join(" ")}
+        var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!m.execScript||m.execScript("var "+l[0]);for(var n;l.length&&(n=l.shift());)l.length||void 0===k?m[n]&&m[n]!==Object.prototype[n]?m=m[n]:m=m[n]={}:m[n]=k;}).call(this);
+        try {window.ytbuffer = {};ytbuffer.handleClick = function(e) {var element = e.target || e.srcElement;while (element.parentElement) {if (/(^| )yt-can-buffer( |$)/.test(element.className)) {window.ytbuffer = {bufferedClick: e};element.className += ' yt-is-buffered';break;}element = element.parentElement;}};if (document.addEventListener) {document.addEventListener('click', ytbuffer.handleClick);} else {document.attachEvent('onclick', ytbuffer.handleClick);}} catch(e) {}
+        yt.www.masthead.sizing.runBeforeBodyIsReady(true,true,true);
+    </script>
+    <script src="/js/one/scheduler.js" type="text/javascript" name="scheduler/scheduler" class="js-httpswwwyoutubecomytsjsbinschedulervfl2BcQXsschedulerjs"></script>
+    <link rel="stylesheet" href="/css/one/www-core.css" name="www-core" class="css-httpswwwyoutubecomytscssbinwwwcorevflJlY1EVcss">
+    <link rel="stylesheet" href="/css/one/www-player.css" name="player" class="css-httpswwwyoutubecomytscssbinplayervfl8_2Wovwwwplayercss">
+    <link rel="stylesheet" href="/css/one/www-pageframe.css" name="www-pageframe" class="css-httpswwwyoutubecomytscssbinwwwpageframevflBEmiKcss">
+    <link rel="stylesheet" href="/css/one/www-guide.css" name="www-guide" class="css-httpswwwyoutubecomytscssbinwwwguidevflY8baDXcss">
+    <link rel="stylesheet" href="/css/one/www-home.css" name="www-home-c4" class="css-httpswwwyoutubecomytscssbinwwwhomec4vflALMTNcss">
     <style>.exp-invert-logo .hats-logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_mini_gray-vflfanGkh.png);width: 65px;height: 15px;}.exp-invert-logo #header:before,.exp-invert-logo .ypc-join-family-header .logo,.exp-invert-logo #footer-logo .footer-logo-icon,.exp-invert-logo #yt-masthead #logo-container .logo,.exp-invert-logo #masthead #logo-container,.exp-invert-logo .admin-masthead-logo a,.exp-invert-logo #yt-sidebar-styleguide-logo #logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_small-vflHpzGZm.png);width: 100px;height: 30px;}.exp-invert-logo.inverted-hdpi #header:before,.exp-invert-logo.inverted-hdpi .ypc-join-family-header .logo,.exp-invert-logo.inverted-hdpi #footer-logo .footer-logo-icon,.exp-invert-logo.inverted-hdpi #yt-masthead #logo-container .logo,.exp-invert-logo.inverted-hdpi #masthead #logo-container,.exp-invert-logo.inverted-hdpi .admin-masthead-logo a,.exp-invert-logo.inverted-hdpi #yt-sidebar-styleguide-logo #logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_small_2x-vfl4_cFqn.png);background-size: 100px 30px;width: 100px;height: 30px;}.exp-invert-logo.exp-fusion-nav-redesign .masthead-logo-renderer-logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo-vflLfk4yD.png);width: 40px;height: 28px;}.exp-invert-logo.inverted-hdpi.exp-fusion-nav-redesign .masthead-logo-renderer-logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo_2x-vflXx5Pg3.png);width: 40px;height: 28px;}@media screen and (max-width: 656px) {.exp-invert-logo #yt-masthead #logo-container .logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo-vflLfk4yD.png);width: 40px;height: 28px;}.exp-invert-logo.inverted-hdpi #yt-masthead #logo-container .logo {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo_2x-vflXx5Pg3.png);background-size: 40px 28px;width: 40px;height: 28px;}}@media only screen and (min-width: 0px) and (max-width: 498px),only screen and (min-width: 499px) and (max-width: 704px) {.exp-invert-logo.exp-responsive #yt-masthead #logo-container {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo-vflLfk4yD.png);width: 40px;height: 28px;}.exp-invert-logo.inverted-hdpi.exp-responsive #yt-masthead #logo-container {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo_2x-vflXx5Pg3.png);background-size: 40px 28px;width: 40px;height: 28px;}}.exp-invert-logo #yt-masthead #logo-container .logo-red {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_youtube_red-vflZxcSR1.png);width: 132px;height: 30px;}.exp-invert-logo.inverted-hdpi #yt-masthead #logo-container .logo-red {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_youtube_red_2x-vflOSHA_n.png);background-size: 132px 30px;width: 132px;height: 30px;}.exp-invert-logo .guide-item .guide-video-youtube-red-icon {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/video_youtube_red-vflovGTdz.png);width: 20px;height: 20px;}.exp-invert-logo.inverted-hdpi .guide-item .guide-video-youtube-red-icon {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/video_youtube_red_2x-vflqMdgEM.png);background-size: 20px 20px;width: 20px;height: 20px;}.exp-invert-logo .guide-item:hover .guide-video-youtube-red-icon,.exp-invert-logo .guide-item.guide-item-selected .guide-video-youtube-red-icon {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/video_youtube_red_hover-vflgV4Gv0.png);width: 20px;height: 20px;}.exp-invert-logo.inverted-hdpi .guide-item:hover .guide-video-youtube-red-icon,.exp-invert-logo.inverted-hdpi .guide-item.guide-item-selected .guide-video-youtube-red-icon {background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/video_youtube_red_hover_2x-vflYjZHvf.png);background-size: 20px 20px;width: 20px;height: 20px;}.exp-invert-logo li.guide-section h3,.exp-invert-logo li.guide-section h3 a {color: #f00;}.exp-invert-logo a.yt-uix-button-epic-nav-item:hover,.exp-invert-logo a.yt-uix-button-epic-nav-item.selected,.exp-invert-logo a.yt-uix-button-epic-nav-item.yt-uix-button-toggled,.exp-invert-logo a.yt-uix-button-epic-nav-item.partially-selected,.exp-invert-logo a.yt-uix-button-epic-nav-item.partially-selected:hover,.exp-invert-logo button.yt-uix-button-epic-nav-item:hover,.exp-invert-logo button.yt-uix-button-epic-nav-item.selected,.exp-invert-logo button.yt-uix-button-epic-nav-item.yt-uix-button-toggled,.exp-invert-logo .epic-nav-item:hover,.exp-invert-logo .epic-nav-item.selected,.exp-invert-logo .epic-nav-item.yt-uix-button-toggled,.exp-invert-logo .epic-nav-item-heading,.exp-invert-logo .yt-gb-shelf-item-thumbtab.yt-gb-selected-shelf-tab::before {border-color: #f00;}.exp-invert-logo .resume-playback-progress-bar,.exp-invert-logo .yt-uix-button-subscribe-branded,.exp-invert-logo .yt-uix-button-subscribe-branded[disabled],.exp-invert-logo .yt-uix-button-subscribe-branded[disabled]:hover,.exp-invert-logo .yt-uix-button-subscribe-branded[disabled]:active,.exp-invert-logo .yt-uix-button-subscribe-branded[disabled]:focus,.exp-invert-logo .sb-notif-on .yt-uix-button-content,.exp-invert-logo .guide-item.guide-item-selected,.exp-invert-logo .guide-item.guide-item-selected:hover,.exp-invert-logo .guide-item.guide-item-selected .yt-deemphasized-text,.exp-invert-logo .guide-item.guide-item-selected:hover .yt-deemphasized-text {background-color: #f00;}.exp-invert-logo .yt-uix-button-subscribe-branded:hover {background-color: #d90a17;}.exp-invert-logo .yt-uix-button-subscribe-branded.yt-is-buffered,.exp-invert-logo .yt-uix-button-subscribe-branded:active,.exp-invert-logo .yt-uix-button-subscribe-branded.yt-uix-button-toggled,.exp-invert-logo .yt-uix-button-subscribe-branded.yt-uix-button-active,.exp-invert-logo .yt-uix-button-subscribed-branded.external,.exp-invert-logo .yt-uix-button-subscribed-branded.external[disabled],.exp-invert-logo .yt-uix-button-subscribed-branded.external:active,.exp-invert-logo .yt-uix-button-subscribed-branded.external.yt-uix-button-toggled,.exp-invert-logo .yt-uix-button-subscribed-branded.external.yt-uix-button-active {background-color: #a60812;}</style><style>.exp-invert-logo #header:before, .exp-invert-logo .ypc-join-family-header .logo, .exp-invert-logo #footer-logo .footer-logo-icon, .exp-invert-logo #yt-masthead #logo-container .logo, .exp-invert-logo #masthead #logo-container, .exp-invert-logo .admin-masthead-logo a, .exp-invert-logo #yt-sidebar-styleguide-logo #logo { background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_small_2x-vfl4_cFqn.png); background-size: 100px 30px; } .exp-invert-logo #yt-masthead #logo-container .logo-red { background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/logo_youtube_red_2x-vflOSHA_n.png); background-size: 132px 30px; } @media only screen and (min-width: 0px) and (max-width: 498px), only screen and (min-width: 499px) and (max-width: 704px) { .exp-invert-logo.exp-responsive #yt-masthead #logo-container { background: no-repeat url(https://www.youtube.com/yts/img/ringo/hitchhiker/yt_play_logo_2x-vflXx5Pg3.png); background-size: 40px 28px; } } .guide-sort-container {display: none}</style>
-    <link rel="manifest" href="https://web.archive.org/web/20180131232212/https://www.youtube.com/manifest.json">
-    <link class="css-httpswwwyoutubecomytscssbinwwwpageframedelayloadedvflNXOrSacss" rel="stylesheet" href="https://www.youtube.com/yts/cssbin/www-pageframedelayloaded-vflNXOrSa.css" name="www-pageframedelayloaded">
-    <!--
-    <script src="/js/one/scheduler.js" type="text/javascript" name="scheduler/scheduler" class="js-httpyoutubecomytsjsbinschedulervfl3S_KkKschedulerjs"></script>
-    <link rel="stylesheet" href="/css/one/www-core.css" name="www-core" class="css-httpyoutubecomytscssbinwwwcorevflRlRixQcss">
-    <link rel="stylesheet" href="/css/one/www-player.css" name="player/www-player" class="css-httpyoutubecomytscssbinplayervflyJJRIpwwwplayercss">
-    <link rel="stylesheet" href="/css/one/www-pageframe.css" name="www-pageframe" class="css-httpyoutubecomytscssbinwwwpageframevfldKQBmrcss">
-    <link rel="stylesheet" href="/css/one/www-guide.css" name="www-guide" class="css-httpyoutubecomytscssbinwwwguidevflybhooecss">
-    <link rel="stylesheet" href="/css/one/www-home.css" name="www-home-c4" class="css-httpyoutubecomytscssbinwwwhomec4vflSOyhuzcss">
-    -->
+    <link rel="manifest" href="/css/manifest.json">
+    <link class="css-httpswwwyoutubecomytscssbinwwwpageframedelayloadedvflNXOrSacss" rel="stylesheet" href="/css/one/www-pageframedelayloaded.css" name="www-pageframedelayloaded">
     <style>
         .n_head, .n_head input, .n_head select {
             font-family: sans-serif !important;
@@ -398,9 +388,11 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                         }
                         case "channels": {
                             $args["featuredblock"] = "false";
+                            $args["multiple"] = true;
                             $args["view"] = (isset($_GET["view"]) && (int)$_GET["view"] != 60) ? (int)$_GET["view"] : 60;
+                            $channels = [];
+
                             if(strlen($Profile["featured_channels"]) > 0) {
-                                $featured_channels = [];
                                 $args["featured_channels"] = explode(",", $Profile["featured_channels"]);
                                 foreach($args["featured_channels"] as $channel) {
                                     $channel = $api->db("SELECT displayname, channel_title, channel_description, (select count(*) from subscriptions where subscription = '$channel') as subscribers, partner, is_admin, is_mod from users where username = '$channel'");
@@ -408,10 +400,24 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                                         $channel = $channel["data"];
                                         $channel["videos"] = $api->db("SELECT count(*) from videos where uploaded_by = \"".$channel["displayname"]."\" and status > 0")["data"]["count(*)"];
                                     }
-                                    array_push($featured_channels, $channel);
+                                    array_push($channels, $channel);
                                 }
-                                $args["featured_channels"] = $featured_channels;
+                            } else {
+                                $args["view"] = 23; $args["multiple"] = false;
+                                $subscriptions = $api->db("SELECT * from subscriptions where subscriber = \"".$Profile["displayname"]."\"", true);
+                                if($subscriptions["count"] > 0) {
+                                    foreach($subscriptions["data"] as $channel) {
+                                        $channel = $api->db("SELECT displayname, channel_title, channel_description, (select count(*) from subscriptions where subscription = '$channel') as subscribers, partner, is_admin, is_mod from users where username = '".$channel["subscription"]."'");
+                                        if($channel["count"] == 1) {
+                                            $channel = $channel["data"];
+                                            $channel["videos"] = $api->db("SELECT count(*) from videos where uploaded_by = \"".$channel["displayname"]."\" and status > 0")["data"]["count(*)"];
+                                        }
+                                        array_push($channels, $channel);
+                                    }
+                                }
                             }
+
+                            $args["channels"] = $channels;
                             break;
                         }
                     }
@@ -438,7 +444,7 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
                 </div>
                 <div id="footer-logo">
                     <a href="/" title="VidLii home">
-                        <img src="https://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="VidLii home">
+                        <img src="/img/one/pixel.gif" alt="VidLii home">
                     </a>
                     <span id="footer-divider"></span>
                 </div>
@@ -470,8 +476,8 @@ var l=["yt","www","masthead","sizing","runBeforeBodyIsReady"],m=this;l[0]in m||!
         <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/scripts.php" ?>
     </div>
     <?php if($Profile["channel_version"] == 4) { ?>
-    <script src="https://www.youtube.com/yts/jsbin/spf-vflRfjT3b/spf.js" type="text/javascript" name="spf/spf" class="js-httpswwwyoutubecomytsjsbinspfvflRfjT3bspfjs"></script>
-    <script src="https://www.youtube.com/yts/jsbin/www-en_US-vfle_h60h/base.js" name="www/base" class="js-httpswwwyoutubecomytsjsbinwwwen_USvfle_h60hbasejs"></script>
+    <script src="/js/one/spf.js" type="text/javascript" name="spf/spf" class="js-httpswwwyoutubecomytsjsbinspfvflRfjT3bspfjs"></script>
+    <script src="/js/one/base.js" name="www/base" class="js-httpswwwyoutubecomytsjsbinwwwen_USvfle_h60hbasejs"></script>
     <script>spf.script.path({'www/': 'https://youtube.com/yts/jsbin/www-en_US-vfle_h60h/'});var ytdepmap = {"www/base": null, "www/common": "www/base", "www/angular_base": "www/common", "www/channels_accountupload": "www/common", "www/channels": "www/common", "www/dashboard": "www/common", "www/downloadreports": "www/common", "www/experiments": "www/common", "www/feed": "www/common", "www/instant": "www/common", "www/legomap": "www/common", "www/promo_join_network": "www/common", "www/results_harlemshake": "www/common", "www/results": "www/common", "www/results_starwars": "www/common", "www/subscriptionmanager": "www/common", "www/unlimited": "www/common", "www/watch": "www/common", "www/ypc_bootstrap": "www/common", "www/ypc_core": "www/common", "www/channels_edit": "www/channels", "www/live_dashboard": "www/angular_base", "www/videomanager": "www/angular_base", "www/watch_autoplayrenderer": "www/watch", "www/watch_edit": "www/watch", "www/watch_editor": "www/watch", "www/watch_live": "www/watch", "www/watch_promos": "www/watch", "www/watch_speedyg": "www/watch", "www/watch_transcript": "www/watch", "www/watch_videoshelf": "www/watch", "www/ct_advancedsearch": "www/videomanager", "www/my_videos": "www/videomanager"};spf.script.declare(ytdepmap);</script><script>if (window.ytcsi) {window.ytcsi.tick("je", null, '');}</script>  
     <script>
         yt.setConfig('ANGULAR_JS', "https:\/\/youtube.com\/yts\/jslib\/angular.min-vflsDVE7V.js");

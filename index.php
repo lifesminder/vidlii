@@ -141,7 +141,18 @@
             header("Location: /");
         }
     });
-
+    $router->get("/help/(\d+)", function($helpID) use($api, $engine) {
+        $article = $api->db("SELECT * from help where id = $helpID");
+        if($article["count"] == 1) {
+            $article = $article["data"];
+            $parsedown = new \Parsedown();
+            $article["content"] = $parsedown->parse($article["content"]);
+            $engine->template("help.html", $article);
+        } else {
+            $feed = new \Vidlii\Vidlii\API\Feed($_SERVER["DOCUMENT_ROOT"]);
+            $engine->template("nouveau/error.html", ["featured" => $feed->index(["show" => "featured"])]);
+        }
+    });
     $router->all("/(.*)", function($url) {
         global $api, $engine;
 

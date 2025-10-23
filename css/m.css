@@ -3261,6 +3261,9 @@ select {
     line-height: 32px;
     box-shadow: 0 1px 3px #00000020;
 }
+.top p {
+    margin: 0;
+}
 
 .notification {
     border: 1.5px solid #ccc;

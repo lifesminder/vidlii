@@ -1,0 +1,21 @@
+{%extends "base.html"%}
+
+{%block title%}{{title}} - VidLii Help{%endblock%}
+
+{%block body%}
+    <h1 class="pg_hd">{{title}}</h1>
+    <div class="vc_r">
+        <article>
+            {{content|raw}}
+            <p style="color: #444; text-align: right; font-size: 12px;">
+                {%if modified != published%}
+                Updated: {{modified|date("M d, Y")}} at {{modified|date("h:m A")}}<br>
+                {%endif%}
+                Created: {{published|date("M d, Y")}} at {{published|date("h:m A")}}
+            </p>
+        </article>
+    </div>
+    <div class="vc_l">
+        {# content to be expected here #}
+    </div>
+{%endblock%}

@@ -65,7 +65,7 @@
     <div id="alerts" style="margin-top: 12px">
         <div class="yt-alert yt-alert-default yt-alert-info">
             <div>
-                <div class="yt-alert-icon"><img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" class="icon master-sprite" alt="Alert icon"></div>
+                <div class="yt-alert-icon"><img src="/img/one/pixel.gif" class="icon master-sprite" alt="Alert icon"></div>
                 <div class="yt-alert-content">
                     <span class="yt-alert-vertical-trick"></span>
                     <div class="yt-alert-message" style="width: 500px">
@@ -86,7 +86,7 @@
         <!-- begin masthead -->
         <div id="masthead" class="" dir="ltr" style="height: 50px">
             <a id="logo-container" href="/" title="VidLii home">
-                <img id="logo" src="https://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="VidLii home">
+                <img id="logo" src="/img/one/pixel.gif" alt="VidLii home">
             </a>
             <div id="masthead-user-bar-container">
                 <div id="masthead-user-bar">

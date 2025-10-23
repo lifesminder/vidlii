@@ -1,0 +1,96 @@
+{%extends "base.html"%}
+
+{%block title%}VidLii - Display Yourself{%endblock%}
+
+{%block main%}
+    <main class="bottom_wrapper">
+        <section class="h_l">
+            {%if session.session == -1%}
+            <div id="iyt-login-suggest-box" style="margin-bottom: 10px;">
+                <div class="yt-alert yt-alert-announce yt-rounded" style="height: 85px;">
+                    <div class="yt-alert-content" style="height: 85px;">
+                        <div class="signup-promo-message" style="margin-bottom: 14px">Join the open source video-sharing community!</div>
+                        <div class="signup-promo-links">
+                            <a href="/register" class="yel_btn large"><span class="yt-uix-button-content">Create Account ›</span></a>
+                            <span class="signup-promo-have-account" style="font-weight: normal">Already have an account? </span>
+                            <a href="/login">Sign In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            <div class="wdg" id="ft_widget">
+                <div style="background-color: #dae9fe;">
+                    <a href="/special_videos?c=0&amp;t=v"><img src="/img/ft.png" alt="Featured Videos"><span>Featured Videos</span></a>
+                    <div class="wdg_sel"></div>
+                </div>
+                <div>
+                    <div class="v_v_bx">
+                        <p>There are no any featured videos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="wdg" id="ft_widget">
+                <div>
+                    <a href="/videos?c=0&o=mv&t=0"><img src="/img/pop.png" alt="Most Popular"><span>Most Popular</span></a>
+                    <div class="wdg_sel"></div>
+                </div>
+                <div>
+                    <div class="v_v_bx">
+                        <p>There are no any popular videos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <aside class="h_r">
+            <div class="wdg">
+                <div>
+                    <span>Recommended Channels</span>
+                </div>
+                <div class="recommended-list">
+                    {%if feed.recommended|length > 0%}
+                    {%for channel in feed.recommended%}
+                    <div class="recommended-list-item">
+                        {%set channel = channel[0]%}
+                        <div class="avatar">
+                            <a href="/user/{{channel.username}}">
+                                <img src="/vi/ava/{{channel.username}}.jpg" width="56" height="56" class="avt2" alt="{%if channel.channel_title != ''%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}">
+                            </a>
+                        </div>
+                        <div class="body">
+                            <a href="/user/{{channel.username}}" style="font-weight:bold;font-size:16px">{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}</a>
+                            <div class="info">
+                                {%if channel.channel_description != ""%}
+                                <p>{{channel.channel_description|raw}}</p>
+                                {%endif%}
+                                <p>{{channel.video_views}} views · {{channel.subscribers}} subscribers</p>
+                            </div>
+                        </div>
+                    </div>
+                    {%endfor%}
+                    {%endif%}
+                </div>
+            </div>
+            <div class="whats_new">
+                <strong>What's New</strong>
+                <a href="/login">Cosmic Panda</a>
+                Say hello to the true and original One Layout of YouTube! It clearly resembles it, providing to you the full experience of 2012!
+                <a href="/">Awards</a>
+                See how you compare to other channels this week, or this month, or this decade.
+                <a href="/themes">Themes</a>
+                Customize your layout of VidLii and make it yours!
+            </div>
+            <div class="last_5">
+                <strong>Last 5 Users Online</strong>
+                {%if feed.last_online|length > 0%}
+                {%for channel in feed.last_online%}
+                <div>
+                    <a href="/user/{{channel.username}}">{{channel.username}}</a>
+                    <span>{{channel.videos}} videos</span><span>{{channel.favorites}} favorites</span><span>{{channel.friends}} friends</span>
+                </div>
+                {%endfor%}
+                {%endif%}
+            </div>
+        </aside>
+    </main>
+{%endblock%}

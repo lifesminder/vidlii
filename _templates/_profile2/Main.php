@@ -25,7 +25,7 @@
                 </div>
                 <? else : ?>
                 <div class="pr_pl_title_custom">
-                    <div><?= $Profile["channel_title"] ?></div>
+                    <div><?= urldecode($Profile["channel_title"]) ?></div>
                     <div><?= $Profile["displayname"] ?>'s Channel</div>
                 </div>
                 <? endif ?>
