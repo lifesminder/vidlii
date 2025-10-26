@@ -96,6 +96,102 @@
             } else header("Location: /login?next=user");
         });
     });
+    $router->all("/login", function() use($api, $engine) {
+        header("Content-Security-Policy: frame-ancestors 'none'");
+        header("Cache-Control: max-age=0, no-cache, no-store, must-revalidate");
+        header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+        header("Pragma: no-cache");
+
+        $args = []; $session = $api->session();
+        if(isset($_GET["next"]) && $_GET["next"] != "") $args["next"] = $_GET["next"];
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if($session["user"]["id"] >= 0) {
+                $args["message"] = "You already signed in";
+            } else {
+                $username = $_POST["username"] ?? "";
+                $password = $_POST["password"] ?? "";
+                $remember = (isset($_POST["remember"]) && $_POST["remember"] == "on") ? true : false;
+
+                if($username == "" || $password == "") {
+                    $args["message"] = "All fields are required";
+                } else {
+                    $auth = new \Vidlii\Vidlii\API\Auth($_SERVER["DOCUMENT_ROOT"]);
+                    $result = $auth->login([
+                        "username" => $username,
+                        "password" => $password,
+                        "remember" => $remember
+                    ]);
+                    if($result["status"] == 0) {
+                        $path = "/";
+                        $next = $_GET["next"] ?? "";
+                        if($next != "")
+                            $path .= $next;
+                        header("Location: $path");
+                    } else {
+                        $args["message"] = $result["message"];
+                    }
+                }
+            }
+        } else if($session["user"]["id"] >= 0) {
+            header("Location: /");
+        }
+
+        $engine->template("nouveau/login.html", $args);
+    });
+    $router->all("/signup", function() use($api, $engine) {
+        $args = [
+            "countries" => $engine->countries(),
+            "months" => $engine->months()
+        ]; $session = $api->session();
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if($session["user"]["id"] >= 0) {
+                $args["message"] = "You already registered";
+            } else {
+                $email = $_POST["email"] ?? "";
+                $username = $_POST["username"] ?? "";
+                $password = $_POST["password"] ?? "";
+                $password2 = $_POST["password2"] ?? "";
+                $country = $_POST["country"] ?? "US";
+                $birthday = ($_POST["year"] ?? "1999")."-".($_POST["month"] ?? "01")."-".($_POST["day"] ?? "01");
+                $accept = (isset($_POST["accept"]) && $_POST["accept"] == "on") ? true : false;
+
+                if($email == "" || $username == "" || $password == "" || $password2 == "") {
+                    $args["message"] = "All fields are required";
+                } else if(!$accept) {
+                    $args["message"] = "You must agree with terms";
+                } else if(strtolower($password) != strtolower($password2)) {
+                    $args["message"] = "Passwords don't match";
+                } else {
+                    $birthDate = new DateTime($birthday);
+                    $currentDate = new DateTime("today");
+                    $interval = $birthDate->diff($currentDate);
+                    $age = $interval->y;
+                    if($age < 18) {
+                        $args["message"] = "You must be 18 years old to register";
+                    } else {
+                        $auth = new \Vidlii\Vidlii\API\Auth($_SERVER["DOCUMENT_ROOT"]);
+                        $result = $auth->register([
+                            "username" => $username,
+                            "password" => $password,
+                            "email" => $email,
+                            "country" => $country,
+                            "birthday" => $birthday
+                        ]);
+                        if($result["status"] == 1) {
+                            header("Location: /login");
+                        } else {
+                            $args["message"] = $result["message"] ?? "Cannot register";
+                        }
+                    }
+                }
+            }
+        } else if($session["user"]["id"] >= 0) {
+            header("Location: /");
+        }
+
+        $engine->template("nouveau/signup.html", $args);
+    });
     $router->get("/logout", function() {
         require_once "_includes/init.php";
         global $api;
@@ -153,17 +249,63 @@
             $engine->template("nouveau/error.html", ["featured" => $feed->index(["show" => "featured"])]);
         }
     });
+    $router->all("/my_(\w+)", function($action) use($api, $engine) {
+        if(file_exists("my_$action.php")) {
+            include_once "my_$action.php";
+        } else if(file_exists("_templates/nouveau/account/my_$action.html")) {
+            $args = []; $session = $api->session();
+            if($session["user"]["id"] < 0) {
+                header("Location: /login?next=/my_quicklist");
+            }
+            switch(strtolower($action)) {
+                case "quicklist": {
+                    $args["videos"] = $api->db("SELECT * from quicklist where user = ".$session["user"]["id"]." order by position asc", true)["data"] ?? [];
+                    foreach($args["videos"] as $i => $video) {
+                        $video["video"] = $api->db("SELECT url, title, description, tags, uploaded_by, uploaded_on, displayviews, watched, comments, favorites, length from videos where url = \"".$video["video"]."\" and status >= 2")["data"] ?? [];
+                        $args["videos"][$i] = $video;
+                    }
+                    break;
+                }
+            }
+            $engine->template("nouveau/account/my_$action.html", $args);
+        } else {
+            $feed = new \Vidlii\Vidlii\API\Feed($_SERVER["DOCUMENT_ROOT"]);
+            $engine->template("nouveau/error.html", ["featured" => $feed->index(["show" => "featured"])]);
+        }
+    });
     $router->all("/(.*)", function($url) {
         global $api, $engine;
 
         $url_chk = strtolower($url); $urls = str_contains($url, "/") ? explode("/", $url) : [$url];
         $static_page = "static/pages/$url.md";
         $system_page = "$url.php";
-        $profile_page = (bool)$api->db("SELECT count(*) from users where username = '".$urls[0]."' or displayname = '".$urls[0]."'")["data"]["count(*)"];
+        $handle_type = 0;
+
+        if($urls[0] == "c") {
+            $handle_type = 1;
+            unset($urls[0]); $urls = array_values($urls);
+            $handle = $api->db("SELECT * from handles where handle = \"".$urls[0]."\" and type = $handle_type");
+            if($handle["count"] == 1) {
+                $urls[0] = $api->db("SELECT username from users where id = '".$handle["data"]["user"]."'")["data"]["username"];
+            }
+        } else if($urls[0][0] == "@") {
+            $handle_type = 2;
+            $urls[0] = substr($urls[0], 1, strlen($urls[0]));
+            $handle = $api->db("SELECT * from handles where handle = \"".$urls[0]."\" and type = $handle_type");
+            if($handle["count"] == 1) {
+                $urls[0] = $api->db("SELECT username from users where id = '".$handle["data"]["user"]."'")["data"]["username"];
+            }
+        }
+        if($handle_type > 0) {
+            $profile_page = (bool)$api->db("SELECT count(*) from users where id = '".$handle["data"]["user"]."'")["data"]["count(*)"];
+        } else {
+            $profile_page = (bool)$api->db("SELECT count(*) from users where username = '".$urls[0]."' or displayname = '".$urls[0]."'")["data"]["count(*)"];
+        }
 
         if($profile_page) {
             $_GET["user"] = $urls[0];
-            $_GET["page"] = (count($urls) > 1) ? $urls[1] : "";
+            if((count($urls) > 1))
+                $_GET["page"] = $urls[1];
             include_once "profile.php";
         } else if(file_exists($static_page)) {
             $content = file_get_contents($static_page);

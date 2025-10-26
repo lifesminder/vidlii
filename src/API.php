@@ -91,24 +91,21 @@
             $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie'");
             if($session["count"] == 1) {
                 $session = $session["data"];
-                $session["user"] = $this->db("SELECT id, username, displayname from users where id = ".$session["user"]);
+                $session["user"] = $this->db("SELECT id, username, displayname, is_admin, is_mod from users where id = ".$session["user"]);
                 if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             } else {
                 $session = ["session" => -1, "user" => ["id" => -1, "username" => "Guest", "displayname" => "Guest"]];
             }
 
             if($action != null) {
-                $result = null;
                 switch(strtolower($action)) {
                     case "logout": {
                         $id = $session["user"]["id"];
                         $logout = $this->db("DELETE from sessions where user = $id");
                         return $logout;
-                        break;
                     }
                     default: return $session;
                 }
-                return $result;
             } else {
                 return $session;
             }

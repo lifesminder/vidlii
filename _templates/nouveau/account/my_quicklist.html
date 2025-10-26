@@ -1,0 +1,66 @@
+{%extends "base.html"%}
+
+{%block title%}Quicklist - VidLii{%endblock%}
+
+{%block body%}
+    <main class="bottom_wrapper" id="st">
+        <div style="font-size:20px;padding-bottom:9px">
+            <div class="account_dropdown">
+                <a href="/my_account" class="dropbtn">My Account <span style="font-size: 9px;">▼</span></a>
+                <div class="inner">
+                    <div class="first"><a href="/inbox">Inbox</a></div>
+                    <div><a href="/my_videos">Videos, Favorites &amp; Playlists</a></div>
+                    <div><a href="/my_subscriptions">Subscriptions</a></div>
+                    <div><a href="/channel_setup">My Channel</a></div>
+                    <div><a href="/my_account">Account Settings</a></div>
+                    <div><a href="/analytics">Insight: Statistics and Data</a></div>
+                </div>
+            </div>
+            <span style="word-spacing:10px; margin: 0 10.56px 0 10.56px;">/</span>
+            Quicklist
+        </div>
+        <div style="border-bottom:1px solid #ccc"></div>
+        <div class="settings_menu">
+            <a href="/my_videos">My Videos</a>
+            <a href="/my_favorites">My Favorites</a>
+            <a href="/my_playlists">My Playlists</a>
+            <a href="/my_subscriptions">My Subscriptions</a>
+            <a href="/my_quicklist" id="nav_sel">Quicklist</a>
+        </div>
+        <div style="float:left; width:800px;-moz-box-sizing: border-box;-ms-box-sizing: border-box;-webkit-box-sizing: border-box;padding-right: 9px;padding-left: 11px;border-left: 1px solid #ccc;border: 1px solid #ccc;border-right:1px solid #ccc;border-top: 0;background: #e2e2e2;">
+            <div style="padding: 12px;">
+                <button>Add To</button>
+                <button>Play Quicklist</button>
+                <button>Clear Quicklist</button>
+            </div>
+            <div style="background-color: #fff; padding: 10px;">
+                {%if videos|length > 0%}
+                <table class="mv_sct">
+                    <tbody>
+                        {%for video in videos%}
+                        <td width="5%" align="center" valign="top"><input type="checkbox"></td>
+                        <td width="20%" valign="top" align="center">
+                            <div class="th">
+                                <div class="th_t">{{secondsToTime(video.video.length)}}</div>
+                                <a href="/watch?v={{video.video.url}}&p=WL">
+                                    <img class="vid_th" src="/vi/{{video.video.url}}/default.jpg" alt="{{video.video.title}}" title="{{video.video.title}}" width="190" height="131">
+                                </a>
+                            </div>
+                        </td>
+                        <td width="70%" valign="top" class="mv_info">
+                            <strong><a href="watch?v={{video.video.url}}&p=WL">{{video.video.title}}</a></strong><br>
+                            <div class="mv_descr"></div>
+                            <span>Uploaded by:</span> <a href="/user/{{video.video.uploaded_by}}" style="font-size: 13px;" target="_blank">{{video.video.uploaded_by}}</a><br>
+                            <span>Comments:</span> {{video.video.comments}} | <span>Views:</span> {{video.video.displayviews}}<br>
+                            <a href="#"><button type="button">Remove from Quicklist</button></a>
+                        </td>
+                        {%endfor%}
+                    </tbody>
+                </table>
+                {%else%}
+                <p style="font-size: 16px; color: #333; font-weight: bold; text-align: center;">There are no videos in your quicklist.</p>
+                {%endif%}
+            </div>
+        </div>
+    </main>
+{%endblock%}

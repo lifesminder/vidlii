@@ -114,7 +114,7 @@
 						<a href="javascript:void(0)" <? if (!$_USER->logged_in) : ?>onclick="alert('Please log in to comment on <?= $Profile["displayname"] ?>s channel!')"<? else : ?> onmouseenter="$('#c_ac').attr('src','/img/comm1.png')" onclick="$('#comment_content').focus()" onmouseleave="$('#c_ac').attr('src','/img/comm0.png')"<? endif ?>><img class="c_l" id="c_ac" src="/img/comm0.png">Add Comment</a><br>
 						<a href="javascript:void(0)" <? if (!$_USER->logged_in) : ?>onclick="alert('Please log in to share <?= $Profile["displayname"] ?>s channel!')"<? else : ?> onmouseenter="$('#c_sc').attr('src','/img/share1.png')" onmouseleave="$('#c_sc').attr('src','/img/share0.png')"<? endif ?>><img class="c_l" id="c_sc" src="/img/share0.png">Share Channel</a><br>
 						<? if (!$_USER->logged_in) : ?>
-							<a href="/login?next=/user/<?= $Profile["displayname"] ?>#block" id="block"><img class="c_l" id="c_bu" src="/img/block0.png">Block User</a><br>
+							<a href="/login?next=<?= $handle ?>#block" id="block"><img class="c_l" id="c_bu" src="/img/block0.png">Block User</a><br>
 						<? elseif (!$Is_Blocked && !$Has_Blocked && $_USER->username !== $Profile["username"]) : ?>
 							<a href="javascript:void(0)" onclick="block_user('<?= $Profile["username"] ?>')" onmouseenter="$('#c_bu').attr('src','/img/block1.png')" onmouseleave="$('#c_bu').attr('src','/img/block0.png')"><img class="c_l" id="c_bu" src="/img/block0.png"><span id="bu">Block User</span></a><br>
 						<? elseif ($Is_Blocked && $_USER->username !== $Profile["username"]) : ?>
@@ -142,8 +142,13 @@
 				</tbody>
 			</table>
 			<div class="connect_lnk" style="display: flex; justify-content: center">
-				<a href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/".$Profile["displayname"]; ?>">
-					<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/".$Profile["displayname"]; ?>
+				<?php
+					if(str_starts_with($handle, "/user/")) {
+						$handle = str_replace("/user/", "/", $handle);
+					}
+				?>
+				<a href="<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]".$handle; ?>">
+					<?= (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]".$handle; ?>
 				</a>
 			</div>
 		</div>
@@ -202,18 +207,18 @@
 	<? if ($Profile["videos"] > 0 and $Profile["c_videos"]) : ?>
 	<section>
 		<div class="prbx_hd nm_hd">
-			Videos (<a href="/user/<?= $Profile["displayname"] ?>/videos"><?= number_format($Profile["videos"]) ?></a>)
+			Videos (<a href="<?= $handle ?>/videos"><?= number_format($Profile["videos"]) ?></a>)
 		</div>
 		<div class="prbx_in nm_in prbx_video">
             <?php if(number_format($Profile["videos"]) > 1) { ?>
             <div style="padding: 5px; display: block; margin-bottom: 30px;">
                 <div style="margin: 5px 0 5px 5px; float: left;">
                     <span>Videos</span> | 
-                    <a href="/user/<?= $Profile["displayname"] ?>/videos?sort=v">Most Viewed</a> | 
-                    <a href="/user/<?= $Profile["displayname"] ?>/videos?sort=d">Most Discussed</a>
+                    <a href="<?= $handle ?>/videos?sort=v">Most Viewed</a> | 
+                    <a href="<?= $handle ?>/videos?sort=d">Most Discussed</a>
                 </div>
                 <div style="margin: 5px 0 5px 5px; float: right;">
-                    <form action="/user/<?= $Profile["displayname"] ?>/videos" method="POST" style="position:relative;bottom:1px" id="searcher">
+                    <form action="<?= $handle ?>/videos" method="POST" style="position:relative;bottom:1px" id="searcher">
                         <input type="text" name="search" maxlength="64"<? if (isset($_POST["search"])) : ?> value="<?= $_POST["search"] ?>" <? endif ?> id="search_input" style="width:200px;border-radius:0">
                         <input type="submit" value="Search" name="search_input" class="search_button" style="border-radius:0;">
                     </form>
@@ -259,7 +264,7 @@
 	<? if ($Profile["favorites"] > 0 and $Profile["c_favorites"]) : ?>
 	<section>
 		<div class="prbx_hd nm_hd">
-			Favorites (<a href="/user/<?= $Profile["displayname"] ?>/favorites"><?= number_format($Profile["favorites"]) ?></a>)
+			Favorites (<a href="<?= $handle ?>/favorites"><?= number_format($Profile["favorites"]) ?></a>)
 		</div>
 		<div class="prbx_in nm_in prbx_video">
 			<? $Count = 0 ?>

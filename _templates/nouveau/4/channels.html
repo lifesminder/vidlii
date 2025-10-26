@@ -10,15 +10,15 @@
                 <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     <li role="menuitem">
                         {%if flow == "list"%}
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=grid" class="yt-uix-button-menu-item spf-link">Grid</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/channels?view=60&amp;flow=grid" class="yt-uix-button-menu-item spf-link">Grid</span>
                         {%else%}
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=list" class="yt-uix-button-menu-item spf-link">List</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/channels?view=60&amp;flow=list" class="yt-uix-button-menu-item spf-link">List</span>
                         {%endif%}
                     </li>
                 </ul>
             </button>
             {%endif%}
-            <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
+            <a href="{{handle}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
                 <span class="yt-uix-button-icon-wrapper">
                     <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
                 </span>
@@ -37,10 +37,10 @@
                 <span class="yt-uix-button-arrow yt-sprite"></span>
                 <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" href="/user/{{profile.displayname}}/channels?view=1&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Featured channels</span>
+                        <span class="yt-uix-button-menu-item spf-link" href="{{handle}}/channels?view=1&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Featured channels</span>
                     </li>
                     <li role="menuitem">
-                        <span class=" yt-uix-button-menu-item spf-link" href="/user/{{profile.displayname}}/channels?view=55&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Subscriptions</span>
+                        <span class=" yt-uix-button-menu-item spf-link" href="{{handle}}/channels?view=55&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Subscriptions</span>
                     </li>
                 </ul>
             </button>

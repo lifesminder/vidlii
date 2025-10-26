@@ -9,32 +9,20 @@
         </nav>
         <nav id="sm_nav">
             <? if (!$_USER->logged_in) : ?>
-            <a href="/register">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
+            <a href="/signup">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
             <div id="login_modal">
                 <form action="/login" method="POST">
-                    <input type="password" class="search_bar" placeholder="Your Password" style="display:none">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <input type="text" name="v_username" class="search_bar" placeholder="Username/E-Mail">
-                        <input type="password" name="<?= substr($_SESSION["secret_id"], 1, 3) ?>_password" class="search_bar" placeholder="Your Password">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <? if (mt_rand(0,1) == 1) : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="<?= mt_rand(0,1000) ?>" value="<?= mt_rand(0,1000) ?>">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                        <? else : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="fA6aavb" value="<?= mt_rand(0,1000) ?>cd">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                        <? endif ?>
-                        <input type="submit" name="submit_login" class="search_button" value="Sign In">
-                        <div class="forgot_pass"><a href="/forgot_password">Forgot Password?</a></div>
+                    <input type="text" name="username" class="search_bar" placeholder="Username/E-Mail">
+                    <input type="password" name="password" class="search_bar" placeholder="Your Password">
+                    <button type="submit" name="submit_login" class="search_button">Sign In</button>
+                    <div class="forgot_pass"><a href="/forgot_password">Forgot Password?</a></div>
                 </form>
             </div>
             <? else : ?>
-                <a href="/user/<?= $_USER->displayname ?>" id="hd_name"><?= $_USER->displayname ?><img id="n_ar" src="/img/dar.png"></a><a href="/my_account">Account</a><a href="/inbox" id="inbox_hd"<? if ($Inbox_Amount > 0) : ?>style="padding-left:34px !important;"<? endif ?>><img src="/img/amsg<? if ($Inbox_Amount == 0) : ?>0<? else : ?>1<? endif ?>.png"<? if ($Inbox_Amount > 0) : ?> style="bottom:2px"<? endif ?>><span>(<?= $Inbox_Amount ?>)</span></a><a href="/help">Help</a><a href="/logout">Log Out</a>
+                <a href="/<?= $handle ?>" id="hd_name"><?= $_USER->displayname ?><img id="n_ar" src="/img/dar.png"></a><a href="/my_account">Account</a><a href="/inbox" id="inbox_hd"<? if ($Inbox_Amount > 0) : ?>style="padding-left:34px !important;"<? endif ?>><img src="/img/amsg<? if ($Inbox_Amount == 0) : ?>0<? else : ?>1<? endif ?>.png"<? if ($Inbox_Amount > 0) : ?> style="bottom:2px"<? endif ?>><span>(<?= $Inbox_Amount ?>)</span></a><a href="/help">Help</a><a href="/logout">Log Out</a>
                 <div id="name_nav">
                     <div>
-                        <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
+                        <a href="/<?= $handle ?>">My Channel</a>
                         <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?><a href="/admin/login">Admin Panel</a><? endif ?>
                         <a href="/my_videos">My Videos</a>
                         <a href="/my_favorites">My Favorites</a>
@@ -83,7 +71,7 @@
         </div>
         <div class="s_center" style="top:17px;right:7px">
             <? if (!$_USER->logged_in) : ?>
-                <a href="/register" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
+                <a href="/signup" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
                     Create Account
                 </a>
                 <a href="/login" class="sign_out">
@@ -95,7 +83,7 @@
                 </div>
                 <span id="s_toggle" class="hddn">
                 <div>
-                <a href="/user/<?= $_USER->displayname ?>">My Channel</a>
+                <a href="/<?= $handle ?>">My Channel</a>
                 <a href="/inbox">Inbox</a>
                 </div>
                 <div>
@@ -125,12 +113,12 @@
     <div>
         <div class="pr_edit_btn" id="settings">Settings</div><div class="pr_edit_btn" id="themes">Themes and Colors</div><div class="pr_edit_btn" id="modules">Modules</div><div class="pr_edit_btn" id="vap">Videos and Playlists</div>
         <div class="pr_edit_box hddn" id="edit_settings">
-            <form action="/user/<?= $_USER->displayname ?>" method="POST">
+            <form action="/<?= $handle ?>" method="POST">
                 <div style="padding: 0 10px 0 0;border-right:1px dotted #bbb;width:50%;float:left;">
                     <table cellpadding="7" cellspacing="0" style="width: 100%;">
                         <tr>
                             <td>URL:</td>
-                            <td align="right"><a href="/user/<?= $_USER->displayname ?>">/user/<?= $_USER->displayname ?></a></td>
+                            <td align="right"><a href="/<?= $handle ?>">/<?= $handle ?></a></td>
                         </tr>
                         <tr>
                             <td>Channel Title:</td>
@@ -182,7 +170,7 @@
                 <div id="custom" onclick="theme_select('custom')" class="theme_selector<? if ($Profile["theme"] == 9) : ?> theme_sel<? endif ?>" style="font-family:arial"><div style="background-color: #CCCCCC;color:#333333;padding: 3px;line-height:120%"><div style="background-color: #999999;color: #000000;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#eeeeff;font-size:9px;padding-left:1px;color:#333333"><span style="color:#000000;font-size:120%">A</span> &nbsp;<span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div><span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Custom</span></div></div>
             </div>
             <div style="clear:both"></div>
-            <form action="/user/<?= $_USER->displayname ?>" method="POST" enctype="multipart/form-data">
+            <form action="/<?= $handle ?>" method="POST" enctype="multipart/form-data">
             <div style="background-color: #eee;border-radius:5px;padding:12px;margin:15px 0 0;overflow:hidden">
                 <div style="float:left;font-size:20px;position: relative;top:2px;">"<span id="theme_title"><? if ($Profile["theme"] == 0) : ?>Grey<? elseif ($Profile["theme"] == 1) : ?>Blue<? elseif ($Profile["theme"] == 2) : ?>Red<? elseif ($Profile["theme"] == 3) : ?>Sunlight<? elseif ($Profile["theme"] == 4) : ?>Forest<? elseif ($Profile["theme"] == 5) : ?>8-Bit<? elseif ($Profile["theme"] == 6) : ?>Princess<? elseif ($Profile["theme"] == 7) : ?>Fire<? elseif ($Profile["theme"] == 8) : ?>Stealth<? else : ?>Custom<? endif ?></span>"</div>
                 <a href="javascript:void(0)" onclick="show_advanced_custom()" id="show_advanced_btn" style="position:relative;top:5.5px;left:16px;">show advanced options</a>
@@ -288,7 +276,7 @@
             </div>
         </div>
         </form>
-        <form action="/user/<?= $_USER->displayname ?>" method="POST">
+        <form action="/<?= $handle ?>" method="POST">
         <div class="pr_edit_box hddn" id="edit_modules">
             <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="comments"<? if ($Profile["c_comments"]) : ?> checked<? endif ?>> Comments</label></div>
             <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="friends"<? if ($Profile["c_friend"]) : ?> checked<? endif ?>> Friends</label></div>
@@ -305,7 +293,7 @@
         </form>
         </div>
         <div class="pr_edit_box hddn" id="edit_vap">
-            <form action="/user/<?= $_USER->displayname ?>" method="POST">
+            <form action="/<?= $handle ?>" method="POST">
             <div style="padding: 3px 10px 0 4px;border-right:1px dotted #bbb;width:33%;float:left;height:140px;font-size:13px;">
                 <div style="margin-bottom:5px">Which content would you like to display?</div>
                 <div style="border:1px solid #bbb;padding:8px 10px 10px">

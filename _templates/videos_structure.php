@@ -53,6 +53,7 @@
                 <? endforeach ?>
             </div>
             <? endif ?>
+            <a href="/my_quicklist">Quicklist</a>
         </div>
         <div style="float:left;width:800px;-moz-box-sizing: border-box;-ms-box-sizing: border-box;-webkit-box-sizing: border-box;padding-right: 9px;padding-left: 11px;border-left: 1px solid #ccc;border: 1px solid #ccc;border-right:1px solid #ccc;border-top: 0;background: #e2e2e2;">
             <div style="background:white;border-left:1px solid #e2e2e2;">

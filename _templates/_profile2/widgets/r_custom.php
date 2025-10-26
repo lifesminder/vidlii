@@ -4,7 +4,7 @@
         <? if ($Is_OWNER) : ?>
             <div style="float: right;position:relative;top:2px;word-spacing:-4px;cursor:pointer">
                 <? if ($Is_OWNER) : ?>
-                    <form action="/user/<?= $_USER->displayname ?>" method="POST" style="display:inline-block" onsubmit="document.getElementById('bbcodeval2').value = document.getElementById('bbtextarea2').value">
+                    <form action="/<?= $handle ?>" method="POST" style="display:inline-block" onsubmit="document.getElementById('bbcodeval2').value = document.getElementById('bbtextarea2').value">
                         <div style="margin-right:10px" id="savebbcode2link">
                             <a href="javascript:void(0)" onclick="$('#savebbcode2link').css('display','none');$('#bbcustom2').css('display','none');$('#bbtextarea2').css('display','block');$('#save_bb2').css('display','inline-block');">Edit</a>
                         </div>

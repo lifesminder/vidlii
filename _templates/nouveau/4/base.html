@@ -63,7 +63,7 @@
                                         </ul>
                                     </div>
                                     {% endif %}
-                                    <a class="channel-header-profile-image-container spf-link" href="/user/{{profile.displayname}}">
+                                    <a class="channel-header-profile-image-container spf-link" href="{{handle}}">
                                         <img class="channel-header-profile-image" src="/vi/ava/{{profile.displayname}}.jpg" title="{{profile.displayname}}" alt="{{profile.displayname}}">
                                     </a>
                                 </div>
@@ -80,7 +80,7 @@
                                                 {%endif%}
                                                     <span class="qualified-channel-title-wrapper">
                                                         <span dir="ltr" class="qualified-channel-title-text">
-                                                            <a dir="ltr" href="/user/{{profile.displayname}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ''%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
+                                                            <a dir="ltr" href="{{handle}}" class="spf-link branded-page-header-title-link yt-uix-sessionlink" title="{%if profile.channel_title != ''%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}">{%if profile.channel_title != ""%}{{profile.channel_title}}{%else%}{{profile.displayname}}{%endif%}</a>
                                                             {%if profile.is_admin == 1 or profile.is_mod == 1 or profile.partner == 1%}
                                                             <a href="{{help('verified')}}" target="_blank" class="qualified-channel-title-badge" style="margin-left: 16px;">
                                                                 <span aria-label="Verified" class="yt-channel-title-icon-verified yt-uix-tooltip yt-sprite" data-tooltip-text="Verified"></span>
@@ -121,7 +121,7 @@
                                         {% if page == "index" or page == "" %}
                                         <h2 class="epic-nav-item-heading" aria-label="Home tab" aria-selected="true" tabindex="0">Home</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Home</span>
                                         </a>
                                         {% endif %}
@@ -130,7 +130,7 @@
                                         {% if page == "videos" %}
                                         <h2 class="epic-nav-item-heading" aria-label="Videos tab" aria-selected="true" tabindex="1">Videos</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}/videos" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}/videos" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Videos</span>
                                         </a>
                                         {% endif %}
@@ -139,7 +139,7 @@
                                         {% if page == "playlists" %}
                                         <h2 class="epic-nav-item-heading" aria-label="Playlists tab" aria-selected="true" tabindex="2">Playlists</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}/playlists" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}/playlists" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Playlists</span>
                                         </a>
                                         {% endif %}
@@ -148,7 +148,7 @@
                                         {% if page == "community" %}
                                         <h2 class="epic-nav-item-heading" aria-label="Community tab" aria-selected="true" tabindex="3">Community</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}/community" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}/community" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Community</span>
                                         </a>
                                         {% endif %}
@@ -157,7 +157,7 @@
                                         {% if page == "channels" %}
                                         <h2 class="epic-nav-item-heading" aria-label="Channels tab" aria-selected="true" tabindex="4">Channels</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}/channels" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}/channels" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">Channels</span>
                                         </a>
                                         {% endif %}
@@ -166,7 +166,7 @@
                                         {% if page == "about" %}
                                         <h2 class="epic-nav-item-heading" aria-label="About tab" aria-selected="true" tabindex="5">About</h2>
                                         {% else %}
-                                        <a href="/user/{{profile.displayname}}/about" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
+                                        <a href="{{handle}}/about" class="yt-uix-button spf-link yt-uix-sessionlink yt-uix-button-epic-nav-item yt-uix-button-size-default">
                                             <span class="yt-uix-button-content">About</span>
                                         </a>
                                         {% endif %}
@@ -176,7 +176,7 @@
                                             <button class="show-search epic-nav-item secondary-nav" title="Search Channel">
                                                 <span class="epic-nav-item-heading-icon search-icon yt-sprite"></span>
                                             </button>
-                                            <form class="search-form epic-nav-item secondary-nav" action="/user/{{profile.displayname}}/search" method="get">
+                                            <form class="search-form epic-nav-item secondary-nav" action="{{handle}}/search" method="get">
                                                 <span class=" yt-uix-form-input-container yt-uix-form-input-text-container">
                                                     <input class="yt-uix-form-input-text search-field" name="query" id="channels-search-field" type="yt-text" value="" placeholder="Search Channel" maxlength="100" autocomplete="off">
                                                 </span>

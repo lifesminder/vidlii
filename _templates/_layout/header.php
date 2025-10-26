@@ -12,24 +12,12 @@
         </nav>
         <nav id="sm_nav">
             <? if (!$_USER->logged_in) : ?>
-                <a href="/register">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
+                <a href="/signup">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
                 <div id="login_modal">
                     <form action="/login" method="POST">
-                        <input type="password" class="search_bar" placeholder="Your Password" style="display:none">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <input type="text" name="v_username" class="search_bar" placeholder="Username/E-Mail">
-                        <input type="password" name="<?= substr($_SESSION["secret_id"], 1, 3) ?>_password" class="search_bar" placeholder="Your Password">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <? if (mt_rand(0,1) == 1) : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="<?= mt_rand(0,1000) ?>" value="<?= mt_rand(0,1000) ?>">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                        <? else : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="fA6aavb" value="<?= mt_rand(0,1000) ?>cd">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                        <? endif ?>
-                        <input type="submit" name="submit_login" class="search_button" value="Sign In">
+                        <input type="text" name="username" class="search_bar" placeholder="Username/E-Mail">
+                        <input type="password" name="password" class="search_bar" placeholder="Your Password">
+                        <button type="submit" name="submit_login" class="search_button">Sign In</button>
                         <div class="forgot_pass"><a href="/forgot_password">Forgot Password?</a></div>
                     </form>
                 </div>
@@ -93,7 +81,7 @@
                     <div id="masthead-user">
                         <div id="masthead-user-display">
                             <? if (!$_USER->logged_in) : ?>
-                            <a class="start" href="/register">Create Account</a>
+                            <a class="start" href="/signup">Create Account</a>
                             <span class="masthead-link-separator">|</span>
                             <a class="end" href="/login">Sign In</a>
                             <? else: ?>
@@ -196,7 +184,7 @@
     </div>
     <div class="s_center">
         <? if (!$_USER->logged_in) : ?>
-            <a href="/register" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
+            <a href="/signup" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
                 Create Account
             </a>
             <a href="/login" class="sign_out">

@@ -12,24 +12,12 @@
 			</nav>
 			<nav id="sm_nav">
 				<? if (!$_USER->logged_in) : ?>
-					<a href="/register">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
+					<a href="/signup">Sign Up</a><a href="/help">Help</a><a href="/login">Sign In</a>
                 <div id="login_modal">
                     <form action="/login" method="POST">
-                        <input type="password" class="search_bar" placeholder="Your Password" style="display:none">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <input type="text" name="v_username" class="search_bar" placeholder="Username/E-Mail">
-                        <input type="password" name="<?= substr($_SESSION["secret_id"], 1, 3) ?>_password" class="search_bar" placeholder="Your Password">
-                        <? if (mt_rand(0,1) == 1) : ?><input type="password" class="search_bar" placeholder="Your Password" style="display:none"><? endif ?>
-                        <? if (mt_rand(0,1) == 1) : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="<?= mt_rand(0,1000) ?>" value="<?= mt_rand(0,1000) ?>">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                        <? else : ?>
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 8, 4) ?>" value="<?= substr($_SESSION["secret_id"], 3, 5).substr(user_ip(), 0, 2) ?>">
-                            <input type="hidden" name="fA6aavb" value="<?= mt_rand(0,1000) ?>cd">
-                            <input type="hidden" name="<?= substr($_SESSION["secret_id"], 6, 4) ?>" value="<?= substr($_SESSION["secret_id"], 1, 5).substr(user_ip(), 0, 2) ?>">
-                        <? endif ?>
-                        <input type="submit" name="submit_login" class="search_button" value="Sign In">
+                        <input type="text" name="username" class="search_bar" placeholder="Username/E-Mail">
+                        <input type="password" name="password" class="search_bar" placeholder="Your Password">
+                        <button type="submit" name="submit_login" class="search_button">Sign In</button>
                         <div class="forgot_pass"><a href="/forgot_password">Forgot Password?</a></div>
                     </form>
                 </div>
@@ -85,7 +73,7 @@
         </div>
         <div class="s_center" style="top:23px;right:7px">
             <? if (!$_USER->logged_in) : ?>
-                <a href="/register" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
+                <a href="/signup" style="margin-right:13px;padding-right:13px;border-right: 1px solid #ccc;">
                     Create Account
                 </a>
                 <a href="/login" class="sign_out">
@@ -132,19 +120,19 @@
 ?>
 <div class="pr_lks" style="margin-top: 17px">
     <?php if(isset($_GET["page"])) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>">Channel</a>
+        <a href="<?= $handle ?>">Channel</a>
     <?php } if ($Profile["c_videos"] && $Profile["videos"] > 0) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/videos"<?php if($active == "videos") echo "class=\"active\""; ?>>Videos</a>
+        <a href="<?= $handle ?>/videos"<?php if($active == "videos") echo "class=\"active\""; ?>>Videos</a>
     <?php } if ($Profile["c_favorites"] && $Profile["favorites"] > 0) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/favorites"<?php if($active == "favorites") echo "class=\"active\""; ?>>Favorites</a>
+        <a href="<?= $handle ?>/favorites"<?php if($active == "favorites") echo "class=\"active\""; ?>>Favorites</a>
     <?php } if($Profile["c_subscriber"] && $Profile["subscribers"] > 0) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/subscribers"<?php if($active == "subscribers") echo "class=\"active\""; ?>>Subscribers</a>
+        <a href="<?= $handle ?>/subscribers"<?php if($active == "subscribers") echo "class=\"active\""; ?>>Subscribers</a>
     <?php } if($Profile["c_subscription"] && $Profile["subscriptions"] > 0) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/subscriptions"<?php if($active == "subscriptions") echo "class=\"active\""; ?>>Subscriptions</a>
+        <a href="<?= $handle ?>/subscriptions"<?php if($active == "subscriptions") echo "class=\"active\""; ?>>Subscriptions</a>
     <?php } if($Profile["c_friend"] && $Profile["friends"] > 0) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/friends"<?php if($active == "friends") echo "class=\"active\""; ?>>Friends</a>
+        <a href="<?= $handle ?>/friends"<?php if($active == "friends") echo "class=\"active\""; ?>>Friends</a>
     <?php } if($Profile["c_playlists"]) { ?>
-        <a href="/user/<?= $Profile["displayname"] ?>/playlists"<?php if($active == "playlists") echo "class=\"active\""; ?>>Playlists</a>
+        <a href="<?= $handle ?>/playlists"<?php if($active == "playlists") echo "class=\"active\""; ?>>Playlists</a>
     <?php } ?>
 </div>
 <?php } ?>

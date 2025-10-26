@@ -3,7 +3,7 @@
 {% block body %}
     <ul id="browse-items-primary">
         <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
-            <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
+            <a href="{{handle}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
                 <span class="yt-uix-button-icon-wrapper">
                     <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
                 </span>
@@ -15,24 +15,24 @@
                 <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     {% if view == "all" %}
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}">Uploads</span>
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}">Uploads</span>
                     </li>
                     <li role="menuitem">
-                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=2">Favorite videos</span>
+                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}&amp;view=2">Favorite videos</span>
                     </li>
                     {% elseif view == "favorite" %}
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=57">All videos</span>
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}&amp;view=57">All videos</span>
                     </li>
                     <li role="menuitem">
-                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}">Uploads</span>
+                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}">Uploads</span>
                     </li>
                     {% else %}
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=57">All videos</span>
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}&amp;view=57">All videos</span>
                     </li>
                     <li role="menuitem">
-                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?flow={{flow}}&amp;view=2">Favorite videos</span>
+                        <span class=" yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?flow={{flow}}&amp;view=2">Favorite videos</span>
                     </li>
                     {% endif %}
                 </ul>
@@ -47,11 +47,11 @@
                 <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     {% if flow == "list" %}
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?sort={{sort}}&amp;view={{viewn}}&amp;flow=grid">Grid</span>
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?sort={{sort}}&amp;view={{viewn}}&amp;flow=grid">Grid</span>
                     </li>
                     {% else %}
                     <li role="menuitem">
-                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?sort={{sort}}&amp;view={{viewn}}&amp;flow=list">List</span>
+                        <span class="yt-uix-button-menu-item spf-link" onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?sort={{sort}}&amp;view={{viewn}}&amp;flow=list">List</span>
                     </li>
                     {% endif %}
                 </ul>
@@ -64,24 +64,24 @@
                 <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     {%if sort == "da"%}
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
                     </li>
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
                     </li>
                     {%elseif sort == "p"%}
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=ad" class=" yt-uix-button-menu-item spf-link">Date added (newest)</span>
                     </li>
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
                     </li>
                     {%else%}
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=p" class=" yt-uix-button-menu-item spf-link">Most popular</span>
                     </li>
                     <li role="menuitem">
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/videos?view=0&amp;flow={{flow}}&amp;view={{viewn}}&amp;sort=da" class=" yt-uix-button-menu-item spf-link">Date added (oldest)</span>
                     </li>
                     {%endif%}
                 </ul>

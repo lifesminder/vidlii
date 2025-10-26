@@ -10,12 +10,12 @@
             <?php if(number_format($Profile["videos"]) > 1) { ?>
             <div style="padding: 5px; display: block; margin-bottom: 30px;">
                 <div style="margin: 5px 0 5px 5px; float: left;">
-                    <?php if(!isset($_GET["sort"])) { ?><span>Videos</span><?php } else { ?><a href="/user/<?= $Profile["displayname"] ?>/videos">Videos</a><?php } ?> | 
-                    <?php if(isset($_GET["sort"]) && strtolower($_GET["sort"]) == "v") { ?><span>Most Viewed</span><?php } else { ?><a href="/user/<?= $Profile["displayname"] ?>/videos?sort=v">Most Viewed</a><?php } ?> | 
-                    <?php if(isset($_GET["sort"]) && strtolower($_GET["sort"]) == "d") { ?><span>Most Discussed</span><?php } else { ?><a href="/user/<?= $Profile["displayname"] ?>/videos?sort=d">Most Discussed</a><?php } ?>
+                    <?php if(!isset($_GET["sort"])) { ?><span>Videos</span><?php } else { ?><a href="<?= $handle ?>/videos">Videos</a><?php } ?> | 
+                    <?php if(isset($_GET["sort"]) && strtolower($_GET["sort"]) == "v") { ?><span>Most Viewed</span><?php } else { ?><a href="<?= $handle ?>/videos?sort=v">Most Viewed</a><?php } ?> | 
+                    <?php if(isset($_GET["sort"]) && strtolower($_GET["sort"]) == "d") { ?><span>Most Discussed</span><?php } else { ?><a href="<?= $handle ?>/videos?sort=d">Most Discussed</a><?php } ?>
                 </div>
                 <div style="margin: 5px 0 5px 5px; float: right;">
-                    <form action="/user/<?= $Profile["displayname"] ?>/videos" method="POST" style="position:relative;bottom:1px" id="searcher">
+                    <form action="<?= $handle ?>/videos" method="POST" style="position:relative;bottom:1px" id="searcher">
                         <input type="text" name="search" maxlength="64"<? if (isset($_POST["search"])) : ?> value="<?= $_POST["search"] ?>" <? endif ?> id="search_input" style="width:200px;border-radius:0;">
                         <input type="submit" value="Search" name="search_input" class="search_button" style="border-radius:0;">
                     </form>

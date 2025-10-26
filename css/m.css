@@ -191,7 +191,7 @@ footer {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#ebece0', GradientType=0);
     padding: 10px 0;
     border-radius: 6px;
-    margin: 10px 0 20px;
+    margin-top: 15px;
     border: 1px solid #ccc
 }
 
@@ -240,6 +240,12 @@ footer form {
 
 footer input[type=search] {
     width: 275px
+}
+
+#copyright {
+    font-size: 11px;
+    padding: 15px 0;
+    text-align: center;
 }
 
 a {
@@ -3310,6 +3316,23 @@ select {
 }
 .account_dropdown .inner a:hover {
     background-color: #fff;
+}
+
+.watch-tab-contents {
+    clear: left;
+    padding: 7px;
+}
+
+#watch-some-stats {
+    color: #666;
+    width: 100%;
+}
+#watch-some-stats td {
+    padding: 5px 0;
+}
+#watch-some-stats .watch-stat {
+    font-weight: bold;
+    color: #000;
 }
 
 #page {

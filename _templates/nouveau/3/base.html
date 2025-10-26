@@ -58,7 +58,7 @@
                 {%if owner%}
                 <div class="cosmic_edit hddn" id="gbg" style="background-color: #f0f0f0; text-align: left; box-shadow: 0 2px 4px #ccc;">
                     <div style="width: 970px; margin: 0 auto;">
-                        <form action="/user/{{profile.displayname}}" method="POST" enctype="multipart/form-data">
+                        <form action="{{handle}}" method="POST" enctype="multipart/form-data">
                             <div style="background-color: #f0f0f0; position: relative;">
                                 <div style="padding:12px;font-size:18px;color:#555">
                                     Edit Channel
@@ -200,7 +200,7 @@
                         <div id="branded-page-header" class="ytg-wide">
                             <div id="channel-header-main">
                                 <div class="upper-section clearfix">
-                                    <a href="/user/{{profile.displayname}}">
+                                    <a href="{{handle}}">
                                         <span class="profile-thumb">
                                             <span class="centering-wrap">
                                                 <img src="/vi/ava/{{profile.displayname}}.jpg" alt="{{profile.displayname}}" width="60">
@@ -219,7 +219,7 @@
                                         {%elseif authorized == false%}
                                         <div class="yt-subscription-button-hovercard yt-uix-hovercard">
                                             <span class="yt-uix-button-context-light yt-uix-button-subscription-container">
-                                                <button onclick="window.location.replace('/login?next=/user/{{profile.displayname}}')" class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip{%if subscribed%} subscribed{%endif%}">
+                                                <button onclick="window.location.replace('/login?next={{handle}}')" class="yt-subscription-button subscription-button-with-recommended-channels yt-uix-button yt-uix-button-subscription yt-uix-tooltip{%if subscribed%} subscribed{%endif%}">
                                                     <span class="yt-uix-button-icon-wrapper">
                                                         <img class="yt-uix-button-icon yt-uix-button-icon-subscribe" src="/img/one/pixel.gif" alt="">
                                                         <span class="yt-valign-trick"></span>
@@ -269,23 +269,23 @@
                                 <div class="channel-horizontal-menu clearfix">
                                     <ul>
                                         <li{%if page == "featured" or page == "index"%} class="selected"{%endif%}>
-                                            <a href="/user/{{profile.displayname}}/featured" class="gh-tab-100">Featured</a>
+                                            <a href="{{handle}}/featured" class="gh-tab-100">Featured</a>
                                         </li>
                                         {% if owner or (profile.c_recent == 1 or profile.c_comments == 1) %}
                                         <li{%if page == "feed"%} class="selected"{%endif%}>
-                                            <a href="/user/{{profile.displayname}}/feed" class="gh-tab-101">Feed</a>
+                                            <a href="{{handle}}/feed" class="gh-tab-101">Feed</a>
                                         </li>
                                         {% endif %}
                                         {%if videos.count > 0 %}
                                         {% if profile.c_videos == 1 or profile.c_playlists == 1 %}
                                         <li{%if page == "videos"%} class="selected"{%endif%}>
-                                            <a href="/user/{{profile.displayname}}/videos" class="gh-tab-102">Videos</a>
+                                            <a href="{{handle}}/videos" class="gh-tab-102">Videos</a>
                                         </li>
                                         {% endif %}
                                         {%endif%}
                                     </ul>
                                     {% if videos.count > 0 %}
-                                    <form id="channel-search" action="/user/{{profile.displayname}}/videos">
+                                    <form id="channel-search" action="{{handle}}/videos">
                                         <input name="query" type="text" autocomplete="off" class="search-field label-input-label" maxlength="100" style="height: 24px;" placeholder="Search Channel" value="{% if query is defined%}{{query}}{% endif %}">
                                         <button class="search-btn" type="submit">
                                             <span class="search-btn-content">Search</span>
@@ -453,7 +453,7 @@
                                             </div>
                                             {% endfor %}
                                             {% if featured_playlists|length > 0 %}
-                                            <a class="view-all-link" href="/user/{{profile.displayname}}/videos?view=1">
+                                            <a class="view-all-link" href="{{handle}}/videos?view=1">
                                                 view all
                                                 <img src="/img/one/pixel.gif" alt="">
                                             </a>
@@ -470,7 +470,7 @@
                                                 <div><button class="yt-uix-button yt-uix-button-default yt-uix-button-short" id="edit_featured" onclick="$(this).toggleClass('hddn');$('.cosmic_featured_channels > a').toggleClass('hddn');$('#featured_users_add').toggleClass('hddn')">Edit</button></div>
                                             </div>
                                             <div id="featured_users_add" class="hddn" style="background-color:#7696e6; padding: 13px; font-size:14px;border-radius:5px;margin: 5px 0 5px 0; border:1px solid #4f87d4;color:white;font-weight:bold">
-                                                <form class="yt-uix-form" action="/user/{{profile.displayname}}" method="POST">
+                                                <form class="yt-uix-form" action="{{handle}}" method="POST">
                                                     <input type="text" class="yt-uix-form-input-text" style="width: 122px" maxlength="64" name="featured_title" style="padding:7px;width:238px;margin-top:7px" placeholder="Featured Channels" value="{% if featured_title != '' %}{{featured_title}}{% else %}Featured Channels{% endif %}">
                                                     <button type="submit" name="save_featured_channels" class="yt-uix-button yt-uix-button-primary yt-uix-button-short">Save</button>
                                                     <input type="hidden" id="featured_channels_small_input" value="{{profile.featured_channels}}" name="featured_channels">

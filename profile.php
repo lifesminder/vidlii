@@ -12,7 +12,7 @@
     if (isset($_GET["user"])) {
         $Channel_Owner = $DB->execute("SELECT username FROM users WHERE displayname = :USERNAME LIMIT 1", true, [":USERNAME" => $_GET["user"]]);
         $Exist = ($DB->RowNum > 0);
-        
+
         if (!$Exist) {
             $Channel_Owner = $DB->execute("SELECT u.displayname FROM users_oldnames r, users u WHERE r.displayname = :USERNAME AND u.username = r.username LIMIT 1", true, [":USERNAME" => $_GET["user"]]);
             if ($DB->RowNum > 0) {
@@ -27,6 +27,15 @@
 
             $Profile = $OWNER->get_profile();
             $OWNER_USERNAME = clean($Profile["username"]);
+            $handle = "/user/".$Profile["displayname"];
+            $userHandle = $api->db("SELECT * from handles where user = ".$Profile["id"]." and featured = 1");
+            if($userHandle["count"] == 1) {
+                $userHandle = $userHandle["data"];
+                switch($userHandle["type"]) {
+                    case 1: $handle = "/c/".$userHandle["handle"]; break;
+                    case 2: $handle = "/@".$userHandle["handle"]; break;
+                }
+            }
 
             // New logic of channels: Nouveau
             if($Profile["channel_version"] == 3 || ($Profile["nouveau"] == 1 && $Profile["channel_version"] > 3)) {

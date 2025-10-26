@@ -4,7 +4,7 @@
             Favorites (<?= number_format($Profile["favorites"]) ?>)
             <div style="float:right">
                 <a<? if (isset($_POST["search_input"])) : ?> class="hddn"<? endif ?> href="javascript:void(0)" onclick="$(this).toggleClass('hddn');$('#searcher').toggleClass('hddn');$('#search_input').focus()">Search Favorites</a>
-                <form action="/user/<?= $Profile["displayname"] ?>/favorites" method="POST" <? if (!isset($_POST["search_input"])) : ?>class="hddn"<? endif ?> style="position:relative;bottom:1px" id="searcher">
+                <form action="<?= $handle ?>/favorites" method="POST" <? if (!isset($_POST["search_input"])) : ?>class="hddn"<? endif ?> style="position:relative;bottom:1px" id="searcher">
                     <input type="text" name="search" maxlength="64"<? if (isset($_POST["search"])) : ?> value="<?= $_POST["search"] ?>" <? endif ?>placeholder="Enter Search Term..." id="search_input" style="width:200px;border-radius:0;padding:1px"> <input type="submit" value="Search" name="search_input" class="search_button" style="border-radius:0;padding:1px 5px">
                 </form>
             </div>

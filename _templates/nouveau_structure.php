@@ -118,6 +118,8 @@
     ?>
     <div style="background: transparent; background-color: transparent;">
         <?php
+            $args["handle"] = $handle;
+
             switch($Profile["channel_version"]) {
                 case 3: {
                     $twoColumns = true;
