@@ -12,11 +12,11 @@ use Doctrine\DBAL\Types\Type;
 
 use function array_change_key_case;
 use function array_key_exists;
-use function array_values;
 use function assert;
 use function implode;
 use function is_string;
 use function preg_match;
+use function sprintf;
 use function str_contains;
 use function str_replace;
 use function str_starts_with;
@@ -44,38 +44,40 @@ class OracleSchemaManager extends AbstractSchemaManager
     }
 
     /**
+     * @deprecated Use the schema name and the unqualified table name separately instead.
+     *
      * {@inheritDoc}
      */
     protected function _getPortableTableDefinition(array $table): string
     {
         $table = array_change_key_case($table, CASE_LOWER);
 
+        /** @phpstan-ignore return.type */
         return $this->getQuotedIdentifierName($table['table_name']);
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function _getPortableTableIndexesList(array $tableIndexes, string $tableName): array
+    protected function _getPortableTableIndexesList(array $rows, string $tableName): array
     {
         $indexBuffer = [];
-        foreach ($tableIndexes as $tableIndex) {
-            $tableIndex = array_change_key_case($tableIndex, CASE_LOWER);
+        foreach ($rows as $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
 
-            $keyName = strtolower($tableIndex['name']);
-            $buffer  = [];
+            $buffer = [];
 
-            if ($tableIndex['is_primary'] === 'P') {
-                $keyName              = 'primary';
+            if ($row['is_primary'] === 'P') {
+                $buffer['key_name']   = 'primary';
                 $buffer['primary']    = true;
                 $buffer['non_unique'] = false;
             } else {
+                $buffer['key_name']   = strtolower($row['name']);
                 $buffer['primary']    = false;
-                $buffer['non_unique'] = ! $tableIndex['is_unique'];
+                $buffer['non_unique'] = ! $row['is_unique'];
             }
 
-            $buffer['key_name']    = $keyName;
-            $buffer['column_name'] = $this->getQuotedIdentifierName($tableIndex['column_name']);
+            $buffer['column_name'] = $this->getQuotedIdentifierName($row['column_name']);
             $indexBuffer[]         = $buffer;
         }
 
@@ -101,10 +103,6 @@ class OracleSchemaManager extends AbstractSchemaManager
         $length = $precision = null;
         $scale  = 0;
         $fixed  = false;
-
-        if (! isset($tableColumn['column_name'])) {
-            $tableColumn['column_name'] = '';
-        }
 
         assert(array_key_exists('data_default', $tableColumn));
 
@@ -182,7 +180,7 @@ class OracleSchemaManager extends AbstractSchemaManager
             'scale'      => $scale,
         ];
 
-        if (isset($tableColumn['comments'])) {
+        if ($tableColumn['comments'] !== null) {
             $options['comment'] = $tableColumn['comments'];
         }
 
@@ -192,30 +190,32 @@ class OracleSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritDoc}
      */
-    protected function _getPortableTableForeignKeysList(array $tableForeignKeys): array
+    protected function _getPortableTableForeignKeysList(array $rows): array
     {
         $list = [];
-        foreach ($tableForeignKeys as $value) {
-            $value = array_change_key_case($value, CASE_LOWER);
-            if (! isset($list[$value['constraint_name']])) {
-                if ($value['delete_rule'] === 'NO ACTION') {
-                    $value['delete_rule'] = null;
+        foreach ($rows as $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
+            if (! isset($list[$row['constraint_name']])) {
+                if ($row['delete_rule'] === 'NO ACTION') {
+                    $row['delete_rule'] = null;
                 }
 
-                $list[$value['constraint_name']] = [
-                    'name' => $this->getQuotedIdentifierName($value['constraint_name']),
+                $list[$row['constraint_name']] = [
+                    'name' => $this->getQuotedIdentifierName($row['constraint_name']),
                     'local' => [],
                     'foreign' => [],
-                    'foreignTable' => $value['references_table'],
-                    'onDelete' => $value['delete_rule'],
+                    'foreignTable' => $row['references_table'],
+                    'onDelete' => $row['delete_rule'],
+                    'deferrable' => $row['deferrable'] === 'DEFERRABLE',
+                    'deferred' => $row['deferred'] === 'DEFERRED',
                 ];
             }
 
-            $localColumn   = $this->getQuotedIdentifierName($value['local_column']);
-            $foreignColumn = $this->getQuotedIdentifierName($value['foreign_column']);
+            $localColumn   = $this->getQuotedIdentifierName($row['local_column']);
+            $foreignColumn = $this->getQuotedIdentifierName($row['foreign_column']);
 
-            $list[$value['constraint_name']]['local'][$value['position']]   = $localColumn;
-            $list[$value['constraint_name']]['foreign'][$value['position']] = $foreignColumn;
+            $list[$row['constraint_name']]['local'][]   = $localColumn;
+            $list[$row['constraint_name']]['foreign'][] = $foreignColumn;
         }
 
         return parent::_getPortableTableForeignKeysList($list);
@@ -227,11 +227,15 @@ class OracleSchemaManager extends AbstractSchemaManager
     protected function _getPortableTableForeignKeyDefinition(array $tableForeignKey): ForeignKeyConstraint
     {
         return new ForeignKeyConstraint(
-            array_values($tableForeignKey['local']),
+            $tableForeignKey['local'],
             $this->getQuotedIdentifierName($tableForeignKey['foreignTable']),
-            array_values($tableForeignKey['foreign']),
+            $tableForeignKey['foreign'],
             $this->getQuotedIdentifierName($tableForeignKey['name']),
-            ['onDelete' => $tableForeignKey['onDelete']],
+            [
+                'onDelete' => $tableForeignKey['onDelete'],
+                'deferrable' => $tableForeignKey['deferrable'],
+                'deferred' => $tableForeignKey['deferred'],
+            ],
         );
     }
 
@@ -266,7 +270,7 @@ class OracleSchemaManager extends AbstractSchemaManager
         $params = $this->connection->getParams();
 
         if (isset($params['password'])) {
-            $statement .= ' IDENTIFIED BY ' . $params['password'];
+            $statement .= ' IDENTIFIED BY ' . $this->connection->quoteSingleIdentifier($params['password']);
         }
 
         $this->connection->executeStatement($statement);
@@ -275,7 +279,11 @@ class OracleSchemaManager extends AbstractSchemaManager
         $this->connection->executeStatement($statement);
     }
 
-    /** @throws Exception */
+    /**
+     * @internal The method should be only used by the {@see OracleSchemaManager} class.
+     *
+     * @throws Exception
+     */
     protected function dropAutoincrement(string $table): bool
     {
         $sql = $this->platform->getDropAutoincrementSql($table);
@@ -305,7 +313,7 @@ class OracleSchemaManager extends AbstractSchemaManager
     private function getQuotedIdentifierName(string $identifier): string
     {
         if (preg_match('/[a-z]/', $identifier) === 1) {
-            return $this->platform->quoteIdentifier($identifier);
+            return $this->platform->quoteSingleIdentifier($identifier);
         }
 
         return $identifier;
@@ -325,13 +333,18 @@ SQL;
 
     protected function selectTableColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $sql = 'SELECT';
+        $conditions = ['C.OWNER = :OWNER'];
+        $params     = ['OWNER' => $databaseName];
 
-        if ($tableName === null) {
-            $sql .= ' C.TABLE_NAME,';
+        if ($tableName !== null) {
+            $conditions[]         = 'C.TABLE_NAME = :TABLE_NAME';
+            $params['TABLE_NAME'] = $tableName;
         }
 
-        $sql .= <<<'SQL'
+        $sql = sprintf(
+            <<<'SQL'
+          SELECT
+                 C.TABLE_NAME,
                  C.COLUMN_NAME,
                  C.DATA_TYPE,
                  C.DATA_DEFAULT,
@@ -349,30 +362,29 @@ SQL;
            ON D.OWNER = C.OWNER
                   AND D.TABLE_NAME = C.TABLE_NAME
                   AND D.COLUMN_NAME = C.COLUMN_NAME
-SQL;
-
-        $conditions = ['C.OWNER = :OWNER'];
-        $params     = ['OWNER' => $databaseName];
-
-        if ($tableName !== null) {
-            $conditions[]         = 'C.TABLE_NAME = :TABLE_NAME';
-            $params['TABLE_NAME'] = $tableName;
-        }
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY C.COLUMN_ID';
+           WHERE %s
+        ORDER BY C.TABLE_NAME, C.COLUMN_ID
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
 
     protected function selectIndexColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $sql = 'SELECT';
+        $conditions = ['IND_COL.INDEX_OWNER = :OWNER'];
+        $params     = ['OWNER' => $databaseName];
 
-        if ($tableName === null) {
-            $sql .= ' IND_COL.TABLE_NAME,';
+        if ($tableName !== null) {
+            $conditions[]         = 'IND_COL.TABLE_NAME = :TABLE_NAME';
+            $params['TABLE_NAME'] = $tableName;
         }
 
-        $sql .= <<<'SQL'
+        $sql = sprintf(
+            <<<'SQL'
+          SELECT
+                 IND_COL.TABLE_NAME,
                  IND_COL.INDEX_NAME AS NAME,
                  IND.INDEX_TYPE AS TYPE,
                  DECODE(IND.UNIQUENESS, 'NONUNIQUE', 0, 'UNIQUE', 1) AS IS_UNIQUE,
@@ -386,33 +398,35 @@ SQL;
        LEFT JOIN ALL_CONSTRAINTS CON
               ON CON.OWNER = IND_COL.INDEX_OWNER
              AND CON.INDEX_NAME = IND_COL.INDEX_NAME
-SQL;
-
-        $conditions = ['IND_COL.INDEX_OWNER = :OWNER'];
-        $params     = ['OWNER' => $databaseName];
-
-        if ($tableName !== null) {
-            $conditions[]         = 'IND_COL.TABLE_NAME = :TABLE_NAME';
-            $params['TABLE_NAME'] = $tableName;
-        }
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY IND_COL.TABLE_NAME, IND_COL.INDEX_NAME'
-            . ', IND_COL.COLUMN_POSITION';
+           WHERE %s
+        ORDER BY IND_COL.TABLE_NAME,
+                 IND_COL.INDEX_NAME,
+                 IND_COL.COLUMN_POSITION
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
 
     protected function selectForeignKeyColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $sql = 'SELECT';
+        $conditions = ["ALC.CONSTRAINT_TYPE = 'R'", 'COLS.OWNER = :OWNER'];
+        $params     = ['OWNER' => $databaseName];
 
-        if ($tableName === null) {
-            $sql .= ' COLS.TABLE_NAME,';
+        if ($tableName !== null) {
+            $conditions[]         = 'COLS.TABLE_NAME = :TABLE_NAME';
+            $params['TABLE_NAME'] = $tableName;
         }
 
-        $sql .= <<<'SQL'
+        $sql = sprintf(
+            <<<'SQL'
+          SELECT
+                 COLS.TABLE_NAME,
                  ALC.CONSTRAINT_NAME,
                  ALC.DELETE_RULE,
+                 ALC.DEFERRABLE,
+                 ALC.DEFERRED,
                  COLS.COLUMN_NAME LOCAL_COLUMN,
                  COLS.POSITION,
                  R_COLS.TABLE_NAME REFERENCES_TABLE,
@@ -422,18 +436,13 @@ SQL;
        LEFT JOIN ALL_CONS_COLUMNS R_COLS ON R_COLS.OWNER = ALC.R_OWNER AND
                  R_COLS.CONSTRAINT_NAME = ALC.R_CONSTRAINT_NAME AND
                  R_COLS.POSITION = COLS.POSITION
-SQL;
-
-        $conditions = ["ALC.CONSTRAINT_TYPE = 'R'", 'COLS.OWNER = :OWNER'];
-        $params     = ['OWNER' => $databaseName];
-
-        if ($tableName !== null) {
-            $conditions[]         = 'COLS.TABLE_NAME = :TABLE_NAME';
-            $params['TABLE_NAME'] = $tableName;
-        }
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY COLS.TABLE_NAME, COLS.CONSTRAINT_NAME'
-            . ', COLS.POSITION';
+           WHERE %s
+        ORDER BY COLS.TABLE_NAME,
+                 COLS.CONSTRAINT_NAME,
+                 COLS.POSITION
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
@@ -443,8 +452,6 @@ SQL;
      */
     protected function fetchTableOptionsByTable(string $databaseName, ?string $tableName = null): array
     {
-        $sql = 'SELECT TABLE_NAME, COMMENTS';
-
         $conditions = ['OWNER = :OWNER'];
         $params     = ['OWNER' => $databaseName];
 
@@ -453,24 +460,26 @@ SQL;
             $params['TABLE_NAME'] = $tableName;
         }
 
-        $sql .= ' FROM ALL_TAB_COMMENTS WHERE ' . implode(' AND ', $conditions);
-
-        /** @var array<string,array<string,mixed>> $metadata */
-        $metadata = $this->connection->executeQuery($sql, $params)
-            ->fetchAllAssociativeIndexed();
+        $sql = sprintf(
+            <<<'SQL'
+      SELECT TABLE_NAME,
+             COMMENTS
+        FROM ALL_TAB_COMMENTS
+      WHERE %s
+   ORDER BY TABLE_NAME
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         $tableOptions = [];
-        foreach ($metadata as $table => $data) {
-            $data = array_change_key_case($data, CASE_LOWER);
-
-            $tableOptions[$table] = [
-                'comment' => $data['comments'],
-            ];
+        foreach ($this->connection->iterateKeyValue($sql, $params) as $table => $comments) {
+            $tableOptions[$table] = ['comment' => $comments];
         }
 
         return $tableOptions;
     }
 
+    /** @deprecated Use {@see Identifier::toNormalizedValue()} instead. */
     protected function normalizeName(string $name): string
     {
         $identifier = new Identifier($name);

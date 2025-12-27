@@ -20,13 +20,13 @@ use function array_change_key_case;
 use function array_map;
 use function assert;
 use function explode;
+use function func_get_arg;
+use function func_num_args;
 use function implode;
-use function is_string;
 use function preg_match;
 use function preg_match_all;
+use function sprintf;
 use function str_contains;
-use function strtok;
-use function strtolower;
 use function strtr;
 
 use const CASE_LOWER;
@@ -59,6 +59,8 @@ class MySQLSchemaManager extends AbstractSchemaManager
     private ?DefaultTableOptions $defaultTableOptions = null;
 
     /**
+     * @deprecated Use the schema name and the unqualified table name separately instead.
+     *
      * {@inheritDoc}
      */
     protected function _getPortableTableDefinition(array $table): string
@@ -77,31 +79,28 @@ class MySQLSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritDoc}
      */
-    protected function _getPortableTableIndexesList(array $tableIndexes, string $tableName): array
+    protected function _getPortableTableIndexesList(array $rows, string $tableName): array
     {
-        foreach ($tableIndexes as $k => $v) {
-            $v = array_change_key_case($v, CASE_LOWER);
-            if ($v['key_name'] === 'PRIMARY') {
-                $v['primary'] = true;
-            } else {
-                $v['primary'] = false;
-            }
+        foreach ($rows as $i => $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
 
-            if (str_contains($v['index_type'], 'FULLTEXT')) {
-                $v['flags'] = ['FULLTEXT'];
-            } elseif (str_contains($v['index_type'], 'SPATIAL')) {
-                $v['flags'] = ['SPATIAL'];
+            $row['primary'] = $row['key_name'] === 'PRIMARY';
+
+            if (str_contains($row['index_type'], 'FULLTEXT')) {
+                $row['flags'] = ['FULLTEXT'];
+            } elseif (str_contains($row['index_type'], 'SPATIAL')) {
+                $row['flags'] = ['SPATIAL'];
             }
 
             // Ignore prohibited prefix `length` for spatial index
-            if (! str_contains($v['index_type'], 'SPATIAL')) {
-                $v['length'] = isset($v['sub_part']) ? (int) $v['sub_part'] : null;
+            if (! str_contains($row['index_type'], 'SPATIAL')) {
+                $row['length'] = isset($row['sub_part']) ? (int) $row['sub_part'] : null;
             }
 
-            $tableIndexes[$k] = $v;
+            $rows[$i] = $row;
         }
 
-        return parent::_getPortableTableIndexesList($tableIndexes, $tableName);
+        return parent::_getPortableTableIndexesList($rows, $tableName);
     }
 
     /**
@@ -119,48 +118,24 @@ class MySQLSchemaManager extends AbstractSchemaManager
     {
         $tableColumn = array_change_key_case($tableColumn, CASE_LOWER);
 
-        $dbType = strtolower($tableColumn['type']);
-        $dbType = strtok($dbType, '(), ');
-        assert(is_string($dbType));
-
-        $length = $tableColumn['length'] ?? strtok('(), ');
-
-        $fixed = false;
-
-        if (! isset($tableColumn['name'])) {
-            $tableColumn['name'] = '';
-        }
-
+        $dbType    = $tableColumn['type'];
+        $length    = null;
         $scale     = 0;
         $precision = null;
+        $fixed     = false;
+        $values    = [];
 
         $type = $this->platform->getDoctrineTypeMapping($dbType);
 
-        $values = [];
-
         switch ($dbType) {
             case 'char':
-            case 'binary':
-                $fixed = true;
+            case 'varchar':
+                $length = (int) $tableColumn['character_maximum_length'];
                 break;
 
-            case 'float':
-            case 'double':
-            case 'real':
-            case 'numeric':
-            case 'decimal':
-                if (
-                    preg_match(
-                        '([A-Za-z]+\(([0-9]+),([0-9]+)\))',
-                        $tableColumn['type'],
-                        $match,
-                    ) === 1
-                ) {
-                    $precision = (int) $match[1];
-                    $scale     = (int) $match[2];
-                    $length    = null;
-                }
-
+            case 'binary':
+            case 'varbinary':
+                $length = (int) $tableColumn['character_octet_length'];
                 break;
 
             case 'tinytext':
@@ -187,18 +162,28 @@ class MySQLSchemaManager extends AbstractSchemaManager
                 $length = AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
                 break;
 
-            case 'tinyint':
-            case 'smallint':
-            case 'mediumint':
-            case 'int':
-            case 'integer':
-            case 'bigint':
-            case 'year':
-                $length = null;
+            case 'float':
+            case 'double':
+            case 'real':
+            case 'numeric':
+            case 'decimal':
+                $precision = (int) $tableColumn['numeric_precision'];
+
+                if (isset($tableColumn['numeric_scale'])) {
+                    $scale = (int) $tableColumn['numeric_scale'];
+                }
+
+                break;
+        }
+
+        switch ($dbType) {
+            case 'char':
+            case 'binary':
+                $fixed = true;
                 break;
 
             case 'enum':
-                $values = $this->parseEnumExpression($tableColumn['type']);
+                $values = $this->parseEnumExpression($tableColumn['column_type']);
                 break;
         }
 
@@ -209,8 +194,8 @@ class MySQLSchemaManager extends AbstractSchemaManager
         }
 
         $options = [
-            'length'        => $length !== null ? (int) $length : null,
-            'unsigned'      => str_contains($tableColumn['type'], 'unsigned'),
+            'length'        => $length,
+            'unsigned'      => str_contains($tableColumn['column_type'], 'unsigned'),
             'fixed'         => $fixed,
             'default'       => $columnDefault,
             'notnull'       => $tableColumn['null'] !== 'YES',
@@ -220,19 +205,13 @@ class MySQLSchemaManager extends AbstractSchemaManager
             'values'        => $values,
         ];
 
-        if (isset($tableColumn['comment'])) {
+        if ($tableColumn['comment'] !== null) {
             $options['comment'] = $tableColumn['comment'];
         }
 
         $column = new Column($tableColumn['field'], Type::getType($type), $options);
-
-        if (isset($tableColumn['characterset'])) {
-            $column->setPlatformOption('charset', $tableColumn['characterset']);
-        }
-
-        if (isset($tableColumn['collation'])) {
-            $column->setPlatformOption('collation', $tableColumn['collation']);
-        }
+        $column->setPlatformOption('charset', $tableColumn['characterset']);
+        $column->setPlatformOption('collation', $tableColumn['collation']);
 
         return $column;
     }
@@ -286,32 +265,32 @@ class MySQLSchemaManager extends AbstractSchemaManager
     /**
      * {@inheritDoc}
      */
-    protected function _getPortableTableForeignKeysList(array $tableForeignKeys): array
+    protected function _getPortableTableForeignKeysList(array $rows): array
     {
         $list = [];
-        foreach ($tableForeignKeys as $value) {
-            $value = array_change_key_case($value, CASE_LOWER);
-            if (! isset($list[$value['constraint_name']])) {
-                if (! isset($value['delete_rule']) || $value['delete_rule'] === 'RESTRICT') {
-                    $value['delete_rule'] = null;
+        foreach ($rows as $row) {
+            $row = array_change_key_case($row, CASE_LOWER);
+            if (! isset($list[$row['constraint_name']])) {
+                if (! isset($row['delete_rule']) || $row['delete_rule'] === 'RESTRICT') {
+                    $row['delete_rule'] = null;
                 }
 
-                if (! isset($value['update_rule']) || $value['update_rule'] === 'RESTRICT') {
-                    $value['update_rule'] = null;
+                if (! isset($row['update_rule']) || $row['update_rule'] === 'RESTRICT') {
+                    $row['update_rule'] = null;
                 }
 
-                $list[$value['constraint_name']] = [
-                    'name' => $value['constraint_name'],
+                $list[$row['constraint_name']] = [
+                    'name' => $this->getQuotedIdentifierName($row['constraint_name']),
                     'local' => [],
                     'foreign' => [],
-                    'foreignTable' => $value['referenced_table_name'],
-                    'onDelete' => $value['delete_rule'],
-                    'onUpdate' => $value['update_rule'],
+                    'foreignTable' => $row['referenced_table_name'],
+                    'onDelete' => $row['delete_rule'],
+                    'onUpdate' => $row['update_rule'],
                 ];
             }
 
-            $list[$value['constraint_name']]['local'][]   = $value['column_name'];
-            $list[$value['constraint_name']]['foreign'][] = $value['referenced_column_name'];
+            $list[$row['constraint_name']]['local'][]   = $row['column_name'];
+            $list[$row['constraint_name']]['foreign'][] = $row['referenced_column_name'];
         }
 
         return parent::_getPortableTableForeignKeysList($list);
@@ -335,7 +314,7 @@ class MySQLSchemaManager extends AbstractSchemaManager
     }
 
     /** @throws Exception */
-    public function createComparator(): Comparator
+    public function createComparator(/* ComparatorConfig $config = new ComparatorConfig() */): Comparator
     {
         return new MySQL\Comparator(
             $this->platform,
@@ -346,6 +325,7 @@ class MySQLSchemaManager extends AbstractSchemaManager
                 new ConnectionCollationMetadataProvider($this->connection),
             ),
             $this->getDefaultTableOptions(),
+            func_num_args() > 0 ? func_get_arg(0) : new ComparatorConfig(),
         );
     }
 
@@ -364,17 +344,28 @@ SQL;
 
     protected function selectTableColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $columnTypeSQL = $this->platform->getColumnTypeSQLSnippet('c', $databaseName);
+        // The schema name is passed multiple times as a literal in the WHERE clause instead of using a JOIN condition
+        // in order to avoid performance issues on MySQL older than 8.0 and the corresponding MariaDB versions
+        // caused by https://bugs.mysql.com/bug.php?id=81347
+        $conditions = ['c.TABLE_SCHEMA = ?', 't.TABLE_SCHEMA = ?'];
+        $params     = [$databaseName, $databaseName];
 
-        $sql = 'SELECT';
-
-        if ($tableName === null) {
-            $sql .= ' c.TABLE_NAME,';
+        if ($tableName !== null) {
+            $conditions[] = 't.TABLE_NAME = ?';
+            $params[]     = $tableName;
         }
 
-        $sql .= <<<SQL
+        $sql = sprintf(
+            <<<'SQL'
+SELECT
+       c.TABLE_NAME,
        c.COLUMN_NAME        AS field,
-       $columnTypeSQL       AS type,
+       %s                   AS type,
+       c.COLUMN_TYPE,
+       c.CHARACTER_MAXIMUM_LENGTH,
+       c.CHARACTER_OCTET_LENGTH,
+       c.NUMERIC_PRECISION,
+       c.NUMERIC_SCALE,
        c.IS_NULLABLE        AS `null`,
        c.COLUMN_KEY         AS `key`,
        c.COLUMN_DEFAULT     AS `default`,
@@ -385,41 +376,20 @@ SQL;
 FROM information_schema.COLUMNS c
     INNER JOIN information_schema.TABLES t
         ON t.TABLE_NAME = c.TABLE_NAME
-SQL;
-
-        // The schema name is passed multiple times as a literal in the WHERE clause instead of using a JOIN condition
-        // in order to avoid performance issues on MySQL older than 8.0 and the corresponding MariaDB versions
-        // caused by https://bugs.mysql.com/bug.php?id=81347
-        $conditions = ['c.TABLE_SCHEMA = ?', 't.TABLE_SCHEMA = ?', "t.TABLE_TYPE = 'BASE TABLE'"];
-        $params     = [$databaseName, $databaseName];
-
-        if ($tableName !== null) {
-            $conditions[] = 't.TABLE_NAME = ?';
-            $params[]     = $tableName;
-        }
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY ORDINAL_POSITION';
+ WHERE %s
+   AND t.TABLE_TYPE = 'BASE TABLE'
+ORDER BY c.TABLE_NAME,
+         c.ORDINAL_POSITION
+SQL,
+            $this->platform->getColumnTypeSQLSnippet('c', $databaseName),
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
 
     protected function selectIndexColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $sql = 'SELECT';
-
-        if ($tableName === null) {
-            $sql .= ' TABLE_NAME,';
-        }
-
-        $sql .= <<<'SQL'
-        NON_UNIQUE  AS Non_Unique,
-        INDEX_NAME  AS Key_name,
-        COLUMN_NAME AS Column_Name,
-        SUB_PART    AS Sub_Part,
-        INDEX_TYPE  AS Index_Type
-FROM information_schema.STATISTICS
-SQL;
-
         $conditions = ['TABLE_SCHEMA = ?'];
         $params     = [$databaseName];
 
@@ -428,20 +398,43 @@ SQL;
             $params[]     = $tableName;
         }
 
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY SEQ_IN_INDEX';
+        $sql = sprintf(
+            <<<'SQL'
+SELECT
+        TABLE_NAME,
+        NON_UNIQUE  AS Non_Unique,
+        INDEX_NAME  AS Key_name,
+        COLUMN_NAME AS Column_Name,
+        SUB_PART    AS Sub_Part,
+        INDEX_TYPE  AS Index_Type
+FROM information_schema.STATISTICS
+WHERE %s
+ORDER BY TABLE_NAME,
+         SEQ_IN_INDEX
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
 
     protected function selectForeignKeyColumns(string $databaseName, ?string $tableName = null): Result
     {
-        $sql = 'SELECT DISTINCT';
+        // The schema name is passed multiple times in the WHERE clause instead of using a JOIN condition
+        // in order to avoid performance issues on MySQL older than 8.0 and the corresponding MariaDB versions
+        // caused by https://bugs.mysql.com/bug.php?id=81347
+        $conditions = ['k.TABLE_SCHEMA = ?', 'c.CONSTRAINT_SCHEMA = ?'];
+        $params     = [$databaseName, $databaseName];
 
-        if ($tableName === null) {
-            $sql .= ' k.TABLE_NAME,';
+        if ($tableName !== null) {
+            $conditions[] = 'k.TABLE_NAME = ?';
+            $params[]     = $tableName;
         }
 
-        $sql .= <<<'SQL'
+        $sql = sprintf(
+            <<<'SQL'
+SELECT
+            k.TABLE_NAME,
             k.CONSTRAINT_NAME,
             k.COLUMN_NAME,
             k.REFERENCED_TABLE_NAME,
@@ -453,25 +446,14 @@ FROM information_schema.key_column_usage k
 INNER JOIN information_schema.referential_constraints c
 ON c.CONSTRAINT_NAME = k.CONSTRAINT_NAME
 AND c.TABLE_NAME = k.TABLE_NAME
-SQL;
-
-        $conditions = ['k.TABLE_SCHEMA = ?'];
-        $params     = [$databaseName];
-
-        if ($tableName !== null) {
-            $conditions[] = 'k.TABLE_NAME = ?';
-            $params[]     = $tableName;
-        }
-
-        // The schema name is passed multiple times in the WHERE clause instead of using a JOIN condition
-        // in order to avoid performance issues on MySQL older than 8.0 and the corresponding MariaDB versions
-        // caused by https://bugs.mysql.com/bug.php?id=81347
-        $conditions[] = 'c.CONSTRAINT_SCHEMA = ?';
-        $params[]     = $databaseName;
-
-        $conditions[] = 'k.REFERENCED_COLUMN_NAME IS NOT NULL';
-
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY k.ORDINAL_POSITION';
+WHERE %s
+AND k.REFERENCED_COLUMN_NAME IS NOT NULL
+ORDER BY k.TABLE_NAME,
+         k.CONSTRAINT_NAME,
+         k.ORDINAL_POSITION
+SQL,
+            implode(' AND ', $conditions),
+        );
 
         return $this->connection->executeQuery($sql, $params);
     }
@@ -488,7 +470,7 @@ SQL;
             $params[] = $tableName;
         }
 
-        /** @var array<string,array<string,mixed>> $metadata */
+        /** @var array<non-empty-string,array<string,mixed>> $metadata */
         $metadata = $this->connection->executeQuery($sql, $params)
             ->fetchAllAssociativeIndexed();
 
@@ -541,5 +523,15 @@ SQL;
         }
 
         return $this->defaultTableOptions;
+    }
+
+    /** Returns the quoted representation of the given identifier name. */
+    private function getQuotedIdentifierName(?string $identifier): ?string
+    {
+        if ($identifier === null) {
+            return null;
+        }
+
+        return $this->platform->quoteSingleIdentifier($identifier);
     }
 }

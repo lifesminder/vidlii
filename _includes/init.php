@@ -5,14 +5,10 @@
     error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
     // initializing environment
-    if(file_exists($_SERVER["DOCUMENT_ROOT"]."/.env")) {
-        $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
-        $env->load();
-    } else {
-        header("Location: /setup");
-        exit(0);
-    }
-	
+    $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+    $env->safeLoad();
+    $_ENV["setup"] = (!file_exists($_SERVER["DOCUMENT_ROOT"]."/.env"));
+
     // Constraints
     define("ROOT_FOLDER", $_SERVER["DOCUMENT_ROOT"]);
     define("UPLOAD_LIMIT", (int)$_ENV["uploadLimit"] ?? 1024 * 1024 * 1024 * 2.01);
@@ -34,9 +30,10 @@
     // AUTOLOAD CLASSES
     spl_autoload_register(function ($class) { include ROOT_FOLDER."/_includes/_classes/" . $class . ".class.php"; });
     require_once ROOT_FOLDER."/_includes/PHPfunctions.php";
-    
+
     // create folders
-    if(!is_dir(ROOT_FOLDER."/cache")) mkdir(ROOT_FOLDER."/cache", 0777, true);
+    if(!is_dir(ROOT_FOLDER."/cache"))
+        mkdir(ROOT_FOLDER."/cache", 0777, true);
     if(!is_dir(ROOT_FOLDER."/usfi")) {
         mkdir(ROOT_FOLDER."/usfi", 0777, true);
         mkdir(ROOT_FOLDER."/usfi/v/", 0777, true);

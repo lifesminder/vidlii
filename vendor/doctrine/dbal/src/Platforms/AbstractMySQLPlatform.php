@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace Doctrine\DBAL\Platforms;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\InvalidColumnType\ColumnValuesRequired;
 use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Platforms\Keywords\MySQLKeywords;
-use Doctrine\DBAL\Schema\AbstractAsset;
+use Doctrine\DBAL\Platforms\MySQL\MySQLMetadataProvider;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\SQL\Builder\DefaultSelectSQLBuilder;
 use Doctrine\DBAL\SQL\Builder\SelectSQLBuilder;
+use Doctrine\DBAL\SQL\Parser;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Deprecations\Deprecation;
 
+use function array_diff;
 use function array_map;
 use function array_merge;
 use function array_unique;
@@ -44,6 +47,11 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     final public const LENGTH_LIMIT_TINYBLOB   = 255;
     final public const LENGTH_LIMIT_BLOB       = 65535;
     final public const LENGTH_LIMIT_MEDIUMBLOB = 16777215;
+
+    public function __construct()
+    {
+        parent::__construct(UnquotedIdentifierFolding::NONE);
+    }
 
     protected function doModifyLimitQuery(string $query, ?int $limit, int $offset): string
     {
@@ -128,6 +136,14 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      */
     public function getJsonTypeDeclarationSQL(array $column): string
     {
+        if (! empty($column['jsonb'])) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6939',
+                'The "jsonb" column platform option is deprecated. Use the "JSONB" type instead.',
+            );
+        }
+
         return 'JSON';
     }
 
@@ -167,6 +183,12 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     public function getDateTimeTypeDeclarationSQL(array $column): string
     {
         if (isset($column['version']) && $column['version'] === true) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6940',
+                'The "version" column platform option is deprecated.',
+            );
+
             return 'TIMESTAMP';
         }
 
@@ -194,7 +216,7 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      */
     public function getBooleanTypeDeclarationSQL(array $column): string
     {
-        return 'TINYINT(1)';
+        return 'TINYINT';
     }
 
     /**
@@ -223,10 +245,12 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      * The SQL snippet required to elucidate a column type
      *
      * Returns a column type SELECT snippet string
+     *
+     * @internal The method should be only used from within the {@see MySQLSchemaManager} class hierarchy.
      */
     public function getColumnTypeSQLSnippet(string $tableAlias, string $databaseName): string
     {
-        return $tableAlias . '.COLUMN_TYPE';
+        return $tableAlias . '.DATA_TYPE';
     }
 
     /**
@@ -234,25 +258,27 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      */
     protected function _getCreateTableSQL(string $name, array $columns, array $options = []): array
     {
+        $this->validateCreateTableOptions($options, __METHOD__);
+
         $queryFields = $this->getColumnDeclarationListSQL($columns);
 
-        if (isset($options['uniqueConstraints']) && ! empty($options['uniqueConstraints'])) {
+        if (! empty($options['uniqueConstraints'])) {
             foreach ($options['uniqueConstraints'] as $definition) {
                 $queryFields .= ', ' . $this->getUniqueConstraintDeclarationSQL($definition);
             }
         }
 
         // add all indexes
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+        if (! empty($options['indexes'])) {
             foreach ($options['indexes'] as $definition) {
                 $queryFields .= ', ' . $this->getIndexDeclarationSQL($definition);
             }
         }
 
         // attach all primary keys
-        if (isset($options['primary']) && ! empty($options['primary'])) {
+        if (! empty($options['primary'])) {
             $keyColumns   = array_unique(array_values($options['primary']));
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+            $queryFields .= ', PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
         }
 
         $sql = ['CREATE'];
@@ -367,48 +393,51 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
                 . $this->getColumnDeclarationSQL($newColumn->getQuotedName($this), $newColumnProperties);
         }
 
-        $addedIndexes    = $this->indexAssetsByLowerCaseName($diff->getAddedIndexes());
-        $modifiedIndexes = $this->indexAssetsByLowerCaseName($diff->getModifiedIndexes());
-        $diffModified    = false;
+        $droppedIndexes = $this->indexIndexesByLowerCaseName($diff->getDroppedIndexes());
+        $addedIndexes   = $this->indexIndexesByLowerCaseName($diff->getAddedIndexes());
+        $diffModified   = false;
+
+        $noLongerPrimaryKeyColumns = [];
+
+        if (isset($droppedIndexes['primary'])) {
+            $queryParts[] = 'DROP PRIMARY KEY';
+
+            $noLongerPrimaryKeyColumns = $droppedIndexes['primary']->getColumns();
+        }
 
         if (isset($addedIndexes['primary'])) {
             $keyColumns   = array_values(array_unique($addedIndexes['primary']->getColumns()));
             $queryParts[] = 'ADD PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
-            unset($addedIndexes['primary']);
-            $diffModified = true;
-        } elseif (isset($modifiedIndexes['primary'])) {
-            $addedColumns = $this->indexAssetsByLowerCaseName($diff->getAddedColumns());
 
-            // Necessary in case the new primary key includes a new auto_increment column
-            foreach ($modifiedIndexes['primary']->getColumns() as $columnName) {
-                if (isset($addedColumns[$columnName]) && $addedColumns[$columnName]->getAutoincrement()) {
-                    $keyColumns   = array_values(array_unique($modifiedIndexes['primary']->getColumns()));
-                    $queryParts[] = 'DROP PRIMARY KEY';
-                    $queryParts[] = 'ADD PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
-                    unset($modifiedIndexes['primary']);
-                    $diffModified = true;
-                    break;
-                }
-            }
-        }
-
-        if ($diffModified) {
-            $diff = new TableDiff(
-                $diff->getOldTable(),
-                addedColumns: $diff->getAddedColumns(),
-                changedColumns: $diff->getChangedColumns(),
-                droppedColumns: $diff->getDroppedColumns(),
-                addedIndexes: array_values($addedIndexes),
-                modifiedIndexes: array_values($modifiedIndexes),
-                droppedIndexes: $diff->getDroppedIndexes(),
-                renamedIndexes: $diff->getRenamedIndexes(),
-                addedForeignKeys: $diff->getAddedForeignKeys(),
-                modifiedForeignKeys: $diff->getModifiedForeignKeys(),
-                droppedForeignKeys: $diff->getDroppedForeignKeys(),
+            $noLongerPrimaryKeyColumns = array_diff(
+                $noLongerPrimaryKeyColumns,
+                $addedIndexes['primary']->getColumns(),
             );
+
+            $diff->unsetAddedIndex($addedIndexes['primary']);
         }
 
         $tableSql = [];
+
+        if (isset($droppedIndexes['primary'])) {
+            $oldTable = $diff->getOldTable();
+            foreach ($noLongerPrimaryKeyColumns as $columnName) {
+                if (! $oldTable->hasColumn($columnName)) {
+                    continue;
+                }
+
+                $column = $oldTable->getColumn($columnName);
+                if ($column->getAutoincrement()) {
+                    $tableSql = array_merge(
+                        $tableSql,
+                        $this->getPreAlterTableAlterPrimaryKeySQL($diff, $droppedIndexes['primary']),
+                    );
+                    break;
+                }
+            }
+
+            $diff->unsetDroppedIndex($droppedIndexes['primary']);
+        }
 
         if (count($queryParts) > 0) {
             $tableSql[] = 'ALTER TABLE ' . $diff->getOldTable()->getQuotedName($this) . ' '
@@ -472,11 +501,7 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         );
     }
 
-    /**
-     * @return list<string>
-     *
-     * @throws Exception
-     */
+    /** @return list<string> */
     private function getPreAlterTableAlterPrimaryKeySQL(TableDiff $diff, Index $index): array
     {
         if (! $index->isPrimary()) {
@@ -501,6 +526,14 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
                 continue;
             }
 
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6841',
+                'Relying on the auto-increment attribute of a column being automatically dropped once a column'
+                    . ' is no longer part of the primary key constraint is deprecated. Instead, drop the auto-increment'
+                    . ' attribute explicitly.',
+            );
+
             $column->setAutoincrement(false);
 
             $sql[] = 'ALTER TABLE ' . $tableNameSQL . ' MODIFY ' .
@@ -517,8 +550,6 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      * @param TableDiff $diff The table diff to gather the SQL for.
      *
      * @return list<string>
-     *
-     * @throws Exception
      */
     private function getPreAlterTableAlterIndexForeignKeySQL(TableDiff $diff): array
     {
@@ -678,12 +709,13 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
      */
     protected function _getCommonIntegerTypeDeclarationSQL(array $column): string
     {
-        $autoinc = '';
+        $sql = $this->getUnsignedDeclaration($column);
+
         if (! empty($column['autoincrement'])) {
-            $autoinc = ' AUTO_INCREMENT';
+            $sql .= ' AUTO_INCREMENT';
         }
 
-        return $this->getUnsignedDeclaration($column) . $autoinc;
+        return $sql;
     }
 
     /** @internal The method should be only used from within the {@see AbstractPlatform} class hierarchy. */
@@ -763,8 +795,16 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         ];
     }
 
+    /** @deprecated */
     protected function createReservedKeywordsList(): KeywordList
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6607',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return new MySQLKeywords();
     }
 
@@ -822,9 +862,22 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
         return TransactionIsolationLevel::REPEATABLE_READ;
     }
 
+    /** @deprecated */
     public function supportsColumnLengthIndexes(): bool
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6886',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return true;
+    }
+
+    public function createMetadataProvider(Connection $connection): MySQLMetadataProvider
+    {
+        return new MySQLMetadataProvider($connection, $this);
     }
 
     public function createSchemaManager(Connection $connection): MySQLSchemaManager
@@ -833,23 +886,22 @@ abstract class AbstractMySQLPlatform extends AbstractPlatform
     }
 
     /**
-     * @param array<T> $assets
+     * @param array<Index> $indexes
      *
-     * @return array<string,T>
-     *
-     * @template T of AbstractAsset
+     * @return array<string,Index>
      */
-    private function indexAssetsByLowerCaseName(array $assets): array
+    private function indexIndexesByLowerCaseName(array $indexes): array
     {
         $result = [];
 
-        foreach ($assets as $asset) {
-            $result[strtolower($asset->getName())] = $asset;
+        foreach ($indexes as $index) {
+            $result[strtolower($index->getName())] = $index;
         }
 
         return $result;
     }
 
+    /** @internal The method should be only used from within the {@see MySQLSchemaManager} class hierarchy. */
     public function fetchTableOptionsByTable(bool $includeTableName): string
     {
         $sql = <<<'SQL'
@@ -874,5 +926,10 @@ SQL;
         $conditions[] = "t.TABLE_TYPE = 'BASE TABLE'";
 
         return $sql . ' WHERE ' . implode(' AND ', $conditions);
+    }
+
+    public function createSQLParser(): Parser
+    {
+        return new Parser(true);
     }
 }

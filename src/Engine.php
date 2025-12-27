@@ -5,6 +5,11 @@
         private $api;
 
         function __construct() {
+            if(empty($_ENV)) {
+                $env = \Dotenv\Dotenv::createImmutable($_SERVER["DOCUMENT_ROOT"]);
+                $env->safeLoad();
+                $_ENV["setup"] = (!file_exists($_SERVER["DOCUMENT_ROOT"]."/.env"));
+            }
             $this->api = new \Vidlii\Vidlii\API($_SERVER["CONFIG_ROOT"]);
         }
 
@@ -25,6 +30,7 @@
                     $args["config"][$key["name"]] = $key["value"];
                 }
             }
+            $args["config"]["setup"] = $_ENV["setup"] ?? false;
             $args["config"]["header"] = $_THEMES->Header;
             $args["config"]["title"] = (isset($_ENV["title"]) && $_ENV["title"] != "") ? $_ENV["title"] : "VidLii";
             $args["config"]["slogan"] = (isset($_ENV["slogan"]) && $_ENV["slogan"] != "") ? $_ENV["slogan"] : "VidLii - Display Yourself";
@@ -47,5 +53,21 @@
                 else return -1;
             }
 		}
+
+        // Encrypt/Decrypt
+        function encrypt(string $data, string $key = ""): string {
+            $key = hash("sha256", $key, true);
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("aes-256-cbc"));
+            $encrypted = openssl_encrypt($data, "aes-256-cbc", $key, OPENSSL_RAW_DATA, $iv);
+            return base64_encode($iv . $encrypted);
+        }
+        function decrypt(string $data, string $key = ""): string {
+            $key = hash("sha256", $key, true);
+            $data = base64_decode($data);
+            $iv_length = openssl_cipher_iv_length("aes-256-cbc");
+            $iv = substr($data, 0, $iv_length);
+            $ciphertext = substr($data, $iv_length);
+            return openssl_decrypt($ciphertext, "aes-256-cbc", $key, OPENSSL_RAW_DATA, $iv);
+        }
     }
 ?>

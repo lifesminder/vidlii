@@ -40,6 +40,7 @@ use Twig\Cache\ChainCache;
 use Twig\Cache\FilesystemCache;
 use Twig\Cache\ReadOnlyFilesystemCache;
 use Twig\Environment;
+use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\EscaperExtension;
@@ -65,6 +66,7 @@ return static function (ContainerConfigurator $container) {
             ->tag('container.preload', ['class' => EscaperExtension::class])
             ->tag('container.preload', ['class' => OptimizerExtension::class])
             ->tag('container.preload', ['class' => StagingExtension::class])
+            ->tag('container.preload', ['class' => BinaryOperatorExpressionParser::class])
             ->tag('container.preload', ['class' => ExtensionSet::class])
             ->tag('container.preload', ['class' => Template::class])
             ->tag('container.preload', ['class' => TemplateWrapper::class])

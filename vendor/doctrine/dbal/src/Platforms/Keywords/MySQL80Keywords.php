@@ -9,7 +9,7 @@ use function array_merge;
 /**
  * MySQL 8.0 reserved keywords list.
  *
- * @deprecated This class will be removed once support for MySQL 5.7 is dropped.
+ * @deprecated
  */
 class MySQL80Keywords extends MySQLKeywords
 {

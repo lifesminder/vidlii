@@ -70,6 +70,8 @@ class UnusedTagsPass implements CompilerPassInterface
         'mime.mime_type_guesser',
         'monolog.logger',
         'notifier.channel',
+        'object_mapper.condition_callable',
+        'object_mapper.transform_callable',
         'property_info.access_extractor',
         'property_info.constructor_extractor',
         'property_info.initializable_extractor',
@@ -78,6 +80,7 @@ class UnusedTagsPass implements CompilerPassInterface
         'proxy',
         'remote_event.consumer',
         'routing.condition_service',
+        'routing.controller',
         'routing.expression_language_function',
         'routing.expression_language_provider',
         'routing.loader',
@@ -101,13 +104,12 @@ class UnusedTagsPass implements CompilerPassInterface
         'twig.extension',
         'twig.loader',
         'twig.runtime',
+        'validator.attribute_metadata',
         'validator.auto_mapper',
         'validator.constraint_validator',
         'validator.group_provider',
         'validator.initializer',
         'workflow',
-        'object_mapper.transform_callable',
-        'object_mapper.condition_callable',
     ];
 
     public function process(ContainerBuilder $container): void

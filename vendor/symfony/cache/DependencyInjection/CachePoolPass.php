@@ -16,6 +16,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Cache\Adapter\ParameterNormalizer;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\Cache\Messenger\EarlyExpirationDispatcher;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -55,9 +56,11 @@ class CachePoolPass implements CompilerPassInterface
                 continue;
             }
             $class = $adapter->getClass();
+            $providers = $adapter->getArguments();
             while ($adapter instanceof ChildDefinition) {
                 $adapter = $container->findDefinition($adapter->getParent());
                 $class = $class ?: $adapter->getClass();
+                $providers += $adapter->getArguments();
                 if ($t = $adapter->getTag('cache.pool')) {
                     $tags[0] += $t[0];
                 }
@@ -87,7 +90,7 @@ class CachePoolPass implements CompilerPassInterface
 
             if (ChainAdapter::class === $class) {
                 $adapters = [];
-                foreach ($adapter->getArgument(0) as $provider => $adapter) {
+                foreach ($providers['index_0'] ?? $providers[0] as $provider => $adapter) {
                     if ($adapter instanceof ChildDefinition) {
                         $chainedPool = $adapter;
                     } else {
@@ -151,7 +154,7 @@ class CachePoolPass implements CompilerPassInterface
                         ),
                     ]);
                     $pool->addTag('container.reversible');
-                } elseif ('namespace' !== $attr || !\in_array($class, [ArrayAdapter::class, NullAdapter::class], true)) {
+                } elseif ('namespace' !== $attr || !\in_array($class, [ArrayAdapter::class, NullAdapter::class, TagAwareAdapter::class], true)) {
                     $argument = $tags[0][$attr];
 
                     if ('default_lifetime' === $attr && !is_numeric($argument)) {

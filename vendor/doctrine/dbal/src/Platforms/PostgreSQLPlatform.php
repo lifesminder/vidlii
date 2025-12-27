@@ -7,14 +7,18 @@ namespace Doctrine\DBAL\Platforms;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Platforms\Keywords\PostgreSQLKeywords;
+use Doctrine\DBAL\Platforms\PostgreSQL\PostgreSQLMetadataProvider;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Name\UnquotedIdentifierFolding;
 use Doctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\TransactionIsolationLevel;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Deprecations\Deprecation;
 use UnexpectedValueException;
 
 use function array_merge;
@@ -61,6 +65,11 @@ class PostgreSQLPlatform extends AbstractPlatform
             '0',
         ],
     ];
+
+    public function __construct()
+    {
+        parent::__construct(UnquotedIdentifierFolding::LOWER);
+    }
 
     /**
      * PostgreSQL has different behavior with some drivers
@@ -181,18 +190,10 @@ class PostgreSQLPlatform extends AbstractPlatform
 
         $query .= parent::getAdvancedForeignKeyOptionsSQL($foreignKey);
 
-        if ($foreignKey->hasOption('deferrable') && $foreignKey->getOption('deferrable') !== false) {
-            $query .= ' DEFERRABLE';
-        } else {
-            $query .= ' NOT DEFERRABLE';
-        }
+        $deferrabilitySQL = $this->getConstraintDeferrabilitySQL($foreignKey);
 
-        if (
-            $foreignKey->hasOption('deferred') && $foreignKey->getOption('deferred') !== false
-        ) {
-            $query .= ' INITIALLY DEFERRED';
-        } else {
-            $query .= ' INITIALLY IMMEDIATE';
+        if ($deferrabilitySQL !== '') {
+            $query .= $deferrabilitySQL;
         }
 
         return $query;
@@ -250,22 +251,10 @@ class PostgreSQLPlatform extends AbstractPlatform
                 );
             }
 
-            if (
-                $columnDiff->hasTypeChanged()
-                || $columnDiff->hasPrecisionChanged()
-                || $columnDiff->hasScaleChanged()
-                || $columnDiff->hasFixedChanged()
-                || $columnDiff->hasLengthChanged()
-                || $columnDiff->hasPlatformOptionsChanged()
-            ) {
-                $type = $newColumn->getType();
-
-                // SERIAL/BIGSERIAL are not "real" types and we can't alter a column to that type
-                $columnDefinition                  = $newColumn->toArray();
-                $columnDefinition['autoincrement'] = false;
-
-                // here was a server version check before, but DBAL API does not support this anymore.
-                $query = 'ALTER ' . $newColumnName . ' TYPE ' . $type->getSQLDeclaration($columnDefinition, $this);
+            $newTypeSQLDeclaration = $this->getTypeSQLDeclaration($newColumn);
+            $oldTypeSQLDeclaration = $this->getTypeSQLDeclaration($oldColumn);
+            if ($oldTypeSQLDeclaration !== $newTypeSQLDeclaration) {
+                $query = 'ALTER ' . $newColumnName . ' TYPE ' . $newTypeSQLDeclaration;
                 $sql[] = 'ALTER TABLE ' . $tableNameSQL . ' ' . $query;
             }
 
@@ -312,6 +301,17 @@ class PostgreSQLPlatform extends AbstractPlatform
         );
     }
 
+    private function getTypeSQLDeclaration(Column $column): string
+    {
+        $type = $column->getType();
+
+        // SERIAL/BIGSERIAL are not "real" types and we can't alter a column to that type
+        $columnDefinition                  = $column->toArray();
+        $columnDefinition['autoincrement'] = false;
+
+        return $type->getSQLDeclaration($columnDefinition, $this);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -331,23 +331,23 @@ class PostgreSQLPlatform extends AbstractPlatform
             ' INCREMENT BY ' . $sequence->getAllocationSize() .
             ' MINVALUE ' . $sequence->getInitialValue() .
             ' START ' . $sequence->getInitialValue() .
-            $this->getSequenceCacheSQL($sequence);
+            $this->getSequenceCacheSQL($sequence->getCacheSize());
     }
 
     public function getAlterSequenceSQL(Sequence $sequence): string
     {
         return 'ALTER SEQUENCE ' . $sequence->getQuotedName($this) .
             ' INCREMENT BY ' . $sequence->getAllocationSize() .
-            $this->getSequenceCacheSQL($sequence);
+            $this->getSequenceCacheSQL($sequence->getCacheSize());
     }
 
     /**
      * Cache definition for sequences
      */
-    private function getSequenceCacheSQL(Sequence $sequence): string
+    private function getSequenceCacheSQL(?int $cacheSize): string
     {
-        if ($sequence->getCache() > 1) {
-            return ' CACHE ' . $sequence->getCache();
+        if ($cacheSize > 1) {
+            return ' CACHE ' . $cacheSize;
         }
 
         return '';
@@ -365,14 +365,22 @@ class PostgreSQLPlatform extends AbstractPlatform
 
     public function getDropIndexSQL(string $name, string $table): string
     {
-        if ($name === '"primary"') {
-            if (str_ends_with($table, '"')) {
-                $constraintName = substr($table, 0, -1) . '_pkey"';
-            } else {
-                $constraintName = $table . '_pkey';
-            }
+        if (str_ends_with($table, '"')) {
+            $primaryKeyName = substr($table, 0, -1) . '_pkey"';
+        } else {
+            $primaryKeyName = $table . '_pkey';
+        }
 
-            return $this->getDropConstraintSQL($constraintName, $table);
+        if ($name === '"primary"' || $name === $primaryKeyName) {
+            Deprecation::triggerIfCalledFromOutside(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6867',
+                'Building the SQL for dropping primary key constraint via %s() is deprecated. Use'
+                    . ' getDropConstraintSQL() instead.',
+                __METHOD__,
+            );
+
+            return $this->getDropConstraintSQL($primaryKeyName, $table);
         }
 
         if (str_contains($table, '.')) {
@@ -388,11 +396,13 @@ class PostgreSQLPlatform extends AbstractPlatform
      */
     protected function _getCreateTableSQL(string $name, array $columns, array $options = []): array
     {
+        $this->validateCreateTableOptions($options, __METHOD__);
+
         $queryFields = $this->getColumnDeclarationListSQL($columns);
 
-        if (isset($options['primary']) && ! empty($options['primary'])) {
+        if (! empty($options['primary'])) {
             $keyColumns   = array_unique(array_values($options['primary']));
-            $queryFields .= ', PRIMARY KEY(' . implode(', ', $keyColumns) . ')';
+            $queryFields .= ', PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
         }
 
         $unlogged = isset($options['unlogged']) && $options['unlogged'] === true ? ' UNLOGGED' : '';
@@ -401,7 +411,7 @@ class PostgreSQLPlatform extends AbstractPlatform
 
         $sql = [$query];
 
-        if (isset($options['indexes']) && ! empty($options['indexes'])) {
+        if (! empty($options['indexes'])) {
             foreach ($options['indexes'] as $index) {
                 $sql[] = $this->getCreateIndexSQL($index, $name);
             }
@@ -691,6 +701,8 @@ class PostgreSQLPlatform extends AbstractPlatform
 
     /**
      * Get the snippet used to retrieve the default value for a given column
+     *
+     * @internal The method should be only used from within the {@see PostgreSQLSchemaManager} class hierarchy.
      */
     public function getDefaultColumnValueSQLSnippet(): string
     {
@@ -713,9 +725,7 @@ class PostgreSQLPlatform extends AbstractPlatform
             'bytea'            => Types::BLOB,
             'char'             => Types::STRING,
             'date'             => Types::DATE_MUTABLE,
-            'datetime'         => Types::DATETIME_MUTABLE,
             'decimal'          => Types::DECIMAL,
-            'double'           => Types::FLOAT,
             'double precision' => Types::FLOAT,
             'float'            => Types::FLOAT,
             'float4'           => Types::SMALLFLOAT,
@@ -744,13 +754,20 @@ class PostgreSQLPlatform extends AbstractPlatform
             'tsvector'         => Types::TEXT,
             'uuid'             => Types::GUID,
             'varchar'          => Types::STRING,
-            'year'             => Types::DATE_MUTABLE,
             '_varchar'         => Types::STRING,
         ];
     }
 
+    /** @deprecated */
     protected function createReservedKeywordsList(): KeywordList
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6607',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return new PostgreSQLKeywords();
     }
 
@@ -788,10 +805,29 @@ class PostgreSQLPlatform extends AbstractPlatform
     public function getJsonTypeDeclarationSQL(array $column): string
     {
         if (! empty($column['jsonb'])) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6939',
+                'The "jsonb" column platform option is deprecated. Use the "JSONB" type instead.',
+            );
+
             return 'JSONB';
         }
 
         return 'JSON';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getJsonbTypeDeclarationSQL(array $column): string
+    {
+        return 'JSONB';
+    }
+
+    public function createMetadataProvider(Connection $connection): PostgreSQLMetadataProvider
+    {
+        return new PostgreSQLMetadataProvider($connection, $this);
     }
 
     public function createSchemaManager(Connection $connection): PostgreSQLSchemaManager

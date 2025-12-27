@@ -6,6 +6,8 @@ namespace Doctrine\DBAL\Platforms\Keywords;
 
 /**
  * Reserved keywords list corresponding to the PostgreSQL database platform of the oldest supported version.
+ *
+ * @deprecated
  */
 class PostgreSQLKeywords extends KeywordList
 {

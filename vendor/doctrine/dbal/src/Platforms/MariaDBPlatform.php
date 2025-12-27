@@ -9,6 +9,7 @@ use Doctrine\DBAL\Platforms\Keywords\MariaDBKeywords;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\JsonType;
+use Doctrine\Deprecations\Deprecation;
 
 use function array_diff_key;
 use function array_merge;
@@ -28,6 +29,8 @@ class MariaDBPlatform extends AbstractMySQLPlatform
      * as JSON where it was originally specified as such instead of LONGTEXT.
      *
      * The CHECK constraints are stored in information_schema.CHECK_CONSTRAINTS so query that table.
+     *
+     * @internal The method should be only used from within the {@see MySQLSchemaManager} class hierarchy.
      */
     public function getColumnTypeSQLSnippet(string $tableAlias, string $databaseName): string
     {
@@ -38,7 +41,7 @@ class MariaDBPlatform extends AbstractMySQLPlatform
         // The check for `CONSTRAINT_SCHEMA = $databaseName` is mandatory here to prevent performance issues
         return <<<SQL
             IF(
-                $tableAlias.COLUMN_TYPE = 'longtext'
+                $tableAlias.DATA_TYPE = 'longtext'
                 AND EXISTS(
                     SELECT * FROM information_schema.CHECK_CONSTRAINTS $subQueryAlias
                     WHERE $subQueryAlias.CONSTRAINT_SCHEMA = $databaseName
@@ -50,7 +53,7 @@ class MariaDBPlatform extends AbstractMySQLPlatform
                     )
                 ),
                 'json',
-                $tableAlias.COLUMN_TYPE
+                $tableAlias.DATA_TYPE
             )
         SQL;
     }
@@ -158,8 +161,16 @@ class MariaDBPlatform extends AbstractMySQLPlatform
         return parent::getColumnDeclarationSQL($name, $column);
     }
 
+    /** @deprecated */
     protected function createReservedKeywordsList(): KeywordList
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6607',
+            '%s is deprecated.',
+            __METHOD__,
+        );
+
         return new MariaDBKeywords();
     }
 }

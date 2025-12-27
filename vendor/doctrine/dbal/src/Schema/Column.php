@@ -4,16 +4,42 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Schema;
 
+use Doctrine\DBAL\Platforms\SQLServerPlatform;
 use Doctrine\DBAL\Schema\Exception\UnknownColumnOption;
+use Doctrine\DBAL\Schema\Name\Parser\UnqualifiedNameParser;
+use Doctrine\DBAL\Schema\Name\Parsers;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Deprecations\Deprecation;
 
 use function array_merge;
 use function method_exists;
 
 /**
  * Object representation of a database column.
+ *
+ * @final
+ * @extends AbstractNamedObject<UnqualifiedName>
+ * @phpstan-type ColumnProperties = array{
+ *     name: string,
+ *     type: Type,
+ *     default: mixed,
+ *     notnull?: bool,
+ *     autoincrement: bool,
+ *     columnDefinition: ?non-empty-string,
+ *     comment: string,
+ *     charset?: ?non-empty-string,
+ *     collation?: ?non-empty-string,
+ * }
+ * @phpstan-type PlatformOptions = array{
+ *     charset?: ?non-empty-string,
+ *     collation?: ?non-empty-string,
+ *     default_constraint_name?: non-empty-string,
+ *     jsonb?: bool,
+ *     version?: bool,
+ * }
  */
-class Column extends AbstractAsset
+class Column extends AbstractNamedObject
 {
     protected Type $_type;
 
@@ -36,23 +62,31 @@ class Column extends AbstractAsset
     /** @var list<string> */
     protected array $_values = [];
 
-    /** @var array<string, mixed> */
+    /** @var PlatformOptions */
     protected array $_platformOptions = [];
 
+    /** @var ?non-empty-string */
     protected ?string $_columnDefinition = null;
 
     protected string $_comment = '';
 
     /**
-     * Creates a new Column.
+     * @internal Use {@link Column::editor()} to instantiate an editor and {@link ColumnEditor::create()} to create a
+     *           column.
      *
      * @param array<string, mixed> $options
      */
     public function __construct(string $name, Type $type, array $options = [])
     {
-        $this->_setName($name);
+        parent::__construct($name);
+
         $this->setType($type);
         $this->setOptions($options);
+    }
+
+    protected function getNameParser(): UnqualifiedNameParser
+    {
+        return Parsers::getUnqualifiedNameParser();
     }
 
     /** @param array<string, mixed> $options */
@@ -127,21 +161,39 @@ class Column extends AbstractAsset
         return $this;
     }
 
-    /** @param array<string, mixed> $platformOptions */
+    /** @param PlatformOptions $platformOptions */
     public function setPlatformOptions(array $platformOptions): self
     {
+        if (isset($platformOptions['jsonb']) && $platformOptions['jsonb']) {
+            Deprecation::triggerIfCalledFromOutside(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6939',
+                'The "jsonb" column platform option is deprecated. Use the "JSONB" type instead.',
+            );
+        }
+
         $this->_platformOptions = $platformOptions;
 
         return $this;
     }
 
+    /** @param key-of<PlatformOptions> $name */
     public function setPlatformOption(string $name, mixed $value): self
     {
+        if ($name === 'jsonb' && (bool) $value === true) {
+            Deprecation::triggerIfCalledFromOutside(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6939',
+                'The "jsonb" column platform option is deprecated. Use the "JSONB" type instead.',
+            );
+        }
+
         $this->_platformOptions[$name] = $value;
 
         return $this;
     }
 
+    /** @param  ?non-empty-string $value */
     public function setColumnDefinition(?string $value): self
     {
         $this->_columnDefinition = $value;
@@ -189,19 +241,85 @@ class Column extends AbstractAsset
         return $this->_default;
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Returns the name of the character set to use with the column.
+     *
+     * @return ?non-empty-string
+     */
+    public function getCharset(): ?string
+    {
+        return $this->_platformOptions['charset'] ?? null;
+    }
+
+    /**
+     * Returns the name of the collation to use with the column.
+     *
+     * @return ?non-empty-string
+     */
+    public function getCollation(): ?string
+    {
+        return $this->_platformOptions['collation'] ?? null;
+    }
+
+    /**
+     * Returns the minimum value to enforce on the column.
+     */
+    public function getMinimumValue(): mixed
+    {
+        return $this->_platformOptions['min'] ?? null;
+    }
+
+    /**
+     * Returns the maximum value to enforce on the column.
+     */
+    public function getMaximumValue(): mixed
+    {
+        return $this->_platformOptions['max'] ?? null;
+    }
+
+    /**
+     * @internal Should be used only from within the {@see AbstractSchemaManager} class hierarchy.
+     *
+     * Returns the name of the DEFAULT constraint that implements the default value for the column on SQL Server.
+     *
+     * @return ?non-empty-string
+     */
+    public function getDefaultConstraintName(): ?string
+    {
+        return $this->_platformOptions[SQLServerPlatform::OPTION_DEFAULT_CONSTRAINT_NAME] ?? null;
+    }
+
+    /**
+     * @deprecated Use {@see getCharset()}, {@see getCollation()}, {@see getMinimumValue()} or {@see getMaximumValue()}
+     *             instead.
+     *
+     * @return PlatformOptions
+     */
     public function getPlatformOptions(): array
     {
         return $this->_platformOptions;
     }
 
+    /**
+     * @deprecated Use {@see getCharset()}, {@see getCollation()}, {@see getMinimumValue()} or {@see getMaximumValue()}
+     *             instead.
+     *
+     * @param key-of<PlatformOptions> $name
+     */
     public function hasPlatformOption(string $name): bool
     {
         return isset($this->_platformOptions[$name]);
     }
 
+    /**
+     * @deprecated Use {@see getCharset()}, {@see getCollation()}, {@see getMinimumValue()} or {@see getMaximumValue()}
+     *             instead.
+     *
+     * @param key-of<PlatformOptions> $name
+     */
     public function getPlatformOption(string $name): mixed
     {
+        /** @phpstan-ignore offsetAccess.notFound */
         return $this->_platformOptions[$name];
     }
 
@@ -252,7 +370,7 @@ class Column extends AbstractAsset
         return $this->_values;
     }
 
-    /** @return array<string, mixed> */
+    /** @return ColumnProperties */
     public function toArray(): array
     {
         return array_merge([
@@ -270,5 +388,33 @@ class Column extends AbstractAsset
             'comment'          => $this->_comment,
             'values'           => $this->_values,
         ], $this->_platformOptions);
+    }
+
+    public static function editor(): ColumnEditor
+    {
+        return new ColumnEditor();
+    }
+
+    public function edit(): ColumnEditor
+    {
+        return self::editor()
+            ->setName($this->getObjectName())
+            ->setType($this->_type)
+            ->setLength($this->_length)
+            ->setPrecision($this->_precision)
+            ->setScale($this->_scale)
+            ->setUnsigned($this->_unsigned)
+            ->setFixed($this->_fixed)
+            ->setNotNull($this->_notnull)
+            ->setDefaultValue($this->_default)
+            ->setAutoincrement($this->_autoincrement)
+            ->setComment($this->_comment)
+            ->setValues($this->_values)
+            ->setColumnDefinition($this->_columnDefinition)
+            ->setCharset($this->getCharset())
+            ->setCollation($this->getCollation())
+            ->setMinimumValue($this->getMinimumValue())
+            ->setMaximumValue($this->getMaximumValue())
+            ->setDefaultConstraintName($this->getDefaultConstraintName());
     }
 }

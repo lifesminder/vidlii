@@ -21,6 +21,7 @@ use Symfony\Component\JsonStreamer\Mapping\Read\AttributePropertyMetadataLoader 
 use Symfony\Component\JsonStreamer\Mapping\Read\DateTimeTypePropertyMetadataLoader as ReadDateTimeTypePropertyMetadataLoader;
 use Symfony\Component\JsonStreamer\Mapping\Write\AttributePropertyMetadataLoader as WriteAttributePropertyMetadataLoader;
 use Symfony\Component\JsonStreamer\Mapping\Write\DateTimeTypePropertyMetadataLoader as WriteDateTimeTypePropertyMetadataLoader;
+use Symfony\Component\JsonStreamer\StreamerDumper;
 use Symfony\Component\JsonStreamer\ValueTransformer\DateTimeToStringValueTransformer;
 use Symfony\Component\JsonStreamer\ValueTransformer\StringToDateTimeValueTransformer;
 
@@ -32,12 +33,14 @@ return static function (ContainerConfigurator $container) {
                 tagged_locator('json_streamer.value_transformer'),
                 service('json_streamer.write.property_metadata_loader'),
                 param('.json_streamer.stream_writers_dir'),
+                service('config_cache_factory')->ignoreOnInvalid(),
             ])
         ->set('json_streamer.stream_reader', JsonStreamReader::class)
             ->args([
                 tagged_locator('json_streamer.value_transformer'),
                 service('json_streamer.read.property_metadata_loader'),
                 param('.json_streamer.stream_readers_dir'),
+                class_exists(StreamerDumper::class) ? service('config_cache_factory')->ignoreOnInvalid() : param('.json_streamer.lazy_ghosts_dir'),
                 param('.json_streamer.lazy_ghosts_dir'),
             ])
         ->alias(JsonStreamWriter::class, 'json_streamer.stream_writer')
@@ -106,6 +109,7 @@ return static function (ContainerConfigurator $container) {
                 param('.json_streamer.stream_writers_dir'),
                 param('.json_streamer.stream_readers_dir'),
                 service('logger')->ignoreOnInvalid(),
+                service('config_cache_factory')->ignoreOnInvalid(),
             ])
             ->tag('kernel.cache_warmer')
 

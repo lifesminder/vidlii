@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="vc_r" style="margin-bottom: 0;">
-    <h2 style="font-size: 19px; margin: 22px 0 5px;">What is VidLii?</h2>
+    <h2>What is VidLii?</h2>
     <p>VidLii is a way to get your videos to the people who matter to you. With VidLii, you can:</p>
     <ul>
         <li>Upload the videos you record with your digital camera or cell phone</li>
@@ -26,7 +26,7 @@
         <li>Share videos securely and privately with your friends and family around the world</li>
         <li>...and much, much more!</li>
     </ul>
-    <h2 style="font-size: 19px; margin-bottom: 5px;">About VidLii</h2>
+    <h3>About VidLii</h3>
     <p>Founded in December 2015, VidLii is a consumer media website for people to watch and share original videos worldwide through a Web experience. VidLii allows people to easily upload, tag, and share video clips on <a href="">www.VidLii.com</a> and across the Internet through websites, blogs, and e-mail, as well as to build their own personal video network.</p>
     <p>Everyone can watch videos on VidLii. People can see first-hand accounts of current events, find videos about their hobbies and interests, and discover the quirky and unusual. As more people capture special moments on video, VidLii is empowering them to become the broadcasters of tomorrow.</p>
     <p>

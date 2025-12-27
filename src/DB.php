@@ -4,18 +4,22 @@
     include_once $_SERVER["DOCUMENT_ROOT"]."/_includes/init.php";
 
     class DB {
-        public $RowNum;
+        public $RowNum, $active = false;
         protected $Connection;
 
         function __construct(bool $Show_Errors = false) {
             try {
-                $this->Connection = new \PDO('mysql:host='.DB_HOST.';dbname='.DB_DATABASE.';charset='.DB_CHARSET, DB_USER, DB_PASSWORD);
-                if ($Show_Errors||1) { $this->Connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION); }
-                return true;
+                $dsnParser = new \Doctrine\DBAL\Tools\DsnParser();
+                if(!empty($_ENV["database"])) {
+                    $params = $dsnParser->parse($_ENV["database"]);
+                    $pdoConn = "mysql:host=".$params["host"].";dbname=".$params["dbname"].";charset=utf8mb4";
+                    $this->Connection = new \PDO($pdoConn, $params["user"] ?? "", $params["password"] ?? "");
+                    if ($Show_Errors)
+                        $this->Connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+                    $this->active = true;
+                }
             } catch (\PDOException $e) {
-            	die($e);
-                header($_SERVER['SERVER_PROTOCOL'] . ' Database Unavailable', true, 503);
-                die("<center>Database Error</center>");
+                die("<center>".$e."</center>");
             }
         }
 
@@ -47,6 +51,10 @@
         }
 
         public function execute(string $SQL, bool $Single = false, array $Execute = []): array {
+            if(!$this->Connection) {
+                return [];
+            }
+
 			try {
             	$Query = $this->Connection->prepare($SQL);
             	$Query->execute($Execute);

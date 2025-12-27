@@ -12,7 +12,7 @@
                     $this->env = \Dotenv\Dotenv::createImmutable($path);
                     $this->env->load();
                 } catch(\Exception $e) {
-                    echo "Configuration not found (must be <pre>.env</pre>)";
+                    echo "Configuration not found (must be <code>.env</code>)";
                     exit(1);
                 }
             } else {

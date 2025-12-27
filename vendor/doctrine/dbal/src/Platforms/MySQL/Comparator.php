@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Doctrine\DBAL\Platforms\MySQL;
 
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Comparator as BaseComparator;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 
@@ -17,6 +19,8 @@ use function array_diff_assoc;
  * In MySQL, unless specified explicitly, the column's character set and collation are inherited from its containing
  * table. So during comparison, an omitted value and the value that matches the default value of table in the
  * desired schema must be considered equal.
+ *
+ * @phpstan-import-type PlatformOptions from Column
  */
 class Comparator extends BaseComparator
 {
@@ -26,8 +30,9 @@ class Comparator extends BaseComparator
         private readonly CharsetMetadataProvider $charsetMetadataProvider,
         private readonly CollationMetadataProvider $collationMetadataProvider,
         private readonly DefaultTableOptions $defaultTableOptions,
+        ComparatorConfig $config = new ComparatorConfig(),
     ) {
-        parent::__construct($platform);
+        parent::__construct($platform, $config);
     }
 
     public function compareTables(Table $oldTable, Table $newTable): TableDiff
@@ -69,6 +74,7 @@ class Comparator extends BaseComparator
                 continue;
             }
 
+            /** @phpstan-ignore argument.type */
             $column->setPlatformOptions($overrideOptions);
         }
 
@@ -76,9 +82,9 @@ class Comparator extends BaseComparator
     }
 
     /**
-     * @param array<string,string> $options
+     * @param PlatformOptions $options
      *
-     * @return array<string,string|null>
+     * @return PlatformOptions
      */
     private function normalizeOptions(array $options): array
     {

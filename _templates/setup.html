@@ -1,0 +1,143 @@
+{%extends "base.html"%}
+
+{%block title%}VidLii Setup{%endblock%}
+
+{%block header%}
+    <header class="n_head">
+        <div class="pr_hd_wrapper">
+            <a href="/">
+                <img src="/img/Vidlii6.png" alt="VidLii" title="VidLii - Display Yourself." id="hd_vidlii">
+            </a>
+            <nav>
+                <ul>
+                    <a href="/setup"{%if step == 1%} id="pr_sel"{%endif%}><li>Setup</li></a>
+                    <a href="/setup?step=2"{%if step == 2%} id="pr_sel"{%endif%}><li>Configure</li></a>
+                </ul>
+            </nav>
+            <nav id="sm_nav">
+                <a href="https://github.com/lifesminder/vidlii" target="_blank">GitHub</a>
+            </nav>
+            <div class="pr_hd_bar"></div>
+        </div>
+    </header>
+{%endblock%}
+
+{%block body%}
+    <div class="step1">
+        <h2>Welcome to VidLii's Setup!</h2>
+        <p>This is the start of your VidLii Open Source instance, which can be available both locally and public!</p>
+        <p>Now, let's start with configuring VidLii by entering database credentials.</p>
+        <div class="you_wnt" id="re_box">
+            <div class="setup-1">
+                <div style="margin: 0.5rem">
+                    <label for="host">Hostname: </label>
+                    <input type="text" class="vl-field" name="host" placeholder="Database Host" required>
+                </div>
+                <div style="margin: 0.5rem">
+                    <label for="host">Username: </label>
+                    <input type="text" class="vl-field" name="username" placeholder="Username" required>
+                </div>
+                <div style="margin: 0.5rem">
+                    <label for="host">Password: </label>
+                    <input type="password" class="vl-field" name="password" placeholder="Password">
+                </div>
+                <div style="margin: 0.5rem">
+                    <label for="host">Database: </label>
+                    <input type="text" class="vl-field" name="name" placeholder="Name of DB" value="vidlii" required>
+                </div>
+                <div style="margin: 0.5rem; display: flex; align-items: center;">
+                    <button type="submit" class="btn submit">Next</button>
+                    <input type="hidden" name="step" value="1">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="step2" style="display: none;">
+        <h2>Configure VidLii</h2>
+        <p>Set up VidLii's crucial stuff, such as name, description and administrator account to manage instance at the best!</p>
+        <div class="you_wnt" id="re_box">
+            <div class="setup-2">
+                <form action="/setup?step=2" method="post">
+                    <div style="margin: 0.5rem">
+                        <label for="title">Title: </label>
+                        <input type="text" class="vl-field" name="title" placeholder="Title of your Instance" value="VidLii" required>
+                    </div>
+                    <div style="margin: 0.5rem">
+                        <label for="slogan">Slogan: </label>
+                        <input type="text" class="vl-field" name="slogan" placeholder="Slogan of your Instance" value="Display Yourself!" required>
+                    </div>
+                    <hr>
+                    <div style="margin: 0.5rem">
+                        <label for="adminuser">Username: </label>
+                        <input type="text" class="vl-field" name="adminuser" placeholder="Your Username" required>
+                    </div>
+                    <div style="margin: 0.5rem">
+                        <label for="adminemail">E-Mail: </label>
+                        <input type="text" class="vl-field" name="adminemail" placeholder="Your E-Mail" required>
+                    </div>
+                    <div style="margin: 0.5rem">
+                        <label for="adminpass">Password: </label>
+                        <input type="password" class="vl-field" name="adminpass" placeholder="Your Password" required>
+                    </div>
+                    <div style="margin: 0.5rem">
+                        <label for="adminpass2">Confirm Password: </label>
+                        <input type="password" class="vl-field" name="adminpass2" placeholder="Confirm Your Password" required>
+                    </div>
+                    <div style="margin: 0.5rem; display: flex; align-items: center;">
+                        <button type="submit" class="btn">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="step3" style="display: none">
+        <div class="setup-3">
+            <h2>You're all set!</h2>
+            <p>Congratulations, your VidLii instance is now properly installed and ready to use!</p>
+            <a href="/">Go to VidLii</a>
+        </div>
+    </div>
+
+    <script>
+        var _step = 1;
+
+        async function pass(e) {
+            e.preventDefault();
+            e.target.setAttribute("disabled", "");
+
+            let setup = document.querySelector(`.setup-${_step}`);
+            let fd = new FormData(); fd.append("step", _step);
+            let values = setup.querySelectorAll("input");
+            values.forEach(value => {
+                fd.append(value.getAttribute("name"), value.value);
+            });
+
+            await fetch(`/setup`, {
+                method: "POST",
+                body: fd
+            }).then(resp => resp.json()).then(data => {
+                if(data.status == 1) {
+                    let previousStep = document.querySelector(`.step${data.step - 1}`), nextStep = document.querySelector(`.step${data.step}`);
+                    previousStep.setAttribute("style", "display: none;");
+                    nextStep.removeAttribute("style");
+                    _step++;
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        const submitBtns = document.querySelectorAll("[type=submit]");
+        submitBtns.forEach(btn => {
+            btn.addEventListener("click", async(e) => {
+                await pass(e);
+            });
+        });
+    </script>
+{%endblock%}
+
+{%block footer%}
+    <div class="copyright">
+        &copy; VidLii Open Source
+    </div>
+{%endblock%}

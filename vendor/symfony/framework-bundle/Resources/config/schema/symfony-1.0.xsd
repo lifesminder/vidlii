@@ -47,6 +47,7 @@
             <xsd:element name="webhook" type="webhook" minOccurs="0" maxOccurs="1" />
             <xsd:element name="remote-event" type="remote-event" minOccurs="0" maxOccurs="1" />
             <xsd:element name="json-streamer" type="json-streamer" minOccurs="0" maxOccurs="1" />
+            <xsd:element name="secrets" type="secrets" minOccurs="0" maxOccurs="1" />
         </xsd:choice>
 
         <xsd:attribute name="http-method-override" type="xsd:boolean" />
@@ -62,6 +63,7 @@
         <xsd:attribute name="trusted-hosts" type="xsd:string" />
         <xsd:attribute name="trusted-proxies" type="xsd:string" />
         <xsd:attribute name="trusted-headers" type="xsd:string" />
+        <xsd:attribute name="disallow-search-engine-index" type="xsd:boolean" />
     </xsd:complexType>
 
     <xsd:complexType name="form">
@@ -338,6 +340,7 @@
     <xsd:simpleType name="email-validation-mode">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="html5" />
+            <xsd:enumeration value="html5-allow-no-tld" />
             <xsd:enumeration value="loose" />
             <xsd:enumeration value="strict" />
         </xsd:restriction>
@@ -381,7 +384,18 @@
     </xsd:complexType>
 
     <xsd:complexType name="type_info">
-        <xsd:attribute name="enabled" type="xsd:boolean" />
+        <xsd:sequence>
+            <xsd:element name="alias" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="xsd:string">
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="enabled" type="xsd:boolean"/>
     </xsd:complexType>
 
     <xsd:complexType name="named_serializer_options">
@@ -461,6 +475,7 @@
         <xsd:attribute name="initial-marking" type="xsd:string" />
         <xsd:attribute name="support-strategy" type="xsd:string" />
         <xsd:attribute name="enabled" type="xsd:boolean" />
+        <xsd:attribute name="places" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="php-errors">
@@ -503,12 +518,21 @@
 
     <xsd:complexType name="transition">
         <xsd:sequence>
-            <xsd:element name="from" type="xsd:string" minOccurs="1" maxOccurs="unbounded" />
-            <xsd:element name="to" type="xsd:string" minOccurs="1" maxOccurs="unbounded" />
+            <xsd:element name="from" type="arc" minOccurs="1" maxOccurs="unbounded" />
+            <xsd:element name="to" type="arc" minOccurs="1" maxOccurs="unbounded" />
             <xsd:element name="metadata" type="metadata" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="guard" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
-        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="key" type="xsd:string" />
+    </xsd:complexType>
+
+    <xsd:complexType name="arc">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="weight" type="xsd:integer" />
+            </xsd:extension>
+        </xsd:simpleContent>
     </xsd:complexType>
 
     <xsd:complexType name="place" mixed="true">
@@ -712,7 +736,9 @@
         <xsd:choice maxOccurs="unbounded">
             <xsd:element name="resolve" type="http_resolve" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="header" type="http_header" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="var" type="http_var" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="peer-fingerprint" type="fingerprint" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="caching" type="http_client_caching" minOccurs="0" maxOccurs="1" />
             <xsd:element name="retry-failed" type="http_client_retry_failed" minOccurs="0" maxOccurs="1" />
             <xsd:element name="extra" type="xsd:anyType" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
@@ -740,6 +766,7 @@
             <xsd:element name="resolve" type="http_resolve" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="header" type="http_header" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="peer-fingerprint" type="fingerprint" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="caching" type="http_client_caching" minOccurs="0" maxOccurs="1" />
             <xsd:element name="retry-failed" type="http_client_retry_failed" minOccurs="0" maxOccurs="1" />
             <xsd:element name="extra" type="xsd:anyType" minOccurs="0" maxOccurs="unbounded" />
         </xsd:choice>
@@ -773,6 +800,13 @@
         </xsd:choice>
     </xsd:complexType>
 
+    <xsd:complexType name="http_client_caching">
+        <xsd:attribute name="enabled" type="xsd:boolean" />
+        <xsd:attribute name="cache-pool" type="xsd:string" />
+        <xsd:attribute name="shared" type="xsd:boolean" />
+        <xsd:attribute name="max-ttl" type="xsd:unsignedInt" />
+    </xsd:complexType>
+
     <xsd:complexType name="http_client_retry_failed">
         <xsd:sequence>
             <xsd:element name="http-code" type="http_client_retry_code" minOccurs="0" maxOccurs="unbounded" />
@@ -803,6 +837,10 @@
     </xsd:complexType>
 
     <xsd:complexType name="http_header" mixed="true">
+        <xsd:attribute name="name" type="xsd:string" />
+    </xsd:complexType>
+
+    <xsd:complexType name="http_var" mixed="true">
         <xsd:attribute name="name" type="xsd:string" />
     </xsd:complexType>
 
@@ -863,6 +901,7 @@
     <xsd:complexType name="http_cache">
         <xsd:sequence>
             <xsd:element name="private-header" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="skip-response-header" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
 
         <xsd:attribute name="enabled" type="xsd:boolean" />
@@ -1063,6 +1102,13 @@
 
     <xsd:complexType name="json-streamer">
         <xsd:attribute name="enabled" type="xsd:boolean" />
+    </xsd:complexType>
+
+    <xsd:complexType name="secrets">
+        <xsd:attribute name="enabled" type="xsd:boolean" />
+        <xsd:attribute name="vault-directory" type="xsd:string" />
+        <xsd:attribute name="local-dotenv-file" type="xsd:string" />
+        <xsd:attribute name="decryption-env-var" type="xsd:string" />
     </xsd:complexType>
 
 </xsd:schema>

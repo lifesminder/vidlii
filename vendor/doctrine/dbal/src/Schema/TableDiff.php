@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Schema;
 
+use Doctrine\DBAL\Schema\Exception\InvalidState;
+use Doctrine\DBAL\Schema\Name\UnqualifiedName;
 use Doctrine\Deprecations\Deprecation;
 
 use function array_filter;
@@ -12,6 +14,8 @@ use function count;
 
 /**
  * Table Diff.
+ *
+ * @final
  */
 class TableDiff
 {
@@ -44,6 +48,38 @@ class TableDiff
         private readonly array $modifiedForeignKeys = [],
         private readonly array $droppedForeignKeys = [],
     ) {
+        if (count($this->modifiedIndexes) !== 0) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6831',
+                'Passing a non-empty $modifiedIndexes value to %s() is deprecated. Instead, pass dropped'
+                    . ' indexes via $droppedIndexes and added indexes via $addedIndexes.',
+                __METHOD__,
+            );
+        }
+
+        foreach ($droppedForeignKeys as $droppedForeignKey) {
+            if ($droppedForeignKey->getName() === '') {
+                Deprecation::trigger(
+                    'doctrine/dbal',
+                    'https://github.com/doctrine/dbal/pull/7143',
+                    'Dropping a foreign key constraints without specifying its name is deprecated.',
+                );
+                break;
+            }
+        }
+
+        if (count($modifiedForeignKeys) === 0) {
+            return;
+        }
+
+        Deprecation::trigger(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6827',
+            'Passing a non-empty $modifiedForeignKeys value to %s() is deprecated. Instead, pass dropped'
+                . ' constraints via $droppedForeignKeys and added constraints via $addedForeignKeys.',
+            __METHOD__,
+        );
     }
 
     public function getOldTable(): Table
@@ -135,9 +171,20 @@ class TableDiff
         );
     }
 
-    /** @return array<Index> */
+    /**
+     * @deprecated Use {@see getAddedIndexes()} and {@see getDroppedIndexes()} instead.
+     *
+     * @return array<Index>
+     */
     public function getModifiedIndexes(): array
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6831',
+            '%s() is deprecated, use getAddedIndexes() and getDroppedIndexes() instead.',
+            __METHOD__,
+        );
+
         return $this->modifiedIndexes;
     }
 
@@ -173,16 +220,48 @@ class TableDiff
         return $this->addedForeignKeys;
     }
 
-    /** @return array<ForeignKeyConstraint> */
+    /**
+     * @deprecated Use {@see getAddedForeignKeys()} and {@see getDroppedForeignKeys()} instead.
+     *
+     * @return array<ForeignKeyConstraint>
+     */
     public function getModifiedForeignKeys(): array
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6827',
+            '%s() is deprecated, use getDroppedForeignKeys() and getAddedForeignKeys() instead.',
+            __METHOD__,
+        );
+
         return $this->modifiedForeignKeys;
     }
 
-    /** @return array<ForeignKeyConstraint> */
+    /**
+     * @deprecated Use {@see getDroppedForeignKeyConstraintNames()}.
+     *
+     * @return array<ForeignKeyConstraint>
+     */
     public function getDroppedForeignKeys(): array
     {
         return $this->droppedForeignKeys;
+    }
+
+    /** @return array<UnqualifiedName> */
+    public function getDroppedForeignKeyConstraintNames(): array
+    {
+        $names = [];
+        foreach ($this->droppedForeignKeys as $constraint) {
+            $name = $constraint->getObjectName();
+
+            if ($name === null) {
+                throw InvalidState::tableDiffContainsUnnamedDroppedForeignKeyConstraints();
+            }
+
+            $names[] = $name;
+        }
+
+        return $names;
     }
 
     /**

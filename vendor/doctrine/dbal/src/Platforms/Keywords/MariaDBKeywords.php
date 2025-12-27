@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Platforms\Keywords;
 
+/** @deprecated */
 class MariaDBKeywords extends MySQLKeywords
 {
     /**

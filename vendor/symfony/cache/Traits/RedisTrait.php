@@ -98,8 +98,8 @@ trait RedisTrait
             default => throw new InvalidArgumentException('Invalid Redis DSN: it does not start with "redis[s]:" nor "valkey[s]:".'),
         };
 
-        if (!\extension_loaded('redis') && !class_exists(\Predis\Client::class)) {
-            throw new CacheException('Cannot find the "redis" extension nor the "predis/predis" package.');
+        if (!\extension_loaded('redis') && !\extension_loaded('relay') && !class_exists(\Predis\Client::class)) {
+            throw new CacheException('Cannot find the "redis" extension nor the "relay" extension nor the "predis/predis" package.');
         }
 
         $params = preg_replace_callback('#^'.$scheme.':(//)?(?:(?:(?<user>[^:@]*+):)?(?<password>[^@]*+)@)?#', function ($m) use (&$auth) {
@@ -193,7 +193,7 @@ trait RedisTrait
         }
 
         if (isset($params['sentinel']) && !class_exists(\Predis\Client::class) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
-            throw new CacheException('Redis Sentinel support requires one of: "predis/predis", "ext-redis >= 5.2", "ext-relay".');
+            throw new CacheException('Redis Sentinel support requires one of: "predis/predis", "ext-redis >= 6.1", "ext-relay".');
         }
 
         foreach (['lazy', 'persistent', 'cluster'] as $option) {
@@ -224,7 +224,7 @@ trait RedisTrait
         };
 
         if (isset($params['sentinel']) && !is_a($class, \Predis\Client::class, true) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
-            throw new CacheException(\sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 5.2 nor ext-relay have been found.', $class));
+            throw new CacheException(\sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 6.1 nor ext-relay have been found.', $class));
         }
 
         $isRedisExt = is_a($class, \Redis::class, true);
@@ -252,7 +252,7 @@ trait RedisTrait
                     }
 
                     try {
-                        if (version_compare(phpversion('redis'), '6.0.0', '>=') && $isRedisExt) {
+                        if ($isRedisExt) {
                             $options = [
                                 'host' => $host,
                                 'port' => $port,
@@ -351,10 +351,6 @@ trait RedisTrait
                 $redis->setOption($isRedisExt ? \Redis::OPT_TCP_KEEPALIVE : Relay::OPT_TCP_KEEPALIVE, $params['tcp_keepalive']);
             }
         } elseif (is_a($class, RelayCluster::class, true)) {
-            if (version_compare(phpversion('relay'), '0.10.0', '<')) {
-                throw new InvalidArgumentException('Using RelayCluster is supported from ext-relay 0.10.0 or higher.');
-            }
-
             $initializer = static function () use ($class, $params, $hosts) {
                 foreach ($hosts as $i => $host) {
                     $hosts[$i] = match ($host['scheme']) {
@@ -498,7 +494,7 @@ trait RedisTrait
 
         $result = [];
 
-        if ($this->redis instanceof \Predis\ClientInterface && ($this->redis->getConnection() instanceof ClusterInterface || $this->redis->getConnection() instanceof Predis2ClusterInterface)) {
+        if (($this->redis instanceof \Predis\ClientInterface && ($this->redis->getConnection() instanceof ClusterInterface || $this->redis->getConnection() instanceof Predis2ClusterInterface)) || $this->redis instanceof RelayCluster) {
             $values = $this->pipeline(function () use ($ids) {
                 foreach ($ids as $id) {
                     yield 'get' => [$id];

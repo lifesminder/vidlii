@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Doctrine\DBAL\Platforms\Keywords;
 
 /**
- * DB2 Keywords.
+ * Db2 Keywords.
+ *
+ * @deprecated
  */
 class DB2Keywords extends KeywordList
 {
