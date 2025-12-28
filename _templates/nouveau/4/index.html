@@ -2,7 +2,7 @@
 
 {% block body %}
     <ul id="browse-items-primary">
-        {%if profile.c_featured == 1%}
+        {%if profile.c_featured == 1 and featured_video is defined%}
         <li>
             <div class="video-player-view-component branded-page-box">
                 <div class="video-content clearfix">
@@ -39,6 +39,7 @@
             </div>
         </li>
         {%endif%}
+        {%if videos.count > 0%}
         <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box vve-check">
             <div class="feed-item-dismissable">
                 <div class="feed-item-main feed-item-no-author">
@@ -47,7 +48,7 @@
                             {% if videos.count > 0 %}
                             <div class="expanded-shelf shelf-item vve-check yt-uix-expander yt-uix-expander-collapsed yt-section-hover-container">
                                 <h2 class="branded-page-module-title">
-                                    <a href="/user/{{profile.displayname}}/videos?view=0&amp;sort=dd&amp;shelf_id=1" class="yt-uix-sessionlink branded-page-module-title-link spf-nolink">
+                                    <a href="{{handle}}/videos?view=0&amp;sort=dd&amp;shelf_id=1" class="yt-uix-sessionlink branded-page-module-title-link spf-nolink">
                                         <span class="branded-page-module-title-text">
                                             <span class="">Uploads</span>
                                         </span>
@@ -64,7 +65,7 @@
                                                             <span class="video-thumb yt-thumb yt-thumb-196 yt-thumb-fluid">
                                                                 <span class="yt-thumb-default">
                                                                     <span class="yt-thumb-clip">
-                                                                        <img alt="" aria-hidden="true" data-thumb="/vi/{{video.url}}/hqresdefault.jpg" data-ytimg="1" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" src="http://youtube.com/yts/img/pixel-vfl3z5WfW.gif" width="196">
+                                                                        <img alt="" aria-hidden="true" data-thumb="/vi/{{video.url}}/hqresdefault.jpg" data-ytimg="1" onload=";window.__ytRIL &amp;&amp; __ytRIL(this)" src="/img/one/pixel.gif" width="196">
                                                                         <span class="vertical-align"></span>
                                                                     </span>
                                                                 </span>
@@ -91,7 +92,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2">
-                                                    Description to the Video...
+                                                    {{video.description}}
                                                 </div>
                                             </div>
                                         </div>
@@ -105,5 +106,10 @@
                 </div>
             </div>
         </li>
+        {%else%}
+        <p class="display-message">
+            This profile has nothing to show.
+        </p>
+        {%endif%}
     </ul>
 {% endblock %}

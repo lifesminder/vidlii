@@ -41,12 +41,13 @@
                 $email = htmlspecialchars($args["email"]);
                 $password = htmlspecialchars($args["password"]);
                 $country = (isset($args["country"]) && $args["country"] != "") ? strtoupper($args["country"]) : "US";
+                $birthday = (isset($args["birthday"]) && $args["birthday"] != "") ? $args["birthday"] : "1999-01-01";
                 
                 $exists = (bool)($this->db("SELECT count(*) from users where username = \"$username\" or displayname = \"$username\"")["data"]["count(*)"] >= 1);
                 if(!$exists) {
                     $ip = user_ip();
                     $password = password_hash($password, PASSWORD_BCRYPT); // subject to change, I guess
-                    $register = $this->db("INSERT into users (username, displayname, email, password, reg_date, last_login, birthday, country, 1st_latest_ip, 2nd_latest_ip) values (\"$username\", \"$username\", \"$email\", \"$password\", NOW(), NOW(), \"1970-01-01\", \"$country\", \"$ip\", \"$ip\")");
+                    $register = $this->db("INSERT into users (username, displayname, email, password, reg_date, last_login, birthday, country, 1st_latest_ip, 2nd_latest_ip) values (\"$username\", \"$username\", \"$email\", \"$password\", NOW(), NOW(), \"$birthday\", \"$country\", \"$ip\", \"$ip\")");
                     $data = $register;
                 } else $data = $this->api_message(-1, "User already exists");
             } else $data = $this->api_message(-1, "Enter credentials");

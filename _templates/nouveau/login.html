@@ -1,0 +1,72 @@
+{%extends "base.html"%}
+
+{%block title%}Sign In - VidLii{%endblock%}
+
+{%block body%}
+    <h1 class="pg_hd">Sign In</h1>
+    <aside class="lg_l">
+        <div style="font-size:16px;font-weight:bold">Sign in now, and use your VidLii account to:</div>
+        <table style="margin: 17px 0 0 0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <div style="font-size: 16px;">Customize your experience on VidLii</div>
+                    <div style="color:#2f2f2f;padding-bottom:43px">VidLii allows you to personalize your channel and homepage to whatever you want it to look like!</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="font-size: 16px;">Be part of the VidLii community</div>
+                    <div style="color:#2f2f2f;padding-bottom:43px"">Having a VidLii account allows you to interact and be part of the VidLii community in many unique and fun ways!</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="font-size: 16px;">Share with your friends</div>
+                    <div style="color:#2f2f2f;padding-bottom:31px">See videos shared by your friends across all your social networks — all in one place!</div>
+                </td>
+            </tr>
+        </table>
+    </aside>
+    <section class="lg_r">
+        <div class="you_wnt" id="login_box">
+            <div>
+                <form action="/login{%if next is defined%}?next={{next}}{%endif%}" method="POST">
+                    <img src="/img/vidlii.png" height="37" width="92" alt="VidLii" title="VidLii - Display Yourself.">
+                    {%if message is defined%}
+                    <div style="color:red;text-align: center">{{message}}</div>
+                    {%endif%}
+                    <table cellpadding="3">
+                        <tr>
+                            <input type="hidden" name="jf1" value="acnla">
+                            <td align="right"><label for="username">Username:</label></td>
+                            <td align="left"><input type="text" name="username" id="lg_username"></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><label for="password">Password:</label></td>
+                            <td align="left"><input id="password" name="password" type="password"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td align="left">
+                                <div style="margin-bottom: 8px">
+                                    <input type="checkbox" id="remember" name="remember">
+                                    <label for="remember">Remember Me</label>
+                                </div>
+                                <button type="submit" class="search_button" style="padding:2.5px 10px" name="submit_login">Sign In</button>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="log_fgt">
+                        <a href="javascript:void(0)" onclick="alert('You can also log in with your email instead of your username!')">Forgot Username</a> | <a href="/forgot_password">Forgot Password</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="you_wnt">
+            <div>
+                <strong>No Account?</strong><br>
+                <strong><a href="/signup">Sign Up for a free VidLii Account!</a></strong>
+            </div>
+        </div>
+    </section>
+{%endblock%}

@@ -2,7 +2,10 @@
 	require_once "../_includes/init.php";
 	$err = "An error has occurred.";
 	$result = 0;
-	
+
+	// Parameters
+	$uploadLimit = (int)$_ENV["upload_limit"] ?? 1073741824;
+
 	if ($_USER->logged_in) {
 		switch($_POST["action"]) {
 			case "check":
@@ -47,7 +50,7 @@
 				}
 				
 				//Check filesize
-				if ($_POST["filesize"] > UPLOAD_LIMIT) {
+				if ($_POST["filesize"] > $uploadLimit) {
 					$err = "The file you're trying to upload is too large!";
 					$result = -1;
 					break;
@@ -232,7 +235,7 @@
 				$result = 1;
 				
 				//Check file size and delete if too big
-				if (filesize($path) > UPLOAD_LIMIT) {
+				if (filesize($path) > $uploadLimit) {
 					$DB->modify("DELETE FROM uploads WHERE url = :URL AND user = :USER LIMIT 1",
                                [
                                    ":URL"   => $_POST["url"],

@@ -17,7 +17,7 @@
                 <div id="edit_ra2" class="hddn" style="border:1.5px solid <?= hexToRgb($Profile["n_head"],$Normal_Trans) ?>;padding: 2px 10px 10px 10px;margin: 9px 0 7px">
                     <strong style="display: block;margin-bottom:6px;position:relative;right:5px">Recent Activity Settings</strong>
                     <table width="80%" style="margin:0 auto;position:relative;left: 45px">
-                        <form action="/user/<?= $Profile["displayname"] ?>" method="POST">
+                        <form action="<?= $handle ?>" method="POST">
                             <tr>
                                 <td><label><input name="ra_comments" type="checkbox" style="position:relative;top:1.6px"<? if ($Profile["ra_comments"] == 1) : ?> checked<? endif ?>> Recent Comments</label></td>
                                 <td><label><input name="ra_favorites" type="checkbox" style="position:relative;top:1.6px"<? if ($Profile["ra_favorites"] == 1) : ?> checked<? endif ?>> Recent Favorites</label></td>

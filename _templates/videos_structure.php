@@ -16,7 +16,19 @@
 <? require_once $_SERVER['DOCUMENT_ROOT']."/_templates/_layout/header.php" ?>
     <main class="bottom_wrapper" id="st">
         <div style="font-size:20px;padding-bottom:9px">
-            <a href="/my_account">My Account</a><span style="word-spacing:10px"> / </span><?= $Header ?>
+            <div class="account_dropdown">
+                <a href="/my_account" class="dropbtn">My Account <span style="font-size: 9px;">▼</span></a>
+                <div class="inner">
+                    <div class="first"><a href="/inbox">Inbox</a></div>
+                    <div><a href="/my_videos">Videos, Favorites & Playlists</a></div>
+                    <div><a href="/my_subscriptions">Subscriptions</a></div>
+                    <div><a href="/channel_setup">My Channel</a></div>
+                    <div><a href="/my_account">Account Settings</a></div>
+                    <div><a href="/analytics">Insight: Statistics and Data</a></div>
+                </div>
+            </div>
+            <span style="word-spacing:10px; margin: 0 10.56px 0 10.56px;">/</span>
+            <?= $Header ?>
         </div>
         <? if (isset($_SESSION["notification"])) : ?>
             <div style="border: 1.5px solid <?= $_SESSION["n_color"] ?>;padding:6px;text-align:center;margin-bottom:11px;font-size:14px;font-weight:bold"><?= $_SESSION["notification"] ?></div>
@@ -41,6 +53,7 @@
                 <? endforeach ?>
             </div>
             <? endif ?>
+            <a href="/my_quicklist">Quicklist</a>
         </div>
         <div style="float:left;width:800px;-moz-box-sizing: border-box;-ms-box-sizing: border-box;-webkit-box-sizing: border-box;padding-right: 9px;padding-left: 11px;border-left: 1px solid #ccc;border: 1px solid #ccc;border-right:1px solid #ccc;border-top: 0;background: #e2e2e2;">
             <div style="background:white;border-left:1px solid #e2e2e2;">

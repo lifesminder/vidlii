@@ -36,3 +36,4 @@
         </div>
     </div>
 </footer>
+<div id="copyright">&copy; <?php echo date("Y"); ?> VidLii</div>

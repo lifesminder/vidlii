@@ -1,7 +1,7 @@
 <section>
     <div class="nm_box">
         <div class="nm_hd">
-            Channel Comments (<a id="ch_nm" href="/user/<?= $Profile["displayname"] ?>/comments"><?= number_format($Profile["channel_comments"]) ?></a>)
+            Channel Comments (<a id="ch_nm" href="<?= $handle ?>/comments"><?= number_format($Profile["channel_comments"]) ?></a>)
         </div>
         <div class="nm_mn">
             <div id="ch_cmt_sct">

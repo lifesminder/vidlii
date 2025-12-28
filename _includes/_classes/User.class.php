@@ -205,8 +205,8 @@
 
         public function get_profile() {
             $Info = $this->DB->execute("SELECT * FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
-            $this->Info = $Info;
-            return $Info;
+            $this->Info = array_map("urldecode", $Info);
+            return $this->Info;
         }
 
         public function rate_video(Video $Video, int $Rating) {

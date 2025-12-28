@@ -20,17 +20,17 @@
 </head>
 <body>
     {%if config.top_text is defined%}
-    <div class="top">{{config.top_text}}</div>
+    <div class="top">{{config.top_text|raw}}</div>
     {%endif%}
     {%if config.header is defined and config.header == 2%}
         <div id="masthead-container">
             <div id="masthead" dir="ltr">
                 <a id="logo-container" href="/" title="{{config.title}} home">
-                    <img id="logo" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="{{config.title}} home">
+                    <img id="logo" src="/img/one/pixel.gif" alt="{{config.title}} home">
                 </a>
                 <div id="masthead-utility" class="">
                     <a href="/browse">Browse</a><a href="/upload" class="split">Upload</a>
-                    <a class="start" href="/register">Create Account</a><a class="end" href="/login">Sign In</a>
+                    <a class="start" href="/signup">Create Account</a><a class="end" href="/login">Sign In</a>
                 </div>
                 <form id="masthead-search" class="search-form" autocomplete="off" action="/results" onsubmit="if (_gel('masthead-search-term').value == '') return false;">
                     <button class="search-button yt-uix-button" onclick="if (_gel('masthead-search-term').value == '') return false; _gel('masthead-search').submit(); return false;;return false;" type="button" id="search-btn" dir="ltr" tabindex="2" role="button" aria-pressed="false">
@@ -67,7 +67,9 @@
                     <div id="name_nav">
                         <div>
                         <a href="/user/{{session.user.displayname}}">My Channel</a>
-                        {# <? if ($_USER->Is_Admin || $_USER->Is_Mod) : ?><a href="/admin/dashboard">Admin Panel</a><? endif ?> #}
+                        {%if session.user.is_admin == 1 or session.user.is_mod == 1%}
+                        <a href="/admin/dashboard">Admin Panel</a>
+                        {%endif%}
                         <a href="/my_videos">My Videos</a>
                         <a href="/my_favorites">My Favorites</a>
                         <a href="/my_subscriptions">Subscriptions</a>
@@ -76,18 +78,15 @@
                         </div>
                     </div>
                     {%else%}
-                    <a href="/register">Sign Up</a>
+                    <a href="/signup">Sign Up</a>
                     <a href="/help">Help</a>
                     <a href="/login">Sign In</a>
                     <div id="login_modal">
                         <form action="/login" method="POST">
-                            <input type="password" class="search_bar" placeholder="Your Password" style="display:none">
-                            <input type="text" name="v_username" class="search_bar" placeholder="Username/E-Mail">
-                            <input type="password" name="v_password" class="search_bar" placeholder="Your Password">
-                            <input type="submit" name="submit_login" class="search_button" value="Sign In">
-                            <div class="forgot_pass">
-                                <a href="/forgot_password">Forgot Password?</a>
-                            </div>
+                            <input type="text" name="username" class="search_bar" placeholder="Username/E-Mail">
+                            <input type="password" name="password" class="search_bar" placeholder="Your Password">
+                            <button type="submit" name="submit_login" class="search_button">Sign In</button>
+                            <div class="forgot_pass"><a href="/forgot_password">Forgot Password?</a></div>
                         </form>
                     </div>
                     {%endif%}
@@ -151,6 +150,7 @@
                 </div>
             </div>
         </footer>
+        <div id="copyright">&copy; {{t|date("Y")}} VidLii</div>
         {%endblock%}
     </div>
     {%if session.session != -1%}

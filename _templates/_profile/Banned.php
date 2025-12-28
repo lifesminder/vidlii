@@ -70,7 +70,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="connect_lnk"><a href="/user/<?= $Profile["displayname"] ?>">/user/<?= $Profile["displayname"] ?></a></div>
+            <div class="connect_lnk"><a href="<?= $handle ?>"><?= $handle ?></a></div>
         </div>
     </section>
 </div>

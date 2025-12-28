@@ -32,11 +32,11 @@
         return $data;
     }
 
-    $bin_path = (PHP_OS == "WINNT") ? "bin/win" : "bin/linux";
+    $bin_path = (PHP_OS == "WINNT") ? "bin\\win" : "bin/linux";
     if(PHP_OS == "WINNT") {
         $config = [
-            'ffmpeg.binaries' => "$bin_path/ffmpeg.exe",
-            'ffprobe.binaries' => "$bin_path/ffprobe.exe"
+            'ffmpeg.binaries' => "$bin_path\\ffmpeg.exe",
+            'ffprobe.binaries' => "$bin_path\\ffprobe.exe"
         ];
     } else {
         $config = [
@@ -52,8 +52,14 @@
     $ffprobe = \FFMpeg\FFProbe::create();
     
     $preConvs = scandir("usfi/conv");
-    for($i = 2; $i < count($preConvs); $i++) {
+    for($i = 0; $i < count($preConvs); $i++) {
         $id = $preConvs[$i];
+
+        // These are directory listing-specific dots
+        if($id == "." || $id == "..") {
+            continue;
+        }
+
         if(end(explode(".", $id)) == "file") {
             $id = explode(".", $id)[0];
             $full_path = "usfi/conv/$id";

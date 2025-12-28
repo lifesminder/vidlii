@@ -3,35 +3,52 @@
 {% block body %}
     <ul id="browse-items-primary">
         <li class="branded-page-v2-subnav-container branded-page-gutter-padding clearfix">
-            {%if featured_channels|length > 0%}
+            {%if profile.c_subscription == 1 or channels|length > 0%}
             <button onclick=";return false;" aria-expanded="false" type="button" aria-haspopup="true" class="subnav-flow-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" data-button-menu-indicate-selected="true">
                 <span class="yt-uix-button-content">{%if flow == "list"%}List{%else%}Grid{%endif%}</span>
                 <span class="yt-uix-button-arrow yt-sprite"></span>
                 <ul class=" yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
                     <li role="menuitem">
                         {%if flow == "list"%}
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=grid" class="yt-uix-button-menu-item spf-link">Grid</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/channels?view=60&amp;flow=grid" class="yt-uix-button-menu-item spf-link">Grid</span>
                         {%else%}
-                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="/user/{{profile.displayname}}/channels?view=60&amp;flow=list" class="yt-uix-button-menu-item spf-link">List</span>
+                        <span onclick=";yt.window.navigate(this.getAttribute('href'));return false;" href="{{handle}}/channels?view=60&amp;flow=list" class="yt-uix-button-menu-item spf-link">List</span>
                         {%endif%}
                     </li>
                 </ul>
             </button>
             {%endif%}
-            <a href="/user/{{profile.displayname}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
+            <a href="{{handle}}" class="yt-uix-button sub-menu-back-button yt-uix-sessionlink yt-uix-button-default yt-uix-button-size-default yt-uix-button-has-icon yt-uix-button-empty" aria-label="Back">
                 <span class="yt-uix-button-icon-wrapper">
                     <span class="yt-uix-button-icon yt-uix-button-icon-channel-back yt-sprite"></span>
                 </span>
             </a>
-            {%if featured_channels|length > 0%}
+            {%if view == 60%}
             <span class="branded-page-module-title">
                 {{profile.featured_title}}
             </span>
+            {%elseif view == 23%}
+            <span class="branded-page-module-title">
+                Subscriptions
+            </span>
+            {%else%}
+            <button aria-expanded="false" aria-haspopup="true" class="subnav-view-menu yt-uix-button yt-uix-button-default yt-uix-button-size-default" onclick=";return false;" type="button" data-button-menu-indicate-selected="true" aria-pressed="false">
+                <span class="yt-uix-button-content">All channels</span>
+                <span class="yt-uix-button-arrow yt-sprite"></span>
+                <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true">
+                    <li role="menuitem">
+                        <span class="yt-uix-button-menu-item spf-link" href="{{handle}}/channels?view=1&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Featured channels</span>
+                    </li>
+                    <li role="menuitem">
+                        <span class=" yt-uix-button-menu-item spf-link" href="{{handle}}/channels?view=55&amp;flow=grid" onclick=";yt.window.navigate(this.getAttribute('href'));return false;">Subscriptions</span>
+                    </li>
+                </ul>
+            </button>
             {%endif%}
         </li>
-        {%if featured_channels|length > 0%}
+        {%if profile.c_subscription == 1 or channels|length > 0%}
         {%if flow == "list"%}
-        {%for channel in featured_channels%}
+        {%for channel in channels%}
         <li class="feed-item-container yt-section-hover-container browse-list-item-container branded-page-box">
             <div class="feed-item-dismissable">
                 <div class="feed-item-main feed-item-no-author">
@@ -51,7 +68,7 @@
                             </div>
                             <div class="yt-lockup-content">
                                 <h3 class="yt-lockup-title">
-                                    <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}" aria-describedby="description-id-36705" href="/user/{{channel.displayname}}">{%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}</a>
+                                    <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{%if channel.channel_title != ""%}{{channel.channel_title|url_decode}}{%else%}{{channel.displayname}}{%endif%}" aria-describedby="description-id-36705" href="/user/{{channel.displayname}}">{%if channel.channel_title != ""%}{{channel.channel_title|url_decode}}{%else%}{{channel.displayname}}{%endif%}</a>
                                     <span class="accessible-description" id="description-id-36705"> - Channel</span>
                                 </h3>
                                 <div class="yt-lockup-meta">
@@ -61,7 +78,7 @@
                                 </div>
                                 {%if channel.channel_description != ""%}
                                 <div class="yt-lockup-description yt-ui-ellipsis yt-ui-ellipsis-2">
-                                    {{channel.channel_description}}
+                                    {{channel.channel_description|url_decode}}
                                 </div>
                                 {%endif%}
                             </div>
@@ -94,7 +111,7 @@
         {%else%}
         <li>
             <ul id="channels-browse-content-grid" class="channels-browse-content-grid branded-page-gutter-padding grid-lockups-container">
-                {%for channel in featured_channels%}
+                {%for channel in channels%}
                 <li class="channels-content-item yt-shelf-grid-item">
                     <div class="yt-lockup clearfix yt-lockup-channel yt-lockup-grid">
                         <div class="yt-lockup-thumbnail">
@@ -111,8 +128,8 @@
                         </div>
                         <div class="yt-lockup-content">
                             <h3 class="yt-lockup-title">
-                                <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="VidLii" aria-describedby="description-id-397939" href="/user/{{channel.displayname}}">
-                                    {%if channel.channel_title != ""%}{{channel.channel_title}}{%else%}{{channel.displayname}}{%endif%}
+                                <a class="yt-uix-sessionlink yt-uix-tile-link spf-link yt-ui-ellipsis yt-ui-ellipsis-2" dir="ltr" title="{%if channel.channel_title != ""%}{{channel.channel_title|url_decode}}{%else%}{{channel.displayname}}{%endif%}" aria-describedby="description-id-397939" href="/user/{{channel.displayname}}">
+                                    {%if channel.channel_title != ""%}{{channel.channel_title|url_decode}}{%else%}{{channel.displayname}}{%endif%}
                                     {%if channel.partner == 1 or channel.is_admin == 1 or channel.is_mod == 1%}
                                     <span class="qualified-channel-title-badge">
                                         <span aria-label="Verified" data-tooltip-text="Verified" class="yt-channel-title-icon-verified yt-uix-tooltip yt-sprite"></span>

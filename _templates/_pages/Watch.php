@@ -555,17 +555,17 @@
                         <? endif ?>
 					</div>
 				</div>
-				<div id="w_stats_sct" class="hddn">
-					<table style="width:88%;margin:0 0 0 61px" cellpadding="5">
+				<div id="w_stats_sct" class="watch-tab-contents hddn">
+					<table id="watch-some-stats" cellpadding="5">
 						<tr>
-							<td>Date: <strong><date><?= date("M d, Y",strtotime($_VIDEO->Info["uploaded_on"])) ?></date></strong></td>
-							<td>Views: <strong><?= $Views ?></strong></td>
-							<td>Ratings: <strong><?= number_format($Total_Ratings) ?></strong></td>
+							<td>Added: <span class="watch-stat"><date><?= date("M d, Y",strtotime($_VIDEO->Info["uploaded_on"])) ?></date></span></td>
+							<td>Views: <span class="watch-stat"><?= $Views ?></span></td>
+							<td>Ratings: <span class="watch-stat"><?= number_format($Total_Ratings) ?></span></td>
 						</tr>
 						<tr>
-							<td>Time: <strong><time><?= date("h:i A",strtotime($_VIDEO->Info["uploaded_on"])) ?></time></strong></td>
-							<td>Comments: <strong><?= $Comments_Num ?></strong></td>
-							<td>Favorites: <strong><?= $_VIDEO->Info["favorites"] ?></strong></td>
+							<td>Responses: <span class="watch-stat">?</span></td>
+							<td>Comments: <span class="watch-stat"><?= $Comments_Num ?></span></td>
+							<td>Favorited: <span class="watch-stat"><?= $_VIDEO->Info["favorites"] ?> times</span></td>
 						</tr>
 					</table>
 				</div>

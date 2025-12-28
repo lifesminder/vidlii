@@ -8,12 +8,12 @@
                 <ul>
                     {% if owner or profile.c_recent == 1 %}
                     <li class="user-feed-filter{%if filter == 2%} selected{%endif%}">
-                        <a href="/user/{{profile.displayname}}/feed?filter=2">Activity</a>
+                        <a href="{{handle}}/feed?filter=2">Activity</a>
                     </li>
                     {% endif %}
                     {% if owner or profile.c_comments == 1 %}
                     <li class="user-feed-filter{%if filter == 1%} selected{%endif%}">
-                        <a href="/user/{{profile.displayname}}/feed?filter=1">Comments</a>
+                        <a href="{{handle}}/feed?filter=1">Comments</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -30,7 +30,7 @@
                 <div class="feed-list-container">
                 {%if filter == 2%}
                     {% if owner %}
-                    <form action="/user/{{profile.displayname}}/feed?filter=2" method="POST" style="display: flex; margin: 8px 0 8px 0;">
+                    <form action="{{handle}}/feed?filter=2" method="POST" style="display: flex; margin: 8px 0 8px 0;">
                         <textarea name="activity" id="activity" placeholder="Write your thoughts"></textarea>
                         <button type="submit" name="activity_post" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Post!</button>
                     </form>
@@ -44,7 +44,7 @@
                                     <div class="feed-item-main">
                                         <div class="feed-item-thumb">
                                             <span class="feed-item-author">
-                                                <a href="/user/{{profile.displayname}}" class="yt-user-photo">
+                                                <a href="{{handle}}" class="yt-user-photo">
                                                     <span class="video-thumb ux-thumb yt-thumb-square-46">
                                                         <span class="yt-thumb-clip">
                                                             <span class="yt-thumb-clip-inner">
@@ -59,14 +59,14 @@
                                         <div class="feed-item-time">
                                             {{bulletin.date}}
                                             {%if owner%}
-                                            · <a href="/user/{{profile.displayname}}/feed?remove_post={{bulletin.id}}">Delete</a>
+                                            ï¿½ <a href="{{handle}}/feed?remove_post={{bulletin.id}}">Delete</a>
                                             {%endif%}
                                         </div>
                                         <div class="feed-item-content">
                                             <div class="feed-item-actions-line user">
                                                 <div class="feed-item-attribution feed-avatar-first">
                                                     <span class="feed-item-owner">
-                                                        <a href="/user/{{profile.displayname}}" class="yt-user-name">{{profile.displayname}}</a>
+                                                        <a href="{{handle}}" class="yt-user-name">{{profile.displayname}}</a>
                                                     </span>
                                                     posted:
                                                 </div>
@@ -88,7 +88,7 @@
                     {%endif%}
                 {%elseif filter == 1%}
                     {% if owner or (authorized and profile.c_comments == 1 and session.session != -1) %}
-                    <form action="/user/{{profile.displayname}}/feed?filter=1" method="POST" style="display: flex; margin: 8px 0 8px 0;">
+                    <form action="{{handle}}/feed?filter=1" method="POST" style="display: flex; margin: 8px 0 8px 0;">
                         <textarea name="comment" id="comment" placeholder="Write your comment"></textarea>
                         <button type="submit" name="channel_comment" class="yt-uix-button yt-uix-button-default yt-uix-button-short">Publish</button>
                     </form>

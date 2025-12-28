@@ -15,16 +15,16 @@
         {%if view == 0 and videos.data|length > 1%}
         <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
             <span class="yt-uix-button-content">{%if sort == "p"%}Most popular{%elseif sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
-            <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+            <img class="yt-uix-button-arrow" src="/img/one/pixel.gif" alt="">
             <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true" style="min-width: 185px; left: 1219.3px; top: 305px; display: none;">
                 <li role="menuitem" id="aria-id-2720847037">
-                    <span href="/user/{{profile.displayname}}/videos?sort=p&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Most popular</span>
+                    <span href="{{handle}}/videos?sort=p&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Most popular</span>
                 </li>
                 <li role="menuitem" id="aria-id-90702033973">
-                    <span href="/user/{{profile.displayname}}/videos?sort=da&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
+                    <span href="{{handle}}/videos?sort=da&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
                 </li>
                 <li role="menuitem" id="aria-id-93516592201">
-                    <span href="/user/{{profile.displayname}}/videos?sort=dd&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
+                    <span href="{{handle}}/videos?sort=dd&amp;view=0" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
                 </li>
             </ul>
         </button>
@@ -32,13 +32,13 @@
         {%if view == 1 and playlists.data|length > 1%}
         <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
             <span class="yt-uix-button-content">{%if sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
-            <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+            <img class="yt-uix-button-arrow" src="/img/one/pixel.gif" alt="">
             <ul class="yt-uix-button-menu yt-uix-button-menu-default hid" role="menu" aria-haspopup="true" style="min-width: 185px; left: 1219.3px; top: 305px; display: none;">
                 <li role="menuitem" id="aria-id-90702033973">
-                    <span href="/user/{{profile.displayname}}/videos?sort=da&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
+                    <span href="{{handle}}/videos?sort=da&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (oldest - newest)</span>
                 </li>
                 <li role="menuitem" id="aria-id-93516592201">
-                    <span href="/user/{{profile.displayname}}/videos?sort=dd&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
+                    <span href="{{handle}}/videos?sort=dd&amp;view=1" class="yt-uix-button-menu-item" onclick=";window.location.href=this.getAttribute('href');return false;">Date added (newest - oldest)</span>
                 </li>
             </ul>
         </button>
@@ -53,12 +53,12 @@
         <ul class="primary-filter-menu">
             {%if video_count > 0%}
             <li>
-                <a class="filter-option{%if view == 0%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=0">Uploaded Videos</a>
+                <a class="filter-option{%if view == 0%} selected-filter{%endif%}" href="{{handle}}/videos?view=0">Uploaded Videos</a>
             </li>
             {%endif%}
             {%if profile.c_playlists == 1 and playlist_count > 0%}
             <li>
-                <a class="filter-option{%if view == 1%} selected-filter{%endif%}" href="/user/{{profile.displayname}}/videos?view=1">Playlists</a>
+                <a class="filter-option{%if view == 1%} selected-filter{%endif%}" href="{{handle}}/videos?view=1">Playlists</a>
             </li>
             {%endif%}
         </ul>
@@ -82,9 +82,9 @@
                         <span class="yt-uix-button-content">
                             <span class="addto-label">Watch Later</span>
                             <span class="addto-label-error">Error</span>
-                            <img src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif">
+                            <img src="/img/one/pixel.gif">
                         </span>
-                        <img class="yt-uix-button-arrow" src="http://s.ytimg.com/yt/img/pixel-vfl3z5WfW.gif" alt="">
+                        <img class="yt-uix-button-arrow" src="/img/one/pixel.gif" alt="">
                     </button>
                 </a>
                 <h3 class="yt-c3-grid-item-title">
