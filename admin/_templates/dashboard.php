@@ -124,17 +124,6 @@
 </div>
 <div style="">
 	<div class="panel_box">
-		<strong>Write Blog Post</strong>
-		<form action="/admin/dashboard" method="POST">
-			<input style="margin-bottom:5px;width:250px" type="text" name="blog_title" maxlength="256" required placeholder="Blog Post Title"><br>
-			<textarea name="blog_post" maxlength="50000" placeholder="Blog Post" required rows="8"></textarea><br>
-			<input type="submit" value="Submit Blog Post" name="submit_blog">
-		</form>
-		<div style="padding: 6px 0 6px 0">
-			<a href="/admin/blog">Blog Management >></a>
-		</div>
-	</div>
-	<div class="panel_box">
 		<strong>Video Reports</strong>
 		<div style="max-height:300px;overflow-y:auto">
 			<div style="display:table; width:100%; text-align: left">

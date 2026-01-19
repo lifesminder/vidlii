@@ -2,37 +2,6 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/_includes/init.php";
 
     if ($_USER->logged_in && ($_USER->Is_Admin || $_USER->Is_Mod)) {
-
-        if (isset($_POST["submit_blog"])) {
-            $_GUMP->validation_rules(array(
-                "blog_title"  => "required|max_len,256",
-                "blog_post"   => "required|max_len,50000"
-            ));
-
-            $_GUMP->filter_rules(array(
-                "blog_title"  => "trim",
-                "blog_post"   => "trim"
-            ));
-
-            $Validation = $_GUMP->run($_POST);
-
-            if ($Validation) {
-                $Title = $Validation["blog_title"];
-                $Post   = $Validation["blog_post"];
-
-                $DB->modify("INSERT INTO blog (title,content,date) VALUES (:TITLE,:CONTENT,NOW())",
-                           [
-                               ":TITLE"     => $Title,
-                               ":CONTENT"   => $Post
-                           ]);
-                if ($DB->RowNum > 0) {
-                    notification("Blog Post successfully submitted!","/admin/dashboard","green");
-                } else {
-                    notification("Something went wrong!","/admin/dashboard","red");
-                }
-            }
-        }
-
         if (!isset($_POST["search_string"])) {
             $Channel_Comments = $DB->execute("SELECT * FROM channel_comments INNER JOIN users ON channel_comments.by_user = users.username ORDER BY date DESC LIMIT 25");
         } else {

@@ -57,7 +57,7 @@
     // New classes, intended to replace previous ones
     $engine = new \Vidlii\Vidlii\Engine();
     $api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
-    $db = new \Vidlii\Vidlii\DB($_SERVER["DOCUMENT_ROOT"]);
+    $db = new \Vidlii\Vidlii\DB(true);
 
     if($_USER->logged_in && (!isset($_SERVER["HTTP_X_REQUESTED_WITH"]) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest')) {
         require_once ROOT_FOLDER."/_includes/inbox.php";

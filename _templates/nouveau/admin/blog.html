@@ -22,9 +22,51 @@
     }
 </style>
 <div style="font-size: 14px;">
-    {%if posts is defined%}
+    {%if post is defined%}
+    <h2>Edit Post</h2>
+    <p>Manage blog post at it's best!</p>
+    <form action="/admin/blog?id={{post.id}}" method="post">
+        <div>
+            <label for="id">ID: </label>
+            <input type="number" name="id" id="id" placeholder="Blog ID" value="{{post.id}}" disabled>
+        </div>
+        <div>
+            <label for="title">Title: </label>
+            <input type="text" name="blog_title" id="title" placeholder="Blog Title" value="{{post.title}}">
+        </div>
+        <div>
+            <label for="content">Article:</label><br>
+            <textarea name="blog_content" id="content" placeholder="Blog Content">{{post.content}}</textarea>
+        </div>
+        <div>
+            <button type="submit" name="blog_edit">Save</button>
+        </div>
+    </form>
+    {%elseif action is defined%}
+    {%if action == "new"%}
+    <h2>New Post</h2>
+    <p>Create a new blog post on the instance</p>
+    <form action="/admin/blog?a=new" method="post">
+        <div>
+            <label for="title">Title: </label>
+            <input type="text" name="blog_title" id="title" placeholder="Blog Title" value="">
+        </div>
+        <div>
+            <label for="content">Article:</label><br>
+            <textarea name="blog_content" id="content" placeholder="Blog Content"></textarea>
+        </div>
+        <div>
+            <button type="submit" name="blog_new">Save</button>
+        </div>
+    </form>
+    {%else%}
+    <p>Invalid action</p>
+    {%endif%}
+    {%else%}
     <h2>Blog</h2>
     <p>Manage blog articles</p>
+    <a href="/admin/blog?a=new">+ New Article</a>
+    <hr>
 
     <table style="width: 100%" cellspacing="0" cellpadding="0" class="atable">
         <thead>
@@ -51,25 +93,5 @@
         </tr>
         {%endif%}
     </table>
-    {%elseif post is defined%}
-    <h2>Edit Post</h2>
-    <p>Manage blog post at it's best!</p>
-    <form action="/admin/blog?id={{post.id}}" method="post">
-        <div>
-            <label for="id">ID: </label>
-            <input type="number" name="id" id="id" placeholder="Blog ID" value="{{post.id}}" disabled>
-        </div>
-        <div>
-            <label for="title">Title: </label>
-            <input type="text" name="blog_title" id="title" placeholder="Blog Title" value="{{post.title}}">
-        </div>
-        <div>
-            <label for="content">Article:</label><br>
-            <textarea name="blog_content" id="content" placeholder="Blog Content">{{post.content}}</textarea>
-        </div>
-        <div>
-            <button type="submit" name="blog_edit">Save</button>
-        </div>
-    </form>
     {%endif%}
 </div>

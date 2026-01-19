@@ -78,13 +78,24 @@
 	}
 
 	function notification($Message,$Redirect,$Color = "red") {
-		/*
-		$_SESSION["notification"] = $Message;
-		$_SESSION["n_color"] = $Color;
-		*/
-		setcookie("notification", "$Message;$Color", time() + (86400 * 30), "/", $_SERVER['SERVER_NAME']);
-		if($Redirect != false) {
-			redirect($Redirect);
+		if(trim($Message) != "") {
+			setcookie(
+				"notification",
+				$Message . ";" . $Color,
+				time() + 10, // expires in 10 seconds
+				"/",
+				$_SERVER['SERVER_NAME'],
+				true,
+				true
+			);
+
+			if ($Redirect !== false) {
+				redirect($Redirect);
+				exit;
+			}
+			if($Redirect != false) {
+				redirect($Redirect);
+			}
 		}
 	}
 

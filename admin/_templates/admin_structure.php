@@ -68,13 +68,15 @@
             <a href="/admin/statistics"<? if ($Page == "statistics") : ?> id="nav_sel"<? endif ?>>Charts</a>
             <a href="/admin/users"<? if ($Page == "Users") : ?> id="nav_sel"<? endif ?>>Users</a>
             <a href="/admin/videos"<? if ($Page == "Videos") : ?> id="nav_sel"<? endif ?>>Videos</a>
+            <a href="/admin/blog"<? if ($Page == "Blog") : ?> id="nav_sel"<? endif ?>>Blog</a>
             <a href="/admin/misc"<? if ($Page == "misc") : ?> id="nav_sel"<? endif ?>>Misc</a>
         </div>
         <div class="subpage">
             <div class="subpage-content">
                 <?php
-                    if(isset($twig) && isset($twig_dest) && isset($twig_args))
-                        echo "D";
+                    if(isset($twig) && isset($twig_dest)) {
+                        echo $engine->template($twig_dest, $twig_args ?? []);
+                    }
                     else
                         require_once $_SERVER['DOCUMENT_ROOT']."/admin/_templates/$Page.php";
                 ?>
