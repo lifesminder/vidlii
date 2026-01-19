@@ -19,7 +19,9 @@
                     $valid = password_verify($password, $real_password);
                     if($valid) {
                         $_USER->username = $username;
-                        if($_USER->login()) $data = $this->api_message(0, "Access Granted");
+                        if($_USER->login()) {
+                            $data = $this->api_message(0, "Access Granted");
+                        }
                         else $data = $this->api_message(-1, "Invalid Username or Password");
                     } else $data = $this->api_message(-1, "Invalid Username or Password");
                 } else $data = $this->api_message(-1, "Invalid Username or Password");

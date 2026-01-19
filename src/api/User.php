@@ -68,22 +68,14 @@
 							$is_subscribed = (bool)$this->db("SELECT count(*) from subscriptions where subscriber = '$from' and subscription = '$to'")["data"]["count(*)"];
 							if($is_subscribed) {
 								$unsubscribe = $this->db("DELETE from subscriptions where subscriber = '$from' and subscription = '$to'");
-								if($unsubscribe["status"] == 1) {
-									$unsubscription_visual = $this->db("UPDATE users set subscriptions = subscriptions - 1 where username = '$from'");
-									$unsubscribe_visual = $this->db("UPDATE users set subscribers = subscribers - 1 where username = '$to'");
-									if($unsubscribe_visual["status"] >= 1 && $unsubscription_visual["status"] >= 1) {
-										$data = $this->api_message(1, "Unsubscribed successfully");
-									} else $data = $unsubscribe_visual;
-								} else $data = $unsubscribe;
+								$unsubscription_visual = $this->db("UPDATE users set subscriptions = subscriptions - 1 where username = '$from'");
+								$unsubscribe_visual = $this->db("UPDATE users set subscribers = subscribers - 1 where username = '$to'");
+								$data = $this->api_message(1, "Unsubscribed successfully");
 							} else {
 								$subscribe = $this->db("INSERT into subscriptions (subscriber, subscription, submit_date, source) values ('$from', '$to', '".date("Y-m-d")."', 'channels')");
-								if($subscribe["status"] == 1) {
-									$subscription_visual = $this->db("UPDATE users set subscriptions = subscriptions + 1 where username = '$from'");
-									$subscribe_visual = $this->db("UPDATE users set subscribers = subscribers + 1 where username = '$to'");
-									if($subscribe_visual["status"] == 1 && $subscription_visual["status"] == 1) {
-										$data = $this->api_message(1, "Subscribed successfully");
-									} else $data = $subscribe_visual;
-								} else $data = $subscribe;
+								$subscription_visual = $this->db("UPDATE users set subscriptions = subscriptions + 1 where username = '$from'");
+								$subscribe_visual = $this->db("UPDATE users set subscribers = subscribers + 1 where username = '$to'");
+								$data = $this->api_message(1, "Subscribed successfully");
 							}
 						} else $data = $this->api_message(-1, "You can't subscribe to yourself");
 					} else $data = $this->api_message(-1, "User not found");

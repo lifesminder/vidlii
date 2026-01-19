@@ -40,7 +40,7 @@
             <div style="font-weight: bold; margin-bottom: 5px">Your Subscribers:</div>
             <? foreach ($Subscribers as $Subscriber) : ?>
             <div style="border-bottom: 1px solid #ccc; padding-bottom: 3px; margin-bottom: 3px; overflow: hidden">
-                <img src="https://www.countryflags.io/<?= $Subscriber["country"] ?>/flat/64.png" style="width: 24px;display:block; float: left; margin-right: 6px">
+                <img src="https://flagsapi.com/<?= $Subscriber["country"] ?>/flat/64.png" style="width: 24px;display:block; float: left; margin-right: 6px">
                 <div style="float:left; position: relative; top: 4px; width: 200px; overflow: hidden"><a href="/analytics?page=subscribers&country=<?= $Subscriber["country"] ?>"><?= $Countries[$Subscriber["country"]] ?></a></div>
                 <div style="position: relative; top: 4px; border-left: 1px solid #ccc;float:right; padding:0 10px"><?= number_format($Subscriber["amount"]) ?></div>
             </div>
