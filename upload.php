@@ -10,12 +10,14 @@ if (!$_USER->Is_Activated)    { redirect("/"); exit();        }
 if ($DB->execute("SELECT value FROM settings WHERE name = 'uploader'", true)["value"] == 0) { notification("The uploader has been temporarily disabled!","/"); exit(); }
 */
 
+/* limitations of video uploads
 $Videos_Today = $DB->execute("SELECT COUNT(url) as amount FROM videos WHERE uploaded_by = :USERNAME AND uploaded_on > DATE_SUB(now(), INTERVAL 1 DAY)", true, [":USERNAME" => $_USER->username])["amount"];
 // TODO Move this to a centralized place, preferably in a database setting row
 $Max_Daily_Videos = 10;
 if ($Videos_Today >= $Max_Daily_Videos) {
     notification("You cannot upload more than $Max_Daily_Videos videos in a 24-hour period! Sorry about that.","/","red"); exit();
 }
+*/
 
 $Categories = return_categories();
 

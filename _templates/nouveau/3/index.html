@@ -22,7 +22,7 @@
                 </h3>
                 <p class="channels-featured-video-metadata">
                     <span>by {{profile.displayname}}</span>
-                    <span class="created-date">? {{featured_video.uploaded}}</span>
+                    <span class="created-date">{{featured_video.uploaded}}</span>
                 </p>
             </div>
         </div>
@@ -38,7 +38,7 @@
             </div>
             <div class="playlist-info">
                 <h2>Uploaded Videos</h2>
-                <span class="blogger-video-count">1-{{videos.count}} of {{video_count}}</span>
+                <span class="blogger-video-count">1-{%if videos.count > 10%}10{%else%}{{videos.count}}{%endif%} of {{videos.count}}</span>
                 <div class="yt-horizontal-rule">
                     <span class="first"></span>
                     <span class="second"></span>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <ul class="gh-single-playlist">
-                {%for video in videos.data%}
+                {%for video in videos.data|slice(0, 10)%}
                 <li class="blogger-video">
                     <div class="video yt-tile-visible">
                         <a href="/watch?v={{video.url}}" class="yt-uix-sessionlink" data-sessionlink="feature=plcp">
@@ -86,6 +86,20 @@
                     </div>
                 </li>
                 {%endfor%}
+                {%if videos.count > 10%}
+                <li class="video">
+                    <button name="page" onclick=";return false;" type="button" class="more-videos yt-uix-button yt-uix-button-default" value="2" role="button">
+                        <span class="yt-uix-button-content">
+                            <span class="load-more-text">
+                                Load {%if videos.count - 10 > 10%}10{%else%}{{videos.count - 10}}{%endif%} more videos
+                            </span>
+                            <span class="loading-indicator">
+                                <img src="http://s.ytimg.com/yt/img/loader-vflff1Mjj.gif" alt="Loading">
+                            </span>
+                        </span>
+                    </button>
+                </li>
+                {%endif%}
             </ul>
         </div>
     </div>

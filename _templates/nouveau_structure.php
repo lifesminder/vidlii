@@ -126,9 +126,8 @@
                     $renderablePage = (file_exists($_SERVER["DOCUMENT_ROOT"]."/_templates/nouveau/3/$page.html")) ? "nouveau/3/$page.html" : "nouveau/3/index.html";
 
                     $args["two_columns"] = $twoColumns;
-                    $args["video_count"] = $api->db("SELECT count(*) from videos where uploaded_by = '".$Profile["displayname"]."'")["data"]["count(*)"];
+                    $args["video_count"] = $api->db("SELECT count(*) from videos where uploaded_by = '".$Profile["displayname"]."' and status >= 1")["data"]["count(*)"];
                     $args["playlist_count"] = $api->db("SELECT count(*) from playlists where created_by = '".$Profile["displayname"]."'")["data"]["count(*)"];
-                    $args["playlists"] = $api->db("SELECT * from playlists where created_by = '".$Profile["displayname"]."' order by created_on $sort", true);
                     $args["bg_color"] = ($Profile["bg"] == "f9f9f9") ? "transparent" : "#".$Profile["bg"];
                     $args["bg_cover"] = (strlen($Profile["cover"]) > 0) ? "/vi/cover/".$Profile["displayname"].".jpg" : null;
 
@@ -160,14 +159,27 @@
                                         $args["two_columns"] = false;
                                         $view = (isset($_GET["view"]) && (int)$_GET["view"] >= 0) ? (int)$_GET["view"] : 0;
                                         $args["view"] = $view;
-                                        
+
                                         $args["sort"] = (isset($_GET["sort"]) && $_GET["sort"] != "") ? strtolower($_GET["sort"]) : "dd";
                                         if($args["sort"] == "da") $sort = "order by uploaded_on asc";
                                         else if($args["sort"] == "p" && $view == 0) $sort = "order by displayviews desc";
                                         else $sort = "order by uploaded_on desc";
-            
+
                                         if($view == 0) {
-                                            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $sort", true);
+                                            // search
+                                            $searchQuery = (isset($_GET["query"]) && trim($_GET["query"]) != "") ? "and (title like \"%".trim($_GET["query"])."%\" or description like \"%".trim($_GET["query"])."%\")" : "";
+                                            $args["search"] = (isset($_GET["query"]) && trim($_GET["query"]) != "") ? true : false;
+                                            $args["search_query"] = (isset($_GET["query"]) && trim($_GET["query"]) != "") ? trim($_GET["query"]) : "";
+
+                                            // pagination
+                                            $perPage = 30;
+                                            $pageNum = (isset($_GET["p"]) && (int)$_GET["p"] > 0) ? (int)$_GET["p"] : 1;
+                                            $pagesNum = (ceil($args["video_count"] / $perPage) > 1) ? ceil($args["video_count"] / $perPage) : 1;
+                                            if($pageNum > $pagesNum) $pageNum = 1;
+                                            $startAt = $perPage * ($pageNum - 1);
+                                            $args["pageNum"] = $pageNum; $args["pagesNum"] = $pagesNum;
+
+                                            $args["videos"] = $api->db("SELECT url, title, description, uploaded_on, length, displayviews from videos where status > 1 and uploaded_by = '".$Profile["displayname"]."' $searchQuery $sort limit $startAt, $perPage", true);
                                             if($args["videos"]["count"] > 0) {
                                                 for($i = 0; $i < $args["videos"]["count"]; $i++) {
                                                     $args["videos"]["data"][$i]["length"] = seconds_to_time($args["videos"]["data"][$i]["length"]);
@@ -178,14 +190,15 @@
                                             }
                                         } else if($view == 1) {
                                             $sort = (isset($_GET["sort"]) && $_GET["sort"] == "da") ? "asc" : "desc";
+                                            $args["playlists"] = $api->db("SELECT * from playlists where created_by = '".$Profile["displayname"]."' order by created_on $sort", true);
                                             if($args["playlists"]["count"] > 0) {
                                                 $playlists = [];
-                                                foreach($args["playlists"] as $playlist) {
-                                                    if(!empty($playlist[0])) {
-                                                        $purl = $playlist[0]["purl"];
-                                                        $playlist[0]["videos"] = $api->db("SELECT url, position from playlists_videos where purl = \"$purl\" order by position asc", true);
-                                                        if(empty($playlist[0]["videos"])) $playlist[0]["videos"]["count"] = 0;
-                                                        array_push($playlists, $playlist[0]);
+                                                foreach($args["playlists"]["data"] as $playlist) {
+                                                    if(!empty($playlist)) {
+                                                        $purl = $playlist["purl"];
+                                                        $playlist["videos"] = $api->db("SELECT url, position from playlists_videos where purl = \"$purl\" order by position asc", true);
+                                                        if(empty($playlist["videos"])) $playlist["videos"]["count"] = 0;
+                                                        array_push($playlists, $playlist);
                                                     }
                                                 }
                                                 $args["playlists"] = $playlists;

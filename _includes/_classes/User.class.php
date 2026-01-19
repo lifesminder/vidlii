@@ -52,16 +52,10 @@
                 $this->username = (string)clean($this->session["user"]["username"]);
                 $this->logged_in = true;
 
-                // Watched videos and channels will be moved into separate DB.
-                if(!isset($_SESSION["watched_videos"]))
-                    $_SESSION["watched_videos"] = [];
-                else
-                    $this->Viewed_Videos = $_SESSION["watched_videos"];
-
-                if(isset($_SESSION["viewed_channels"]))
-                    $this->Viewed_Channels = $_SESSION["viewed_channels"];
-                else
-                    $_SESSION["viewed_channels"] = [];
+                // Watched videos and channels.
+                // Are in process to be moved into separate DB.
+                $this->Viewed_Videos = [];
+                $this->Viewed_Channels = [];
 
                 // If status is unfetchable, then log out
                 if(!$this->get_status()) {
@@ -73,26 +67,20 @@
                 // IF ID HAS NOT BEEN SET AND THE USER ISN'T LOGGED IN YET DURING THIS SESSION
                 $this->logged_in = false;
 
-                // Watched videos and channels will be moved into separate DB.
-                if(!isset($_SESSION["watched_videos"]))
-                    $_SESSION["watched_videos"] = [];
-                else
-                    $this->Viewed_Videos = $_SESSION["watched_videos"];
-
-                if(isset($_SESSION["viewed_channels"]))
-                    $this->Viewed_Channels = $_SESSION["viewed_channels"];
-                else
-                    $_SESSION["viewed_channels"] = [];
+                // Watched videos and channels.
+                // Are in process to be moved into separate DB.
+                $this->Viewed_Videos = [];
+                $this->Viewed_Channels = [];
             }
         }
 
         public function owns_video($URL) {
-            return (bool)($this->api->db("SELECT count(*) from videos where url = \"$URL\" and uploaded_by = \"".$session["user"]["username"]."\"")["data"]["count(*)"] == 1);
+            return (bool)($this->api->db("SELECT count(*) from videos where url = \"$URL\" and uploaded_by = \"".$this->session["user"]["username"]."\"")["data"]["count(*)"] == 1);
         }
 
         public function view_channel($Channel) {
             if(count($this->Viewed_Channels) > 0 && !in_array($Channel,$this->Viewed_Channels)) {
-                $update_channel_views = $this->api->db("UPDATE users SET channel_views = channel_views + 1 WHERE username = \"".$session["user"]["username"]."\"");
+                $update_channel_views = $this->api->db("UPDATE users SET channel_views = channel_views + 1 WHERE username = \"".$this->session["user"]["username"]."\"");
                 return ($update_channel_views["status"] == 1) ? true : false;
             } return false;
         }
@@ -108,15 +96,16 @@
         // GET STATUS INFORMATION ABOUT THE MAIN USER
         // RETURNS FALSE IF THE USER IS BANNED | TRUE IF NOT
         private function get_status(): bool {
-            $Status = $this->DB->execute("SELECT username, banned, partner, is_mod, is_admin, displayname, shadowbanned, activated FROM users WHERE username = :USERNAME", true, [":USERNAME" => $this->username]);
-            if($this->DB->RowNum == 1 && $Status["banned"] == 0) {
-                $this->username     = (string)$Status["username"];
-                $this->displayname  = (string)clean($Status["displayname"]);
-                $this->Shadowbanned = (int)$Status["shadowbanned"];
-                $this->Is_Admin     = (bool)$Status["is_admin"];
-                $this->Is_Mod       = (bool)$Status["is_mod"];
-                $this->Is_Partner   = (bool)$Status["partner"];
-                $this->Is_Activated = (bool)$Status["activated"];
+            $status = $this->api->db("SELECT username, banned, partner, is_mod, is_admin, displayname, shadowbanned, activated FROM users WHERE username = :username", false, arguments: ["username" => $this->username]);
+            if($status["count"] == 1 && $status["data"]["banned"] == 0) {
+                $status = $status["data"];
+                $this->username = (string)$status["username"];
+                $this->displayname = (string)clean($status["displayname"]);
+                $this->Shadowbanned = (int)$status["shadowbanned"];
+                $this->Is_Admin = (bool)$status["is_admin"];
+                $this->Is_Mod = (bool)$status["is_mod"];
+                $this->Is_Partner = (bool)$status["partner"];
+                $this->Is_Activated = (bool)$status["activated"];
                 return true;
             }
             return false;

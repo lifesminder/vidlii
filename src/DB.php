@@ -4,100 +4,59 @@
     include_once $_SERVER["DOCUMENT_ROOT"]."/_includes/init.php";
 
     class DB {
-        public $RowNum, $active = false;
+        public $api, $lastID, $RowNum, $active = false;
         protected $Connection;
 
         function __construct(bool $Show_Errors = false) {
-            try {
-                $dsnParser = new \Doctrine\DBAL\Tools\DsnParser();
-                if(!empty($_ENV["database"])) {
-                    $params = $dsnParser->parse($_ENV["database"]);
-                    $pdoConn = "mysql:host=".$params["host"].";dbname=".$params["dbname"].";charset=utf8mb4";
-                    $this->Connection = new \PDO($pdoConn, $params["user"] ?? "", $params["password"] ?? "");
-                    if ($Show_Errors)
-                        $this->Connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                    $this->active = true;
-                }
-            } catch (\PDOException $e) {
-                die("<center>".$e."</center>");
-            }
+            $this->api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+            $this->$Show_Errors = $Show_Errors;
         }
 
         public function query($query) {
-            $data = [];
-            if(isset($_ENV["database"]) && $_ENV["database"] != "") {
-                $dsnParser = new \Doctrine\DBAL\Tools\DsnParser();
-                $params = $dsnParser->parse($_ENV["database"]);
-                $conn = \Doctrine\DBAL\DriverManager::getConnection($params);
-                try {
-                    $stmt = $conn->prepare($query);
-                    if(
-                        strtolower(substr($query, 0, strlen("select"))) == "select" ||
-                        strtolower(substr($query, 0, strlen("show"))) == "show"
-                    ) {
-                        $result = $stmt->executeQuery();
-                        $datas = $result->fetchAllAssociative();
-                        $data = ["count" => count($datas), "data" => $datas];
-                    } else {
-                        $result = $stmt->executeStatement();
-                        $data["status"] = $result;
-                    }
-                } catch(\Doctrine\DBAL\Exception $e) {
-                    $data = ["status" => -1, "message" => $e->getMessage()];
-                }
-                $conn->close();
-            } else $data = ["status" => -1, "message" => "Connection node is missing"];
-            return $data;
+            return $this->api->db($query);
         }
 
         public function execute(string $SQL, bool $Single = false, array $Execute = []): array {
-            if(!$this->Connection) {
+            // Quickly replace all prepending ":" with nothing,
+            // as DBAL doesn't bind those values
+            $normalized = [];
+            foreach($Execute as $key => $value) {
+                if(is_string($key) && str_starts_with($key, ':')) {
+                    $key = substr($key, 1);
+                }
+                $normalized[$key] = $value;
+            }
+            // Do the rest
+            $Single = !$Single; // VidLii bug, as parameter's boolean value does reverse.
+            $execution = $this->api->db($SQL, $Single, $normalized);
+            if($execution["status"] == -1) {
                 return [];
             }
-
-			try {
-            	$Query = $this->Connection->prepare($SQL);
-            	$Query->execute($Execute);
-            } catch (\Exception $e) {die($e);}
-
-            $this->RowNum = $Query->rowCount();
-
-            if ($this->RowNum == 0) {
+            $this->RowNum = $execution["count"] ?? 0;
+            $this->lastID = $execution["last"] ?? -1;
+            if($this->RowNum == 0) {
                 return [];
-            } elseif ($Single) {
-                return @$Query->fetch(\PDO::FETCH_ASSOC);
             } else {
-                return @$Query->fetchAll(\PDO::FETCH_ASSOC);
+                return $execution["data"] ?? [];
             }
         }
 
         public function modify(string $SQL, array $Execute = []): bool {
-            
-            if ($Execute) {
-                
-                foreach ($Execute as $Key => $Value) {
-                    
-                    $Execute[$Key] = str_ireplace("eval", "evaI", $Value);
-                    if (is_null($Value)) {
-                    	$Execute[$Key] = 0;
-                    }
+            // Quickly replace all prepending ":" with nothing,
+            // as DBAL doesn't bind those values
+            $normalized = [];
+            foreach($Execute as $key => $value) {
+                if(is_string($key) && str_starts_with($key, ':')) {
+                    $key = substr($key, 1);
                 }
-                
+                $normalized[$key] = $value;
             }
-            try {
-            	$Query = $this->Connection->prepare($SQL);
-            	$Query->execute($Execute);
-            } catch (\Exception $e) {die($e);}
-
-            $this->RowNum = $Query->rowCount();
-
-            if ($this->RowNum > 0) {
-                return true;
-            }
-            return false;
+            // Do the rest
+            $execution = $this->api->db($SQL, false, $normalized);
+            return (bool)($execution["status"] == 1);
         }
 
         public function last_id() {
-            return $this->Connection->lastInsertId();
+            return $this->lastID;
         }
     }

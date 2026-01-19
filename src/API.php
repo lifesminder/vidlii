@@ -2,11 +2,14 @@
     namespace Vidlii\Vidlii;
 
     class API extends \Vidlii\Vidlii\Engine {
-        protected $env, $dir;
+        protected $api, $env, $dir;
+        private static \Doctrine\DBAL\Connection|null $conn;
 
         function __construct($path = __dir__, $config = ".env") {
             $this->dir = $path;
             $this->path = "$path/$config";
+            $this->conn = null;
+
             if(file_exists($this->path)) {
                 try {
                     $this->env = \Dotenv\Dotenv::createImmutable($path);
@@ -20,32 +23,43 @@
             }
         }
 
-        function db($query, $alwaysKeyed = false) {
-			$data = []; $database = $_ENV["database"];
-			if(isset($database) && $database != "") {
-				$dsnParser = new \Doctrine\DBAL\Tools\DsnParser();
-				$params = $dsnParser->parse($database);
-				$conn = \Doctrine\DBAL\DriverManager::getConnection($params);
-				try {
-					$stmt = $conn->prepare($query);
-					if(strtolower(substr($query, 0, strlen("select"))) == "select" || strtolower(substr($query, 0, strlen("show"))) == "show") {
-						$result = $stmt->executeQuery();
-						$datas = $result->fetchAllAssociative();
-						if($alwaysKeyed) $data = ["count" => count($datas), "data" => $datas];
-						else $data = ["count" => count($datas), "data" => (count($datas) == 1) ? $datas[0] : $datas];
-					} else {
-						$result = $stmt->executeStatement();
-						$data["status"] = $result;
-                        if(!$result) $data["message"] = $stmt->error;
-					}
-				} catch(\Doctrine\DBAL\DBALException $e) {
-					$data = ["status" => -1, "message" => $e->getMessage()];
-                } catch(\Doctrine\DBAL\Exception $e) {
-					$message = end(explode(": ", $e->getMessage()));
-					$data = ["status" => -1, "message" => $message];
-				}
-				$conn->close();
-			} else $data = ["status" => -1, "message" => "Connection node is missing"];
+        public function db(string $query, bool $alwaysKeyed = false, array $arguments = []): array {
+			$data = [];
+            if($this->conn == null || !$this->conn->isConnected()) {
+                $database = (isset($_ENV["database"]) && trim($_ENV["database"]) != "") ? trim($_ENV["database"]) : null;
+                if($database == null) {
+                    return ["status" => -1, "message" => "Connection node DSN is missing"];
+                }
+                $dsnParser = new \Doctrine\DBAL\Tools\DsnParser(["mysql" => "mysqli", "postgres" => "pdo_pgsql"]);
+                $params = $dsnParser->parse($database);
+                // Connection persistency
+                $params["persistent"] = true;
+                $params["memory"] = true;
+				$this->conn = \Doctrine\DBAL\DriverManager::getConnection($params);
+            }
+            
+			try {
+                $isReadQuery = preg_match('/^\s*(SELECT|SHOW|DESCRIBE|PRAGMA)\b/i', $query);
+				if($isReadQuery) {
+                    $result = $this->conn->executeQuery($query, $arguments);
+                    $rows = $result->fetchAllAssociative();
+                    return [
+                        "status" => 1,
+                        "count" => count($rows),
+                        "data" => $alwaysKeyed ? $rows : (count($rows) === 1 ? $rows[0] : $rows)
+                    ];
+                }
+
+                // Write queries (INSERT / UPDATE / DELETE)
+                $affected = $this->conn->executeStatement($query, $arguments);
+                return [
+                    "status" => 1,
+                    "affected" => $affected,
+                    "last" => $this->conn->lastInsertId()
+                ];
+			} catch(\Exception $e) {
+                $data = ["status" => -1, "message" => $e->getMessage()];
+            }
 			return $data;
         }
 
@@ -69,7 +83,7 @@
                     $data = $entry->$fx($args, $files);
                 } else $data = $this->api_message(-1, "Forbidden");
             } else $data = $this->api_message(-1, "Forbidden");
-            
+
             header("Content-Type: application/json");
             header("Cache-Control: no-cache no-store");
             header("X-Content-Type-Options: nosniff");

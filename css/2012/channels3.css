@@ -4912,3 +4912,10 @@ a:hover .playlist-thumb-strip .hover-overlay,.playlist-thumb-strip .resting-over
     padding-right: 5px;
     float: left
 }
+
+.cosmic_edit {
+    margin-top: -10px;
+    text-align: left;
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 4px #ccc;
+}

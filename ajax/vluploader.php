@@ -4,7 +4,7 @@
 	$result = 0;
 
 	// Parameters
-	$uploadLimit = (int)$_ENV["upload_limit"] ?? 1073741824;
+	$uploadLimit = (!empty($_ENV["upload_limit"])) ? (int)$_ENV["upload_limit"] : 1073741824;
 
 	if ($_USER->logged_in) {
 		switch($_POST["action"]) {
@@ -16,13 +16,14 @@
 				$url = preg_replace("/[^a-zA-Z0-9\-\_]+/", "", $url);
 				$thumb = "/img/no_th.jpg";
 				
-				//Check if user is uploading too many videos a day
+				/* Check if user is uploading too many videos a day
 				$check = $DB->execute("SELECT COUNT(*) as amount FROM videos WHERE uploaded_by = :USER AND uploaded_on > SUBDATE(NOW(),1)", true, [":USER" => $_USER->username])["amount"];
 				if (($_USER->Is_Partner && $check >= 10) || (!$_USER->Is_Partner && $check >= 8)) {
 					$err = "You've uploaded too many videos today, come back tomorrow!";
 					$result = -1;
 					break;
 				}
+				*/
 				
 				//Check partnership status if changing files
 				if ($type == 1 && !$_USER->Is_Partner) {

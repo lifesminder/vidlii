@@ -23,7 +23,7 @@
     <h3>Development, new features and bugfixes</h3>
     <p>
         Do you want to improve VidLii by adding features and doing bugfixes? Or you are involved in VidLii development? <br>
-        You can simply participate in our discussions at <a href="https://github.com/lifesminder/vidlii" target="_blank">GitHub repository</a>, and create Pull Requests.
+        You can simply participate in our <a href="https://github.com/lifesminder/vidlii/discussions" target="_blank">discussions at GitHub repository</a>, and create Pull Requests.
     </p>
     <h3>Copyright</h3>
     <p>
@@ -31,6 +31,6 @@
     </p>
     <h3>How to interact with the VidLii Staff?</h3>
     <p> 
-        Unfortunately, we aren't affiliated with original VidLii in any terms. Since you're on a open-source instance, feel free to start discussion at repository page.
+        Unfortunately, we aren't affiliated with original VidLii in any terms. Since you're on a open-source instance, feel free to start discussion, or <a href="https://github.com/lifesminder/vidlii/issue">report about an issue</a> at repository page.
     </p>
 </div>

@@ -7,69 +7,57 @@
     namespace Vidlii\Vidlii;
 
     class Database {
-        protected $Connection;
-        public $RowNum;
+        protected $api, $Connection;
+        public $lastID, $RowNum, $active = false;
 
         function __construct(bool $Show_Errors = false) {
-            print_r($_ENV);
-
-            try {
-                $this->Connection = new \PDO($_ENV["database"]);
-                // $this->Connection->setAttribute(PDO::NULL_TO_STRING);
-                if($Show_Errors||1) { $this->Connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION); }
-                $this->execute("SET SESSION sql_mode = 'TRADITIONAL'");
-                return true;
-            } catch(\PDOException $e) {
-            	die($e);
-                header($_SERVER['SERVER_PROTOCOL'] . ' Database Unavailable', true, 503);
-                die("<center>Database Error</center>");
-            }
+            $this->api = new \Vidlii\Vidlii\API($_SERVER["DOCUMENT_ROOT"]);
+            $this->$Show_Errors = $Show_Errors;
         }
 
         public function execute(string $SQL, bool $Single = false, array $Execute = []): array {
-			try {
-            	$Query = $this->Connection->prepare($SQL);
-            	$Query->execute($Execute);
-            } catch (\Exception $e) {die($e);}
-
-            $this->RowNum = $Query->rowCount();
-
-            if ($this->RowNum == 0) {
+            // Quickly replace all prepending ":" with nothing,
+            // as DBAL doesn't bind those values
+            $normalized = [];
+            foreach($Execute as $key => $value) {
+                if(is_string($key) && str_starts_with($key, ':')) {
+                    $key = substr($key, 1);
+                }
+                $normalized[$key] = $value;
+            }
+            // Do the rest
+            $Single = !$Single; // VidLii bug, as parameter's boolean value does reverse.
+            $execution = $this->api->db($SQL, $Single, $normalized);
+            if($execution["status"] == -1) {
                 return [];
-            } elseif ($Single) {
-                return @$Query->fetch(\PDO::FETCH_ASSOC);
+            }
+            $this->RowNum = $execution["count"] ?? 0;
+            $this->lastID = $execution["last"] ?? -1;
+            if($this->RowNum == 0) {
+                return [];
+            } else if($this->RowNum == 1) {
+                return ($Single) ? $execution["data"] : $execution["data"][0];
             } else {
-                return @$Query->fetchAll(\PDO::FETCH_ASSOC);
+                return $execution["data"];
             }
         }
 
         public function modify(string $SQL, array $Execute = []): bool {
-            
-            if ($Execute) {
-                
-                foreach ($Execute as $Key => $Value) {
-                    
-                    $Execute[$Key] = str_ireplace("eval", "evaI", $Value);
-                    if (is_null($Value)) {
-                    	$Execute[$Key] = 0;
-                    }
+            // Quickly replace all prepending ":" with nothing,
+            // as DBAL doesn't bind those values
+            $normalized = [];
+            foreach($Execute as $key => $value) {
+                if(is_string($key) && str_starts_with($key, ':')) {
+                    $key = substr($key, 1);
                 }
-                
+                $normalized[$key] = $value;
             }
-            try {
-            	$Query = $this->Connection->prepare($SQL);
-            	$Query->execute($Execute);
-            } catch (\Exception $e) {die($e);}
-
-            $this->RowNum = $Query->rowCount();
-
-            if ($this->RowNum > 0) {
-                return true;
-            }
-            return false;
+            // Do the rest
+            $execution = $this->api->db($SQL, false, $normalized);
+            return (bool)($execution["status"] == 1);
         }
 
         public function last_id() {
-            return $this->Connection->lastInsertId();
+            return $this->lastID;
         }
     }

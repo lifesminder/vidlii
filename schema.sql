@@ -31,7 +31,7 @@ CREATE TABLE `achievement_text` (
   `name` varchar(64) NOT NULL,
   `text` varchar(1000) NOT NULL,
   `amount` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -45,7 +45,7 @@ CREATE TABLE `achievement_users` (
   `type` varchar(12) NOT NULL COMMENT 's,v',
   `ach_date` date NOT NULL,
   `closed` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE `achievement_users` (
 CREATE TABLE `activations` (
   `username` varchar(20) NOT NULL,
   `secret` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -65,7 +65,7 @@ CREATE TABLE `activations` (
 --
 
 CREATE TABLE `applications` (
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `name` varchar(256) NOT NULL,
   `birthday` date NOT NULL,
   `country` varchar(5) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `applications` (
   `date` datetime NOT NULL,
   `accepted` tinyint(1) NOT NULL DEFAULT '0',
   `review_time` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE `badboys` (
   `submit_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `username` varchar(33) NOT NULL DEFAULT '',
   `agent` varchar(315) NOT NULL DEFAULT ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE `badboys` (
 CREATE TABLE `ban_reasons` (
   `id` int NOT NULL,
   `reason` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -111,7 +111,7 @@ CREATE TABLE `blog` (
   `title` varchar(256) NOT NULL,
   `content` mediumtext NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -124,7 +124,7 @@ CREATE TABLE `bulletins` (
   `content` varchar(500) NOT NULL,
   `by_user` varchar(20) NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -135,7 +135,7 @@ CREATE TABLE `bulletins` (
 CREATE TABLE `channel_banners` (
   `username` varchar(20) NOT NULL,
   `links` text CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -150,7 +150,7 @@ CREATE TABLE `channel_comments` (
   `comment` varchar(500) NOT NULL,
   `date` datetime NOT NULL,
   `seen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ CREATE TABLE `channel_comments` (
 CREATE TABLE `contest_entries` (
   `url` varchar(11) NOT NULL,
   `votes` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -172,7 +172,7 @@ CREATE TABLE `contest_entries` (
 CREATE TABLE `contest_votes` (
   `url` varchar(11) NOT NULL,
   `ip` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -185,7 +185,7 @@ CREATE TABLE `converting` (
   `uploaded_on` datetime NOT NULL,
   `convert_status` tinyint(1) NOT NULL DEFAULT '0',
   `queue` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -199,7 +199,7 @@ CREATE TABLE `feature_suggestions` (
   `description` varchar(1000) NOT NULL,
   `from_user` varchar(20) NOT NULL,
   `votes` int NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -210,7 +210,7 @@ CREATE TABLE `feature_suggestions` (
 CREATE TABLE `forgot_password` (
   `username` varchar(20) NOT NULL,
   `code` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -226,7 +226,7 @@ CREATE TABLE `friends` (
   `status` int NOT NULL DEFAULT '0',
   `sent_on` datetime NOT NULL,
   `seen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -252,7 +252,7 @@ CREATE TABLE `help` (
 CREATE TABLE `iprange_bans` (
   `bid` int NOT NULL,
   `ip_range` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -267,7 +267,7 @@ CREATE TABLE `mentions` (
   `date` datetime NOT NULL,
   `username` varchar(20) NOT NULL,
   `seen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -278,7 +278,7 @@ CREATE TABLE `mentions` (
 CREATE TABLE `most_subscribed_month` (
   `username` varchar(20) NOT NULL,
   `amount` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -289,7 +289,7 @@ CREATE TABLE `most_subscribed_month` (
 CREATE TABLE `most_subscribed_week` (
   `username` varchar(20) NOT NULL,
   `amount` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -300,7 +300,7 @@ CREATE TABLE `most_subscribed_week` (
 CREATE TABLE `most_viewed_month` (
   `username` varchar(20) NOT NULL,
   `amount` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -311,7 +311,7 @@ CREATE TABLE `most_viewed_month` (
 CREATE TABLE `most_viewed_week` (
   `username` varchar(20) NOT NULL,
   `amount` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -322,7 +322,7 @@ CREATE TABLE `most_viewed_week` (
 CREATE TABLE `options` (
   `option_name` varchar(50) NOT NULL,
   `value` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -350,7 +350,7 @@ CREATE TABLE `playlists_videos` (
   `url` varchar(11) NOT NULL,
   `purl` varchar(11) NOT NULL,
   `position` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -360,13 +360,13 @@ CREATE TABLE `playlists_videos` (
 
 CREATE TABLE `private_messages` (
   `id` int NOT NULL,
-  `from_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `to_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `from_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `to_user` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `message` varchar(10000) NOT NULL,
   `subject` varchar(256) NOT NULL DEFAULT '',
   `date_sent` datetime NOT NULL,
   `seen` int NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -377,7 +377,7 @@ CREATE TABLE `private_messages` (
 CREATE TABLE `recently_viewed` (
   `url` varchar(11) NOT NULL,
   `time_viewed` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -389,7 +389,7 @@ CREATE TABLE `replies` (
   `id` int NOT NULL,
   `for_user` varchar(20) NOT NULL,
   `seen` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -446,7 +446,7 @@ CREATE TABLE `strikes` (
   `issued_on` int NOT NULL,
   `video_links` text NOT NULL,
   `comment` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -456,11 +456,11 @@ CREATE TABLE `strikes` (
 
 CREATE TABLE `subscriptions` (
   `id` int NOT NULL,
-  `subscriber` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `subscription` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `subscriber` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `subscription` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `submit_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `source` varchar(11) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -472,7 +472,7 @@ CREATE TABLE `terminations` (
   `username` varchar(20) NOT NULL,
   `secret` varchar(100) NOT NULL,
   `issued` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -496,7 +496,7 @@ CREATE TABLE `themes` (
   `upload_date` datetime NOT NULL,
   `installs` int NOT NULL,
   `accepted` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -512,7 +512,7 @@ CREATE TABLE `uploads` (
   `filetype` varchar(50) NOT NULL,
   `modified` varchar(50) NOT NULL,
   `token` varchar(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -522,7 +522,7 @@ CREATE TABLE `uploads` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `displayname` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(128) NOT NULL,
   `password` varchar(64) NOT NULL,
@@ -647,7 +647,7 @@ CREATE TABLE `users` (
   `is_mod` tinyint(1) NOT NULL DEFAULT '0',
   `shadowbanned` tinyint(1) NOT NULL DEFAULT '0',
   `adsense` varchar(100) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -658,7 +658,7 @@ CREATE TABLE `users` (
 CREATE TABLE `users_block` (
   `blocker` varchar(20) NOT NULL,
   `blocked` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -669,7 +669,7 @@ CREATE TABLE `users_block` (
 CREATE TABLE `users_oldnames` (
   `displayname` varchar(20) NOT NULL,
   `username` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -682,7 +682,7 @@ CREATE TABLE `users_remembers` (
   `code` varchar(32) NOT NULL,
   `browser` varchar(16) NOT NULL,
   `last_login` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -699,7 +699,7 @@ CREATE TABLE `videos` (
   `tags` varchar(250) NOT NULL DEFAULT '',
   `category` int NOT NULL DEFAULT '1',
   `privacy` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Pub, 1 = Pri, 2 = Unli',
-  `uploaded_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `uploaded_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `uploaded_on` datetime NOT NULL,
   `thumbnail` mediumblob,
   `views` int NOT NULL DEFAULT '0',
@@ -726,7 +726,7 @@ CREATE TABLE `videos` (
   `status` tinyint(1) NOT NULL DEFAULT '1',
   `thumbs` tinyint(1) NOT NULL DEFAULT '-1',
   `show_ads` tinyint(1) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -736,7 +736,7 @@ CREATE TABLE `videos` (
 
 CREATE TABLE `videos_deleted` (
   `id` varchar(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -749,7 +749,7 @@ CREATE TABLE `videos_flags` (
   `by_user` varchar(20) NOT NULL,
   `reason` int NOT NULL,
   `submit_on` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -760,7 +760,7 @@ CREATE TABLE `videos_flags` (
 CREATE TABLE `videos_schedule` (
   `id` varchar(11) NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -773,7 +773,7 @@ CREATE TABLE `videos_views` (
   `views` smallint NOT NULL,
   `submit_date` date NOT NULL DEFAULT '0000-00-00',
   `source` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -785,7 +785,7 @@ CREATE TABLE `videos_watched` (
   `vid` varchar(11) NOT NULL,
   `watchtime` mediumint NOT NULL,
   `submit_date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -804,7 +804,7 @@ CREATE TABLE `video_comments` (
   `reply_to` int NOT NULL DEFAULT '0',
   `seen` tinyint(1) NOT NULL DEFAULT '0',
   `raters` varchar(10000) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -816,7 +816,7 @@ CREATE TABLE `video_favorites` (
   `url` varchar(11) NOT NULL,
   `favorite_by` varchar(20) NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -829,7 +829,7 @@ CREATE TABLE `video_ratings` (
   `user_rated` varchar(20) NOT NULL,
   `stars` tinyint(1) NOT NULL,
   `submit_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -845,7 +845,7 @@ CREATE TABLE `video_responses` (
   `seen` tinyint(1) NOT NULL DEFAULT '0',
   `accepted` tinyint(1) NOT NULL DEFAULT '0',
   `response_user` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -857,7 +857,7 @@ CREATE TABLE `wrong_logins` (
   `ip` varchar(128) NOT NULL,
   `submit_date` datetime NOT NULL,
   `channel` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables

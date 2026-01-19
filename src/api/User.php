@@ -150,5 +150,40 @@
 			}
 			return $data;
 		}
+
+		function post_update(array $args = [], array $files = []) {
+			$data = [];
+			$session = $this->session($_COOKIE["session"]);
+			try {
+				if($session["session"] == -1) {
+					throw new \Exception();
+				}
+
+				$id = $session["user"]["id"];
+				if(isset($args["action"]) && trim($args["action"]) != "") {
+					switch(strtolower($args["action"])) {
+						case "edit": {
+							// initial version. at this moment can update only featured playlists and channels
+							$featuredPlaylists = !empty($args["f_playlists"]) ? $args["f_playlists"] : "";
+							$featuredChannels = !empty($args["f_channels"]) ? $args["f_channels"] : "";
+
+							$playlistsPart = ($featuredPlaylists != "") ? "playlists = \"$featuredPlaylists\"" : ""; 
+							$channelsPart = ($featuredChannels != "") ? ($featuredPlaylists != "" ? ", " : "")."featured_channels = \"$featuredChannels\"" : ""; 
+							if($playlistsPart != "" || $channelsPart != "") {
+								$updateFeatureds = $this->db("UPDATE users set $playlistsPart$channelsPart where id = $id");
+								if($updateFeatureds["status"] == -1)
+									throw new \Exception($updateFeatureds["message"]);
+							}
+							$data = $this->api_message(1, "Updated Successfully");
+							break;
+						}
+						default: throw new \Exception("Invalid Action");
+					}
+				} else throw new \Exception("Invalid Action");
+			} catch(\Exception $e) {
+				$data = $this->api_message(-1, $e->getMessage() ?? "Forbidden");
+			}
+			return $data;
+		}
 	}
 ?>

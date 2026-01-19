@@ -8,11 +8,15 @@
             Playlists
             <span class="item-count">({{playlist_count}})</span>
             {%else%}
+            {%if search%}
+            Results for <strong>{{search_query}}</strong>
+            {%else%}
             Uploaded Videos
+            {%endif%}
             <span class="item-count">({{video_count}})</span>
             {%endif%}
         </h1>
-        {%if view == 0 and videos.data|length > 1%}
+        {%if search == false and view == 0 and videos.data|length > 1%}
         <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
             <span class="yt-uix-button-content">{%if sort == "p"%}Most popular{%elseif sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
             <img class="yt-uix-button-arrow" src="/img/one/pixel.gif" alt="">
@@ -29,7 +33,7 @@
             </ul>
         </button>
         {%endif%}
-        {%if view == 1 and playlists.data|length > 1%}
+        {%if search == false and view == 1 and playlists|length > 1%}
         <button type="button" class="video-sort-btn yt-uix-button yt-uix-button-default" onclick=";return false;" role="button" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-activedescendant="">
             <span class="yt-uix-button-content">{%if sort == "da"%}Date added (oldest - newest){%else%}Date added (newest - oldest){%endif%}</span>
             <img class="yt-uix-button-arrow" src="/img/one/pixel.gif" alt="">
@@ -78,7 +82,7 @@
                         </span>
                     </span>
                     <span class="video-time">{{video.length}}</span>
-                    <button onclick=";return false;" title="Watch Later" type="button" class="addto-button video-actions addto-watch-later-button-sign-in yt-uix-button yt-uix-button-default yt-uix-button-short yt-uix-tooltip" data-button-menu-id="shared-addto-watch-later-login" role="button">
+                    <button onclick=";return false;" title="Watch Later" type="button" class="addto-button video-actions addto-watch-later-button-sign-in yt-uix-button yt-uix-button-default yt-uix-button-short yt-uix-tooltip" data-button-menu-action="yt.www.lists.addto.toggleMenu" data-button-menu-id="shared-addto-menu" data-video-ids="{{video.url}}" role="button">
                         <span class="yt-uix-button-content">
                             <span class="addto-label">Watch Later</span>
                             <span class="addto-label-error">Error</span>
@@ -100,6 +104,9 @@
                 </span>
             </li>
             {%endfor%}
+            {%if search and videos.count == 0%}
+            <p class="feed-unavailable-message">Nothing found by your query.</p>
+            {%endif%}
         </ol>
         {%elseif view == 1%}
         <ol class="playlists-wide">
@@ -146,6 +153,26 @@
             </div>
             {%endfor%}
         </ol>
+        {%endif%}
+        {%if pageNum and pagesNum > 1%}
+        <div class="yt-uix-pager" role="navigation">
+            {%if pageNum > 1%}
+            <a href="{{handle}}/videos?view={{view}}&amp;p={{pageNum - 1}}" class="yt-uix-button yt-uix-button-default yt-uix-pager-page-num yt-uix-pager-button" data-page="{{pageNum - 1}}">
+                <span class="yt-uix-button-content">« Previous</span>
+            </a>
+            {%endif%}
+            {%for p in 1..pagesNum%}
+            <a href="{{handle}}/videos?view={{view}}&amp;p={{p}}" class="yt-uix-button yt-uix-button-default {%if p == pageNum%}yt-uix-button-toggled {%endif%} yt-uix-pager-page-num yt-uix-pager-button" data-page="{{p}}" aria-label="Go to page {{p}}">
+                <span class="yt-uix-button-content">{{p}}</span>
+            </a>
+            &nbsp;
+            {%endfor%}
+            {%if pageNum < pagesNum%}
+            <a href="{{handle}}/videos?view={{view}}&amp;p={{pageNum + 1}}" class="yt-uix-button yt-uix-button-default yt-uix-pager-page-num yt-uix-pager-button" data-page="{{pageNum + 1}}">
+                <span class="yt-uix-button-content">Next »</span>
+            </a>
+            {%endif%}
+        </div>
         {%endif%}
     </div>
   </div>

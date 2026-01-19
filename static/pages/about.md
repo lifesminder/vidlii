@@ -19,17 +19,17 @@
     <h2>What is VidLii?</h2>
     <p>VidLii is a way to get your videos to the people who matter to you. With VidLii, you can:</p>
     <ul>
-        <li>Upload the videos you record with your digital camera or cell phone</li>
-        <li>Subscribe to your favorite channels</li>
-        <li>Rate and comment on the videos you watch</li>
-        <li>Show off your favorite videos to the world</li>
-        <li>Share videos securely and privately with your friends and family around the world</li>
+        <li>Upload the videos you record with your digital camera or cell phone,</li>
+        <li>Subscribe to your favorite channels,</li>
+        <li>Rate and comment on the videos you watch,</li>
+        <li>Show off your favorite videos to the world,</li>
+        <li>Share videos securely and privately with your friends and family around the world,</li>
         <li>...and much, much more!</li>
     </ul>
     <h3>About VidLii</h3>
     <p>Founded in December 2015, VidLii is a consumer media website for people to watch and share original videos worldwide through a Web experience. VidLii allows people to easily upload, tag, and share video clips on <a href="">www.VidLii.com</a> and across the Internet through websites, blogs, and e-mail, as well as to build their own personal video network.</p>
     <p>Everyone can watch videos on VidLii. People can see first-hand accounts of current events, find videos about their hobbies and interests, and discover the quirky and unusual. As more people capture special moments on video, VidLii is empowering them to become the broadcasters of tomorrow.</p>
     <p>
-        Originally launched by a college student, VidLii was acquired by a new owner in February 2022. After source code share by Evie, VidLii now received a separate instance, being open source and developed by community.
+        Originally launched by a college student, VidLii was acquired by a new owner in February 2022, and after it's source code share by Evie, VidLii now received a separate instance, being open source and developed by community in it's <a href="https://github.com/lifesminder/vidlii">GitHub repository</a>.
     </p>
 </div>

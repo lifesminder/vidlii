@@ -32,32 +32,59 @@ if(document.getElementById("bg_cover_remove") != null) {
     });
 }
 
+if(document.querySelector("#channel-editor-btn") != null) {
+    if(document.querySelector("#channel-cancel") != null) {
+        document.querySelector("#channel-cancel").addEventListener("click", (e) => {
+            e.preventDefault();
+            $('.store-editor').toggleClass('hddn');
+            document.querySelector("#channel-editor-btn").classList.remove("hidden");
+        })
+    }
+    document.querySelector("#channel-editor-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        $('.store-editor').toggleClass('hddn');
+        document.querySelector("#channel-editor-btn").classList.add("hidden");
+    });
+}
+
+const tabContainer = document.getElementById("store-editor");
+const tabs = tabContainer.querySelectorAll("[data-tab]");
+const panels = tabContainer.querySelectorAll("[data-tab-name]");
+
+function activateTab(tabName) {
+    // update tab buttons
+    tabs.forEach(tab => {
+        tab.classList.toggle(
+            "active",
+            tab.dataset.tab === tabName
+        );
+    });
+
+    // update tab panels
+    panels.forEach(panel => {
+        panel.classList.toggle(
+            "tab-active",
+            panel.dataset.tabName === tabName
+        );
+    });
+}
+
+tabContainer.addEventListener("click", (e) => {
+    const tab = e.target.closest("[data-tab]");
+    if (!tab) return;
+
+    e.preventDefault();
+    activateTab(tab.dataset.tab);
+});
+
+activateTab("appearance");
+
 var channels = [], playlists = [];
 
 function cosmic_add_channel() {
     let desired_username = document.getElementById("ft_channel_name").value,
-        channels_small_box = document.getElementById("featured_channels_small"),
-        small_input = document.getElementById("featured_channels_small_input").value;
-    
-    // If we don't have channels list, fetch it
-    if(channels.length == 0) {
-        fetch(`/api/user/featureds`, {
-            method: "GET"
-        }).then(response => {
-            if(response) {
-                return response.json();
-            } else {
-                throw new Error("Network error");
-            }
-        }).then(data => {
-            if(data.count >= 1) {
-                channels = data.data.channels.split(",");
-            }
-        });
-    }
+        channels_small_box = document.getElementById("featured_channels_small");
 
-    console.log(channels);
-    
     if(channels_small_box != null) {
         if(desired_username.length > 0) {
             fetch(`/api/user?u=${desired_username}`, {
@@ -75,9 +102,6 @@ function cosmic_add_channel() {
                         <strong style="color: #282828">${data.data.username}</strong>
                         <div style="float:right"><a onclick="cosmic_remove_ft('${data.data.username}')">Remove</a></div>
                     </div>`;
-                    console.log(small_input);
-                    document.getElementById("featured_channels_small_input").setAttribute("value", channels.join());
-                    small_input = channels.join();
                 } else {
                     alert("This user doesn't exist");
                 }
@@ -109,10 +133,56 @@ function cosmic_add_playlist() {
             </div>`;
             playlists_small_input = playlists.join();
             document.getElementById("playlists_small_input").setAttribute("value", playlists.join());
-            console.log(playlists_small_input);
         } else {
             alert(data.message);
             console.error(data.message);
         }
     });
 }
+
+function cosmic_remove_channel(channel) {
+    console.log(`removing ${channel}...`);
+    console.log(channels);
+    if(channels.includes(channel)) {
+        channels.splice(channels.indexOf(channel), 1);
+    }
+    document.querySelector(`#fc_${channel}`)?.remove();
+}
+
+document.querySelector("#playlists-save")?.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let fd = new FormData(); fd.append("action", "edit"); fd.append("f_playlists", playlists.join());
+    fetch(`/api/user/update`, {
+        method: "POST",
+        body: fd
+    }).then(resp => resp.json()).then(data => {
+        if(data.status >= 0) {
+            window.location.reload();
+        } else {
+            alert(data.message);
+        }
+    });
+});
+document.querySelector("#channels-save")?.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let fd = new FormData(); fd.append("action", "edit"); fd.append("f_channels", channels.join());
+    fetch(`/api/user/update`, {
+        method: "POST",
+        body: fd
+    }).then(resp => resp.json()).then(data => {
+        if(data.status >= 0) {
+            window.location.reload();
+        } else {
+            alert(data.message);
+        }
+    });
+});
+
+document.querySelector(".more-videos").addEventListener("click", async(e) => {
+    e.preventDefault();
+    e.target.setAttribute("disabled", "");
+
+    await fetch(`/api/user`)
+});

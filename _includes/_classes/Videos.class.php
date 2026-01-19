@@ -90,7 +90,7 @@ class Videos {
             }
         }
 
-        if ($this->LIMIT === "LIMIT 1") { $Single = true; } else { $Single = false; }
+        $Single = ($this->LIMIT === "LIMIT 1") ? true : false;
 
         if ($this->Uploader) { $this->SELECT .= ", users.displayname, users.partner, users.avatar"; $this->JOIN .= " LEFT JOIN users ON videos.uploaded_by = users.username"; }
         if ($this->Blocked === false && $Logged_In)  {  $this->SELECT .= ", users_block.blocker"; $this->JOIN .= " LEFT JOIN users_block ON (('$Username' = users_block.blocker AND videos.uploaded_by = users_block.blocked) OR ('$Username' = users_block.blocked AND videos.uploaded_by = users_block.blocker)) ";}

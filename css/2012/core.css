@@ -15899,3 +15899,63 @@ body[data-player-size=fullscreen] #playlist-bar {
 #pr_hd li, .n_head li {
     font-size: 16px;
 }
+
+.hidden {
+    display: none !important;
+}
+
+.store-categories-drilldown-container > ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow: hidden;
+}
+.store-categories-drilldown-container > ul > li {
+    float: left;
+}
+.store-categories-drilldown-container > ul > li > a {
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 20px;
+    color: #777;
+}
+.store-categories-drilldown-container > ul > li > a:hover {
+    text-decoration: none;
+}
+.store-categories-drilldown-container > ul > li > a.active {
+    -moz-box-shadow: 0 1px 2px #ccc;
+    -ms-box-shadow: 0 1px 2px #ccc;
+    -webkit-box-shadow: 0 1px 2px #ccc;
+    box-shadow: 0 1px 2px #ccc;
+}
+
+.featured-inner-editor-tab {
+    display: none !important;
+}
+
+.featured-inner-editor-tab.tab-active {
+    display: block !important;
+}
+
+.featured-inner-editor-tab .short {
+    font-size: 11px;
+    color: #666;
+}
+
+.mini-edit {
+    color: #fff;
+    border: 1px solid #4f87d4;
+    background-color: #7696e6;
+    padding: 13px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 5px 0 25px 0;
+    position: relative;
+    font-weight: bold;
+}
+
+.mini-edit > .mini-edit-inner {
+    border-radius: 3px;
+    background-color: #fff;
+    padding: 6px;
+}
