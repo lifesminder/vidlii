@@ -25,7 +25,12 @@
 					<? endif ?>
 				</div>
 				<div>
-					<strong><?= $Profile["displayname"] ?></strong>
+					<strong>
+						<?= $Profile["displayname"] ?>
+						<a href="/feed/<?= $Profile["displayname"] ?>.xml" title="Videos RSS Feed">
+							<img src="/img/feed.svg" alt="feed icon" width="15" height="15">
+						</a>
+					</strong>
 					<?php if($Profile["a_reg"] == 1) { ?>
 					<span>Joined: <strong><?= date("M d, Y",strtotime($Profile["reg_date"])) ?></strong></span>
 					<?php } ?>

@@ -297,6 +297,11 @@
             $engine->template("nouveau/error.html", ["featured" => $feed->index(["show" => "featured"])]);
         }
     });
+    // RSS feed
+    $router->get("/feed/(.*).xml", function(string $user) {
+        $rss = new \Vidlii\Vidlii\RSS($_SERVER["DOCUMENT_ROOT"]);
+        $rss->show($user);
+    });
     $router->all("/(.*)", function($url) {
         global $api, $engine;
 

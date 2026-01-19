@@ -148,7 +148,11 @@
         <div class="in_box ib_col" id="pr_avt_box">
             <?= user_avatar2($Profile["displayname"],96,96,$Profile["avatar"],"pr_avt") ?>
             <div>
-                <?= $Profile["displayname"] ?><br>
+                <?= $Profile["displayname"] ?>
+				<a href="/feed/<?= $Profile["displayname"] ?>.xml" title="Videos RSS Feed">
+					<img src="/img/feed.svg" alt="feed icon" width="15" height="15">
+				</a>
+                <br>
                 <? if (!$Is_OWNER) : ?>
                     <? if (!$Is_Blocked && !$Has_Blocked) : ?>
                         <?= subscribe_button2($Profile["username"]) ?>
