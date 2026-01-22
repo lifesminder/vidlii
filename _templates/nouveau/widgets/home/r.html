@@ -1,0 +1,77 @@
+{%if modules.recommended%}
+    <div class="wdg" id="rec_widget">
+        <div>
+            <a href="#">
+                <img src="/img/rec.png" alt="Recommended Videos"><span>Recommended Videos</span>
+            </a>
+            <div class="wdg_sel">
+                {%if session.session != -1%}
+                <div class="up1" onclick="move_up('rec_widget')"></div><div class="do1" onclick="move_down('rec_widget')"></div>
+                {%endif%}
+            </div>
+        </div>
+        {%if recommended.amount > 0%}
+        <div>
+            {%if recommended.amount >= 4 and recommended.amount < 8%}
+            <div class="v_v_bx">
+                {%for x in 0..recommended.amount%}
+                <div style="margin-bottom: 8px">
+                    <div class="th">
+                        <div class="th_t">{{recommended.videos[x].length}}</div>
+                        <a href="/watch?v={{recommended.videos[x].url}}">
+                            <img class="vid_th" src="/vi/{{recommended.videos[x].url}}/hqresdefault.jpg" width="140" height="88">
+                        </a>
+                    </div>
+                    <a href="/watch?v={{recommended.videos[x].url}}" class="ba">{{recommended.videos[x].title ?? "Untitled"}}</a>
+                    <div class="vw s">{{recommended.videos[x].views ?? 0}} views</div>
+                    <a href="/user/{{recommended.videos[x].displayname}}" class="ch_l s">{{recommended.videos[x].displayname}}</a>
+                    <div class="s_r">{{ratings(recommended.videos[x], 14, 13)}}</div>
+                </div>
+                {%endfor%}
+            </div>
+            {%else%}
+            <div class="v_v_bx">
+                {%for x in 0..recommended.amount - 1%}
+                <div style="margin-bottom: 8px">
+                    <div class="th">
+                        <div class="th_t">{{recommended.videos[x].length}}</div>
+                        <a href="/watch?v={{recommended.videos[x].url}}">
+                            <img class="vid_th" src="/vi/{{recommended.videos[x].url}}/hqresdefault.jpg" width="140" height="88">
+                        </a>
+                    </div>
+                    <a href="/watch?v={{recommended.videos[x].url}}" class="ba">{{recommended.videos[x].title ?? "Untitled"}}</a>
+                    <div class="vw s">{{recommended.videos[x].views ?? 0}} views</div>
+                    <a href="/user/{{recommended.videos[x].displayname}}" class="ch_l s">{{recommended.videos[x].displayname}}</a>
+                    <div class="s_r">{{ratings(recommended.videos[x], 14, 13)}}</div>
+                </div>
+                {%endfor%}
+            </div>
+            {%if recommended.amount > 3%}
+            <div class="v_v_bx">
+                {%for x in 4..recommended.amount - 1%}
+                <div style="margin-bottom: 8px">
+                    <div class="th">
+                        <div class="th_t">{{recommended.videos[x].length}}</div>
+                        <a href="/watch?v={{recommended.videos[x].url}}">
+                            <img class="vid_th" src="/vi/{{recommended.videos[x].url}}/hqresdefault.jpg" width="140" height="88">
+                        </a>
+                    </div>
+                    <a href="/watch?v={{recommended.videos[x].url}}" class="ba">{{recommended.videos[x].title ?? "Untitled"}}</a>
+                    <div class="vw s">{{recommended.videos[x].views ?? 0}} views</div>
+                    <a href="/user/{{recommended.videos[x].displayname}}" class="ch_l s">{{recommended.videos[x].displayname}}</a>
+                    <div class="s_r">{{ratings(recommended.videos[x], 14, 13)}}</div>
+                </div>
+                {%endfor%}
+            </div>
+            {%endif%}
+            {%endif%}
+        </div>
+        {%else%}
+        <div>
+            <div class="v_v_bx">
+                <p>There are no any recommended videos</p>
+            </div>
+        </div>
+        {%endif%}
+    </div>
+{%endif%}

@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-tap-highlight" content="no">
-    <title>{%block title%}{%if title is defined%}{{title}} | {%endif%}VidLii{%endblock%}</title>
+    <title>{%block title%}{%if title is defined%}{{title}} - {%endif%}{{config.title}}{%endblock%}</title>
     <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="/img/vl_app.png">
     <meta name="description" content="{%if page_description is defined%}{{page_description}}{%endif%}">
     <meta name="keywords" content="{%if page_keywords is defined%}{{page_keywords}}{%endif%}">
-    <meta property="og:site_name" content="VidLii">
+    <meta property="og:site_name" content="{{config.title}}">
     <link rel="stylesheet" type="text/css" href="/css/m.css">
-    <link id="vlPlayer2007css" rel="stylesheet" href="/vlPlayer/skins/2007HD/skin.css?5013">
+    <link id="vlPlayer2007css" rel="stylesheet" href="/vlPlayer/skins/2007HD/skin.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="/vlPlayer/main19.js?5013"></script>
+    <!--<script src="/vlPlayer/main19.js"></script>-->
+    <script src="/js/main3.js"></script>
     <script src="/js/main.js"></script>
-    <!-- some pre-defined scenarios from legacy below! -->
+    {%block head%}{%endblock%}
 </head>
 <body>
     {%if config.top_text is defined%}
@@ -106,11 +107,15 @@
             </div>
         </header>
         {%endif%}
-
+        {%if message is defined and message != ""%}
+        <div class="notification{%if messageColor is defined%} {{messageColor}}{%endif%}">{{message}}</div>
+        {%endif%}
+        {%block main%}
         {%endblock%}
         <div style="font-size: 14px;">
             {%block body%}{%endblock%}
         </div>
+        {%endblock%}
         {%block footer%}
         <div class="cl"></div>
         <footer style="margin-top:30px">
@@ -119,7 +124,7 @@
             </form>
             <div>
                 <div>
-                    <strong>About VidLii</strong>
+                    <strong>About {{config.title}}</strong>
                     <div>
                         <a href="/blog">Blog</a><a href="/about">About</a>
                     </div>
@@ -150,7 +155,7 @@
                 </div>
             </div>
         </footer>
-        <div id="copyright">&copy; {{t|date("Y")}} VidLii</div>
+        <div id="copyright">&copy; {{t|date("Y")}} {{config.title}}</div>
         {%endblock%}
     </div>
     {%if session.session != -1%}

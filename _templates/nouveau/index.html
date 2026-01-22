@@ -1,11 +1,47 @@
 {%extends "base.html"%}
 
-{%block title%}VidLii - Display Yourself{%endblock%}
+{%block title%}{{config.title}}{%if config.slogan != ""%} - {{config.slogan}}{%endif%}{%endblock%}
 
-{%block main%}
+{%block body%}
     <main class="bottom_wrapper">
         <section class="h_l">
-            {%if session.session == -1%}
+            {%if session.session != -1%}
+            <div class="adh">
+                <a onclick="$('.mod_selector').toggleClass('hddn')" href="javascript:void(0)"><img src="/img/addh.png">Add / Remove Modules</a>
+            </div>
+            <div class="wdg mod_selector hddn">
+                <div>
+                    <strong>Select the modules you want to appear on your homepage</strong>
+                </div>
+                <div>
+                    <form action="/" method="POST">
+                        <table cellpadding="3">
+                            <tr>
+                                <td width="250px"><label><input type="checkbox" name="i_subs"{%if modules.subscriptions%} checked{%endif%}> Subscriptions</label></td>
+                                <td><label><input type="checkbox" name="i_in"{%if modules.inbox%} checked{%endif%}> Inbox</label></td>
+                            </tr>
+                            <tr>
+                                <td><label><input type="checkbox" name="i_rec"{%if modules.recommended%} checked{%endif%}> Recommended</label></td>
+                                <td><label><input type="checkbox" name="i_stat"{%if modules.stats%} checked{%endif%}> Channel Stats</label></td>
+                            </tr>
+                            <tr>
+                                <td><label><input type="checkbox" name="i_bein"{%if modules.being_watched%} checked{%endif%}> Being Watched Now</label></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><label><input type="checkbox" name="i_feat"{%if modules.featured%} checked{%endif%}> Featured Videos</label></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><label><input type="checkbox" name="i_pop"{%if modules.most_popular%} checked{%endif%}> Most Popular</label></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        <input style="margin-top: 11px" type="submit" value="Save Changes" name="save_modules">
+                    </form>
+                </div>
+            </div>
+            {%else%}
             <div id="iyt-login-suggest-box" style="margin-bottom: 10px;">
                 <div class="yt-alert yt-alert-announce yt-rounded" style="height: 85px;">
                     <div class="yt-alert-content" style="height: 85px;">
@@ -19,30 +55,59 @@
                 </div>
             </div>
             {%endif%}
-            <div class="wdg" id="ft_widget">
-                <div style="background-color: #dae9fe;">
-                    <a href="/special_videos?c=0&amp;t=v"><img src="/img/ft.png" alt="Featured Videos"><span>Featured Videos</span></a>
-                    <div class="wdg_sel"></div>
-                </div>
-                <div>
-                    <div class="v_v_bx">
-                        <p>There are no any featured videos</p>
-                    </div>
-                </div>
-            </div>
-            <div class="wdg" id="ft_widget">
-                <div>
-                    <a href="/videos?c=0&o=mv&t=0"><img src="/img/pop.png" alt="Most Popular"><span>Most Popular</span></a>
-                    <div class="wdg_sel"></div>
-                </div>
-                <div>
-                    <div class="v_v_bx">
-                        <p>There are no any popular videos</p>
-                    </div>
-                </div>
-            </div>
+
+            {%if session.user.id != -1%}
+            {%include "nouveau/widgets/home/" ~ position[0] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[1] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[2] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[3] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[4] ~ ".html" %}
+            {%else%}
+            {%include "nouveau/widgets/home/" ~ position[0] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[1] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[2] ~ ".html" %}
+            {%include "nouveau/widgets/home/" ~ position[3] ~ ".html" %}
+            {%endif%}
+
         </section>
         <aside class="h_r">
+            {%if session.user.id != -1%}
+                {%if modules.inbox%}
+                <div class="wdg">
+                    <div>
+                        <span>Inbox</span>
+                    </div>
+                    <div id="inbox_wdg">
+                        <div><div><img src="/img/amsg{%if feed.inbox.messages == 0%}0{%else%}1{%endif%}.png" style="width:24px;bottom:3.5px"></div> <a href="/inbox?page=messages" style="bottom:1px;top:inherit">{{feed.inbox.messages}} Personal Message{%if feed.inbox.messages >= 0%}s{%endif%}</a></div>
+                        <div><div><img src="/img/acmt{%if feed.inbox.comments == 0%}0{%else%}1{%endif%}.png" style="width:24px;height:18px;bottom:1px;left:0.5px"></div> <a href="/inbox?page=comments">{{feed.inbox.comments}} Comment{%if feed.inbox.comments >= 0%}s{%endif%}</a></div>
+                        <div><div><img src="/img/brsp{%if feed.inbox.responses == 0%}0{%else%}1{%endif%}.png" style="width:24px;height:18px;bottom:1px;left:0.5px"></div> <a href="/inbox?page=responses">{{feed.inbox.responses}} Video Response{%if feed.inbox.responses >= 0%}s{%endif%}</a></div>
+                        <div><div><img src="/img/lfr{%if feed.inbox.invites == 0%}0{%else%}1{%endif%}.png" style="width:24px;bottom:1.5px;left:0.5px;height:19px"></div> <a href="/inbox?page=invites">{{feed.inbox.invites}} Friend Invite{%if feed.inbox.invites >= 0%}s{%endif%}</a></div>
+                        <div style="text-align:center;border:0"><a href="/inbox?page=send_message">Send Message</a></div>
+                    </div>
+                </div>
+                {%endif%}
+                {%if modules.stats%}
+                <div class="wdg">
+                    <div>
+                        <span>Channel Statistics</span>
+                    </div>
+                    <div id="inbox_wdg" style="padding-bottom:1px">
+                        <div><div><img src="/img/sme.png" style="width:24px;bottom:1.5px;left:0.5px;height:18px"></div> <span>{{stats.subscribers ?? 0}} subscribers</span></div>
+                        <div><div><img src="/img/sme.png" style="width:24px;bottom:1.5px;left:0.5px;height:18px"></div> <span>{{stats.subscriptions ?? 0}} subscriptions</span></div>
+                        <div><div><img src="/img/sme.png" style="width:24px;bottom:1.5px;left:0.5px;height:18px"></div> <span>{{stats.friends ?? 0}} friends</span></div>
+                        <div><div><img src="/img/brsp0.png" style="width:24px;height:18px;bottom:1px;left:0.5px"></div> <span style="top:2px">{{stats.video_views ?? 0}} video views</span> </div>
+                        <div style="border:0"><div><img src="/img/bchn.png" style="width:24px;height:18px;bottom:1px;left:0.5px"></div> <span style="top:2px">{{channel.views ?? 0}} channel views</span> </div>
+                    </div>
+                </div>
+                {%endif%}
+            {%else%}
+            <div class="you_wnt">
+                <div>
+                    <strong>Want to customize this homepage?</strong><br>
+                    <a href="/login">Sign In</a> or <a href="/signup">Sign Up</a> now!
+                </div>
+            </div>
+            {%endif%}
             <div class="wdg">
                 <div>
                     <span>Recommended Channels</span>
@@ -78,7 +143,17 @@
                 <a href="/">Awards</a>
                 See how you compare to other channels this week, or this month, or this decade.
                 <a href="/themes">Themes</a>
-                Customize your layout of VidLii and make it yours!
+                Customize your layout of {{config.title}} and make it yours!
+                {%if feed.blog|length > 0%}
+                {%for blog in feed.blog%}
+                <a href="/blog/{{blog.id}}" class="link">{{blog.title}}</a>
+                {{blog.content|slice(0, 128)}}
+                {%if blog.content|length >= 128%}...{%endif%}
+                {%endfor%}
+                <div class="right">
+                    <a href="/blog">Read more in our Blog</a>
+                </div>
+                {%endif%}
             </div>
             <div class="last_5">
                 <strong>Last 5 Users Online</strong>

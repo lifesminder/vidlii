@@ -1,0 +1,35 @@
+{%if modules.most_popular%}
+    <div class="wdg" id="most_popular">
+        <div>
+            <a href="/videos?c=0&o=mv&t=0"><img src="/img/pop.png" alt="Most Popular"><span>Most Popular</span></a>
+            <div class="wdg_sel">
+                {%if session.session != -1%}
+                <div class="up1" onclick="move_up('most_popular')"></div><div class="do1" onclick="move_down('most_popular')"></div>
+                {%endif%}
+            </div>
+        </div>
+        <div class="mp_hr">
+            {%if feed.popular_videos and feed.popular_videos.count > 0%}
+            {%for video in feed.popular_videos.data%}
+            <div>
+                <a href="/videos?c={{video.category}}&o=re&t=0">{{categories[video.category]}}</a>
+                <div class="th">
+                    <div class="th_t">{{video.length}}</div>
+                    <a href="/watch?v={{video.url}}"><img class="vid_th" src="/vi/{{video.url}}/hqresdefault.jpg" width="140" height="88"></a>
+                </div>
+                <div class="vr_i">
+                    <a href="/watch?v={{video.url}}" class="ln2">{{video.title}}</a>
+                    <div class="vw s">{{video.views}} views</div>
+                    <a href="/user/{{video.uploaded_by}}" class="ch_l s">{{video.uploaded_by}}</a>
+                    <div class="s_r">{{ratings(video, 14, 13)}}</div>
+                </div>
+            </div>
+            {%endfor%}
+            {%else%}
+            <div class="v_v_bx">
+                <p>There are no any popular videos</p>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+{%endif%}

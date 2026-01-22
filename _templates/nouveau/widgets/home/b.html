@@ -1,0 +1,62 @@
+{%if modules.being_watched%}
+    <div class="wdg" id="be_widget">
+        <div>
+            <a href="/special_videos?c=0&t=b"><img src="/img/bw.png" alt="Videos Being Watched Now"><span>Videos Being Watched Now</span></a>
+            <div class="wdg_sel">
+                {%if session.session != -1%}
+                <div class="up1" onclick="move_up('be_widget')"></div><div class="do1" onclick="move_down('be_widget')"></div>
+                {%endif%}
+            </div>
+        </div>
+        <div>
+            <div class="bwn_l">
+                <div class="th">
+                    <div class="th_t">{{watched[0].length}}</div>
+                    <a href="/watch?v={{watched[0].url}}"><img class="vid_th" src="/vi/{{watched[0].url}}/hqresdefault.jpg" width="238" height="152"></a>
+                </div>
+                <a href="/watch?v={{watched[0].url}}" class="ba">{{watched[0].title}}</a>
+                <div class="vw">{{watched[0].views}} views</div>
+                <a href="/user/{{watched[0].displayname}}" class="ch_l">{{watched[0].displayname}}</a>
+                <div class="s_r">{{ratings(watched[0], 14, 13)}}</div>
+            </div>
+            <div class="bwn_r">
+                <div>
+                    <div class="th">
+                        <div class="th_t">{{watched[1].length}}</div>
+                        <a href="/watch?v={{watched[1].url}}"><img class="vid_th" src="/vi/{{watched[1].url}}/hqresdefault.jpg" width="140" height="88"></a>
+                    </div>
+                    <div class="vr_i">
+                        <a href="/watch?v={{watched[1].url}}" class="ba">{{watched[1].title ?? "Unknown Video"}}</a>
+                        <div class="vw s">{{watched[1].views ?? 0}} views</div>
+                        <a href="/user/{{watched[1].displayname}}" class="ch_l">{{watched[1].displayname}}</a>
+                        <div class="s_r">{{ratings(watched[1], 14, 13)}}</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="th">
+                        <div class="th_t">{{watched[2].length}}</div>
+                        <a href="/watch?v={{watched[2].url}}"><img class="vid_th" src="/vi/{{watched[2].url}}/hqresdefault.jpg" width="140" height="88"></a>
+                    </div>
+                    <div class="vr_i">
+                        <a href="/watch?v={{watched[2].url}}" class="ba">{{watched[2].title ?? "Unknown Video"}}</a>
+                        <div class="vw s">{{watched[2].views ?? 0}} views</div>
+                        <a href="/user/{{watched[2].displayname}}" class="ch_l">{{watched[2].displayname}}</a>
+                        <div class="s_r">{{ratings(watched[2], 14, 13)}}</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="th">
+                        <div class="th_t">{{watched[3].length}}</div>
+                        <a href="/watch?v={{watched[3].url}}"><img class="vid_th" src="/vi/{{watched[3].url}}/hqresdefault.jpg" width="140" height="88"></a>
+                    </div>
+                    <div class="vr_i">
+                        <a href="/watch?v={{watched[3].url}}" class="ba">{{watched[3].title ?? "Unknown Video"}}</a>
+                        <div class="vw s">{{watched[3].views ?? 0}} views</div>
+                        <a href="/user/{{watched[3].displayname}}" class="ch_l">{{watched[3].displayname}}</a>
+                        <div class="s_r">{{ratings(watched[3], 14, 13)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endif%}

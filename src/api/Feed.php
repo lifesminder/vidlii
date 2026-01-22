@@ -15,7 +15,6 @@
 				}
 			}
 			$data["popular_videos"] = $this->db("SELECT url, title, description, tags, category, uploaded_by, uploaded_on, displayviews as views, length, featured from videos where status >= 2 order by views desc limit 10", true);
-
 			if($data["popular_videos"]["count"] > 0) {
 				for($i = 0; $i < $data["popular_videos"]["count"]; $i++) {
 					$data["popular_videos"]["data"][$i]["length"] = $this->seconds_to_time($data["popular_videos"]["data"][$i]["length"]);
@@ -26,8 +25,27 @@
 
 			// stats
 			if($session["session"] != -1) {
-				$data["stats"] = $this->db("SELECT users.friends, users.subscribers, users.videos_watched, users.video_views, users.channel_views, users.subscriptions FROM users WHERE users.username = :USERNAME LIMIT 1", true, [":USERNAME" => $session["user"]["username"]])["data"];
+				$data["stats"] = $this->db("SELECT users.friends, users.subscribers, users.videos_watched, users.video_views, users.channel_views, users.subscriptions FROM users WHERE users.username = :USERNAME LIMIT 1", true, ["USERNAME" => $session["user"]["username"]])["data"];
+				// inbox
+				$invites = $this->db("SELECT count(id) as amount FROM friends WHERE (friend_1 = :USERNAME OR friend_2 = :USERNAME) AND status = 0 AND seen = 0 AND by_user <> :USERNAME ORDER BY rand()", false, ["USERNAME" => $session["user"]["displayname"]])["data"]["amount"] ?? 0;
+				$messages = $this->db("SELECT count(id) as amount FROM private_messages WHERE to_user = :USERNAME AND seen = 0", false, ["USERNAME" => $session["user"]["displayname"]])["data"]["amount"] ?? 0;
+				$responses = $this->db("SELECT count(video_responses.id) as amount FROM video_responses INNER JOIN videos ON video_responses.url_response = videos.url INNER JOIN users ON users.username = videos.uploaded_by WHERE video_responses.accepted = 0 AND video_responses.response_user = :USERNAME AND video_responses.seen = 0 AND video_responses.accepted = 0 ORDER BY rand() DESC", false, ["USERNAME" => $session["user"]["displayname"]])["data"]["amount"] ?? 0;
+				$comments = $this->db("SELECT video_comments.id FROM video_comments INNER JOIN videos ON video_comments.url = videos.url WHERE videos.uploaded_by = :USERNAME AND video_comments.by_user <> :USERNAME AND reply_to = 0 AND video_comments.seen = 0
+                                 UNION ALL SELECT mentions.type FROM mentions INNER JOIN video_comments ON video_comments.id = mentions.video INNER JOIN videos ON videos.url = video_comments.url WHERE mentions.username = :USERNAME AND mentions.seen = 0
+                                 UNION ALL SELECT mentions.type FROM mentions INNER JOIN channel_comments ON channel_comments.id = mentions.channel WHERE mentions.username = :USERNAME AND mentions.seen = 0
+                                 UNION ALL SELECT replies.id FROM replies INNER JOIN video_comments ON video_comments.id = replies.id INNER JOIN videos ON videos.url = video_comments.url WHERE replies.for_user = :USERNAME AND replies.seen = 0
+                                 UNION ALL SELECT id FROM channel_comments WHERE on_channel = :USERNAME AND by_user <> :USERNAME AND seen = 0 ORDER BY rand()
+                                 ", false, ["USERNAME" => $session["user"]["displayname"]])["count"] ?? 0;
+				$data["inbox"] = [
+					"invites" => $invites,
+					"messages" => $messages,
+					"responses" => $responses,
+					"comments" => $comments // <- moot, should be checked
+				];
 			}
+
+			// blog
+			$data["blog"] = $this->db("SELECT id, title, content from blog where date >= DATE_SUB(CURDATE(), INTERVAL 2 WEEK) limit 2", true)["data"];
 
 			if(isset($args["show"]) && $args["show"] != "") {
 				switch(strtolower($args["show"])) {

@@ -1239,10 +1239,3 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/"
 }
-
-// Show JS player if present
-$(document).ready(function() {
-    var jsPlayerContainer = document.getElementById("vtbl_pl");
-    if(jsPlayerContainer)
-        jsPlayerContainer.style.display = "inline-block";
-});

@@ -28,6 +28,51 @@
                 }
                 return "/help";
             });
+            $ratings = new \Twig\TwigFunction("ratings", function($Ratings, $width, $height) {
+                if (is_array($Ratings)) {
+                    $Star_1 = $Ratings["1_star"] / 5;
+                    $Star_2 = $Ratings["2_star"] / 4;
+                    $Star_3 = $Ratings["3_star"] / 3;
+                    $Star_4 = $Ratings["4_star"] / 2;
+                    $Star_5 = $Ratings["5_star"] / 1;
+                
+
+                    $Rating_Num = $Star_1 + $Star_2 + $Star_3 + $Star_4 + $Star_5;
+
+                    if ($Rating_Num > 0) {
+                        $Rating = ($Star_1 + $Star_2 * 2 + $Star_3 * 3 + $Star_4 * 4 + $Star_5 * 5) / $Rating_Num;
+                    } else {
+                        $Rating = 0;
+                    }
+                } else {
+                    $Rating = $Ratings;
+                }
+
+                $Full_Stars = substr($Rating, 0, 1);
+                $Half_Stars = substr($Rating, 2, 1);
+
+                $StarNum    = 0;
+                for($x = 0;$x < $Full_Stars;$x++) {
+                    $StarNum++;
+                    echo "<img src='/img/full_star.png' width='$width' height='$height'>";
+                }
+                if ($Half_Stars !== false) {
+                    $StarNum++;
+                    if ($Full_Stars !== "4") {
+                        echo "<img src='/img/half_star.png' width='$width' height='$height'>";
+                    } else {
+                        if ($Half_Stars == "8" or $Half_Stars == "9") {
+                            echo "<img src='/img/full_star.png' width='$width' height='$height'>";
+                        } else {
+                            echo "<img src='/img/full_star.png' width='$width' height='$height'>";
+                        }
+                    }
+                }
+                while($StarNum !== 5) {
+                    $StarNum++;
+                    echo "<img src='/img/no_star.png' width='$width' height='$height'>";
+                }
+            });
             $secondsToTime = new \Twig\TwigFunction("secondsToTime", function($seconds) {
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds % 3600) / 60);
@@ -43,6 +88,7 @@
             $twig->addFilter($filter);
             $twig->addFunction($helpArticle);
             $twig->addFunction($secondsToTime);
+            $twig->addFunction($ratings);
             $parsedown = new \Parsedown();
 			$fullfile = "$path/$file";
 
@@ -56,10 +102,12 @@
             }
             $args["config"]["setup"] = $_ENV["setup"] ?? false;
             $args["config"]["top_text"] = $parsedown->text($args["config"]["top_text"]);
-            $args["config"]["header"] = $_THEMES->Header;
+            $args["config"]["header"] = $_THEMES->Header ?? 1;
             $args["config"]["title"] = (isset($_ENV["title"]) && $_ENV["title"] != "") ? $_ENV["title"] : "VidLii";
-            $args["config"]["slogan"] = (isset($_ENV["slogan"]) && $_ENV["slogan"] != "") ? $_ENV["slogan"] : "VidLii - Display Yourself";
+            $args["config"]["slogan"] = (isset($_ENV["slogan"]) && $_ENV["slogan"] != "") ? $_ENV["slogan"] : "Display Yourself";
             $args["config"]["url"] = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $LOGO_VALUE = $this->api->db("SELECT value FROM settings WHERE name = 'logo'", true)["value"] ?? 0;
+            $LOGO_VALUE = ($LOGO_VALUE == "0") ? "/img/Vidlii6.png" : "/img/$LOGO_VALUE.png";
             $args["config"]["logo"] = $LOGO_VALUE;
             $args["q"] = (isset($_GET["q"]) && $_GET["q"] != "") ? $_GET["q"] : null;
             $args["session"] = $this->api->session();
@@ -101,6 +149,13 @@
         }
         final public function months() {
             return ['January' => 1,'February' => 2,'March' => 3,'April' => 4,'May' => 5,'June' => 6,'July' => 7,'August' => 8,'September' => 9,'October' => 10,'November' => 11,'December' => 12];
+        }
+        final public function categories(int $index = -1) {
+		    $categories =  [1 => "Film & Animation", 2 => "Autos & Vehicles", 3 => "Music", 4 => "Pets & Animals", 5 => "Sports", 6 => "Travel & Events", 7 => "Gaming", 8 => "People & Blogs", 9 => "Comedy", 10 => "Entertainment", 11 => "News & Politics", 12 => "Howto & Style", 13 => "Education", 14 => "Science & Technology", 15 => "Nonprofits & Activism"];
+            if($index > -1) {
+                return $categories[$index];
+            }
+            return $categories;
         }
     }
 ?>

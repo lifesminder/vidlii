@@ -15,8 +15,217 @@
             header("Location: /setup");
         }
     });
-    $router->all("/", function() {
-        include_once "indexold.php";
+    $router->all("/", function() use($api, $engine) {
+        require_once "_includes/init.php";
+        $message = ""; $messageColor = "";
+        if(isset($_COOKIE["old"]) && (bool)$_COOKIE["old"]) {
+            include_once "indexold.php";
+        } else {
+            $session = $api->session();
+            $feed = new \Vidlii\Vidlii\API\Feed($_SERVER["DOCUMENT_ROOT"]);
+            $feed = $feed->index();
+            // selected modules
+            if(!empty($_COOKIE["h"])) {
+                $modules = explode(",", $_COOKIE["h"]);
+                $modules = ["subscriptions" => str_replace("a=", "", $modules[0]), "inbox" => str_replace("b=", "", $modules[1]), "recommended" => str_replace("c=", "", $modules[2]), "stats" => str_replace("d=", "", $modules[3]), "being_watched" => str_replace("e=", "", $modules[4]), "featured" => str_replace("f=", "", $modules[5]), "most_popular" => str_replace("g=", "", $modules[6])];
+            } else {
+                $modules = ["subscriptions" => true, "recommended" => true, "being_watched" => false, "featured" => true, "most_popular" => true, "inbox" => true, "stats" => false];
+            }
+            // widgets positions
+            if($session["user"]["id"] != -1) {
+                if(isset($_POST["save_modules"])) {
+                    $i_subs = isset($_POST["i_subs"]) ? 1 : 0;
+                    $i_in = isset($_POST["i_in"])   ? 1 : 0;
+                    $i_rec = isset($_POST["i_rec"])  ? 1 : 0;
+                    $i_stat = isset($_POST["i_stat"]) ? 1 : 0;
+                    $i_bein = isset($_POST["i_bein"]) ? 1 : 0;
+                    $i_feat = isset($_POST["i_feat"]) ? 1 : 0;
+                    $i_pop = isset($_POST["i_pop"])  ? 1 : 0;
+
+                    setcookie("h", "a=$i_subs,b=$i_in,c=$i_rec,d=$i_stat,e=$i_bein,f=$i_feat,g=$i_pop", time() + 60 * 60 * 24 * 128, "/");
+
+                    $modules = [
+                        "subscriptions" => (bool)$i_subs,
+                        "inbox" => (bool)$i_in,
+                        "recommended" => (bool)$i_rec,
+                        "stats" => (bool)$i_stat,
+                        "being_watched" => (bool)$i_bein,
+                        "featured" => (bool)$i_feat,
+                        "most_popular" => (bool)$i_pop
+                    ];
+
+                    $message = "Homepage successfully updated";
+                    $messageColor = "green";
+                }
+                if(!empty($_COOKIE["po"])) {
+                    $position = explode(",", str_replace("0=", "", str_replace("1=", "", str_replace("2=", "", str_replace("3=", "", str_replace("4=", "", $_COOKIE["po"]))))));
+                    $position = [0 => $position[0], 1 => $position[1], 2 => $position[2], 3 => $position[3], 4 => $position[4]];
+                } else {
+                    $position = [0 => "s", 1 => "r", 2 => "b", 3 => "f", 4 => "m"];
+                }
+            } else {
+                $position = [0 => "r", 1 => "b", 2 => "f", 3 => "m"];
+            }
+            // statistics
+            $stats = $api->db("SELECT video_views, channel_views, subscriptions, subscribers, friends FROM users WHERE username = :user", false, ["user" => $session["user"]["displayname"]]);
+            $stats = ($stats["count"] == 1) ? $stats["data"] : [];
+            if($stats["subscriptions"] > 0) {
+                $Subscription_Videos = new Videos($DB, $_USER);
+                $Subscription_Videos->JOIN = "INNER JOIN subscriptions ON subscriptions.subscription = videos.uploaded_by";
+                $Subscription_Videos->WHERE_P = ["subscriptions.subscriber" => $session["user"]["username"]];
+                $Subscription_Videos->WHERE_C = " AND videos.url <> 'OvQv1MiQN0X' ";
+                $Subscription_Videos->LIMIT = 8;
+                $Subscription_Videos->ORDER_BY = "videos.uploaded_on DESC";
+                $Subscription_Videos->Shadowbanned_Users = false;
+                $Subscription_Videos->get();
+
+                if ($Subscription_Videos::$Videos) {
+                    $Subscription_Videos = $Subscription_Videos->fixed();
+                } else {
+                    $Subscription_Videos = false;
+                }
+            }
+            // watched videos
+            $Watched = new Videos($DB, $_USER);
+            $Watched->JOIN = "INNER JOIN recently_viewed ON videos.url = recently_viewed.url";
+            $Watched->ORDER_BY = "recently_viewed.time_viewed DESC";
+            $Watched->Blocked = false;
+            $Watched->LIMIT = 4;
+            $Watched->Racism = false;
+            $Watched->get();
+            $Watched = $Watched->fixed();
+            // recommended videos
+            if($session["user"]["id"] != -1) {
+                $Recommended_Videos = new Videos($DB, $_USER);
+                $Recommended_Videos->LIMIT = 8;
+                $Recommended_Videos->Blocked = false;
+                $Recommended_Videos->Racism = false;
+                $Recommended_Videos->get();
+
+                $Recommended_Amount = $Recommended_Videos::$Amount;
+                if($Recommended_Videos::$Videos) {
+                    $Recommended_Videos = $Recommended_Videos->fixed();
+                } else {
+                    $Recommended_Videos = false;
+                }
+            } else {
+                $Recommended_Amount = 0;
+            }
+
+            $engine->template("nouveau/index.html", [
+                "categories" => [
+                    1 => "Film & Animation",
+                    2 => "Autos & Vehicles",
+                    3 => "Music",
+                    4 => "Pets & Animals",
+                    5 => "Sports",
+                    6 => "Travel & Events",
+                    7 => "Gaming",
+                    8 => "People & Blogs",
+                    9 => "Comedy",
+                    10 => "Entertainment",
+                    11 => "News & Politics",
+                    12 => "Howto & Style",
+                    13 => "Education",
+                    14 => "Science & Technology",
+                    15 => "Nonprofits & Activism"
+                ],
+                "feed" => $feed,
+                "modules" => $modules,
+                "position" => $position,
+                "stats" => [
+                    "channel" => $stats,
+                    "inbox" => []
+                ],
+                "watched" => $Watched,
+                "recommended" => [
+                    "videos" => $Recommended_Videos,
+                    "amount" => $Recommended_Amount,
+                ],
+                "subscriptions" => $Subscription_Videos,
+                "message" => $message,
+                "messageColor" => $messageColor,
+                "page_type" => "Home"
+            ]);
+        }
+    });
+    $router->all("/videos", function() {
+        require_once "_includes/init.php";
+
+        if(isset($_COOKIE["old"]) && (bool)$_COOKIE["old"]) {
+            include_once "videos.php";
+        } else {
+            $_PAGINATION = new Pagination(16, 20);
+            $categories = $engine->categories();
+            if(isset($_GET["c"], $_GET["o"], $_GET["t"])) {
+                $Current_Order = ($_GET["o"] == "re" || $_GET["o"] == "mv" || $_GET["o"] == "md" || $_GET["o"] == "tr") ? $_GET["o"] : "re";
+                $Current_Cat = ($_GET["c"] > 0 && $_GET["c"] < 16) ? (int)$_GET["c"] : 0;
+                $Current_time = ($_GET["t"] > 0 && $_GET["t"] < 4)?  (int)$_GET["t"] : 0;
+            } else {
+                $Current_Cat = 0;
+                $Current_Order = "re";
+                $Current_time = 2;
+            }
+
+            // order
+            if($Current_Order == "re") $ORDER_BY = "videos.uploaded_on DESC";
+            else if($Current_Order == "mv") $ORDER_BY = "videos.displayviews DESC";
+            else if($Current_Order == "tr") $ORDER_BY = "(videos.1_star + videos.2_star * 2 + videos.3_star * 3 + videos.4_star * 4 + videos.5_star * 5) DESC, videos.views DESC";
+            // category
+            $WHERE = ($Current_Cat == 0) ? " videos.category <> 100 AND videos.url <> 'CndS9berMs3' " : " videos.category = $Current_Cat ";
+            // time
+            if($Current_time == 0) {
+                $WHERE .= " ";
+            } else if($Current_time == 1) {
+                $WHERE .= " AND YEARWEEK(videos.uploaded_on)=YEARWEEK(NOW()) ";
+            } else if($Current_time == 2) {
+                $WHERE .= " AND MONTH(videos.uploaded_on) = MONTH(CURDATE()) AND YEAR(videos.uploaded_on) = YEAR(CURDATE()) ";
+            } else if($Current_time == 3) {
+                $WHERE .= " AND DATE(videos.uploaded_on) = CURDATE() ";
+            }
+
+            $Videos = new Videos($DB, $_USER);
+            $Videos->Blocked = false;
+            $Videos->WHERE_C = " AND $WHERE";
+            $Videos->LIMIT = $_PAGINATION;
+
+            if($Current_Order !== "md") {
+                $Videos->ORDER_BY = $ORDER_BY;
+            } else {
+                $Videos->Distinct = true;
+                $Videos->JOIN = "INNER JOIN video_comments ON videos.url = video_comments.url";
+                $Videos->ORDER_BY = "(SELECT count(DISTINCT video_comments.by_user) as amount FROM video_comments WHERE video_comments.url = videos.url) DESC";
+            }
+
+            $Videos->get();
+            $Videos = $Videos->fixed();
+            $Video_Amount = new Videos($DB, $_USER);
+            $Video_Amount->LIMIT = 320;
+            $Video_Amount->WHERE_C = " AND $WHERE";
+            $Video_Amount->Uploader = true;
+            $Video_Amount->Blocked = false;
+            $Video_Amount->Count = true;
+            $_PAGINATION->Total = $Video_Amount->get();
+
+            $engine->template("nouveau/videos.html", [
+                "page_type" => "Videos",
+                "filters" => [
+                    "re" => "Newest",
+                    "mv" => "Most Viewed",
+                    "md" => "Most Discussed",
+                    "tr" => "Top Rated"
+                ],
+                "categories" => $categories,
+                "category" => $Current_Cat,
+                "order" => $Current_Order,
+                "time" => $Current_time,
+                "videos" => $Videos,
+                "pagination" => [
+                    "current" => $_PAGINATION->Current_Page ?? 1,
+                    "total" => $_PAGINATION->Total,
+                ]
+            ]);
+        }
     });
     $router->all("/admin/(.*)", function($page) {
         include_once "admin/$page.php";
@@ -56,7 +265,7 @@
     });
     $router->mount("/blog", function() use($router) {
         $router->get("/(\d+)", function($id) {
-            global $api;
+            global $api, $engine;
             require_once "_includes/init.php";
 
             // Get blog post, according by ID
@@ -65,13 +274,7 @@
                 $post["data"]["date"] = get_date($post["data"]["date"]);
             }
 
-            $_PAGE->set_variables([
-                "Page_Title" => "VidLii Blog",
-                "Page" => "Blog",
-                "Page_Type" => "Home",
-                "Show_Search" => true
-            ]);
-            require_once "_templates/page_structure.php";
+            $engine->template("nouveau/blog.html", ["post" => $post]);
         });
         $router->get("/", function() {
             require_once "_includes/init.php";
@@ -84,13 +287,7 @@
                 $Blog_Posts[$Key]["date"] = get_date($Post["date"]);
             }
 
-            $_PAGE->set_variables([
-                "Page_Title" => "VidLii Blog",
-                "Page" => "Blog",
-                "Page_Type" => "Home",
-                "Show_Search" => true
-            ]);
-            require_once "_templates/page_structure.php";
+            $engine->template("nouveau/blog.html", ["posts" => $Blog_Posts]);
         });
     });
     $router->all("/api/(.*)", function($query) {

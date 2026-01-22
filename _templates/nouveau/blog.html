@@ -1,0 +1,51 @@
+{%extends "base.html"%}
+
+{%block title%}{{config.title}} Blog{%endblock%}
+
+{%block body%}
+    <h1 class="pg_hd">Blog</h1>
+    <div class="vc_l">
+        <div class="vc_cats">
+            <div>About {{config.title}}</div>
+            <ul>
+                <li class="active">Blog</li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/terms">Terms of Use</a></li>
+                <li><a href="/open-source">Open Source</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/themes">Themes</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/testlii">Testlii</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="vc_r" style="margin-bottom:0">
+        {%if post is defined and post.count == 1%}
+        <div class="blog-box">
+            <div>
+                <p class="date">{{post.data.date}} <span class="author">&nbsp;|&nbsp; Posted by:</span> {{config.title}} Team &nbsp;|&nbsp; <a href="/blog/{{post.data.id}}">Permalink</a></p>
+                <h1 style="font-size: 32px">{{post.data.title}}</h1>
+                <p>{{post.data.content|raw}}</p>
+            </div>
+        </div>
+        {%elseif posts is defined%}
+        {%if posts|length > 0%}
+        {%for post in posts%}
+        <div class="blog-box">
+            <div>
+                <p class="date">{{post.date}} <span class="author">&nbsp;|&nbsp; Posted by:</span> {{config.title}} Team &nbsp;|&nbsp; <a href="/blog/{{post.id}}">Permalink</a></p>
+                <h1 style="font-size: 32px"><a href="/blog/{{post.id}}">{{post.title}}</a></h1>
+                <p>{{post.content|raw}}</p>
+            </div>
+        </div>
+        {%endfor%}
+        {%else%}
+        <center style="color: #999">
+            <p style="font-size: 32px"><:(</p>
+            <h3 style="color: #666">We haven't written anything yet...</h3>
+            <p>But we'll ultimately do it when a new announcement will appear from us. Stay tuned ;)</p>
+        </center>
+        {%endif%}
+        {%endif%}
+    </div>
+{%endblock%}

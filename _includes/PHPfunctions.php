@@ -93,9 +93,6 @@
 				redirect($Redirect);
 				exit;
 			}
-			if($Redirect != false) {
-				redirect($Redirect);
-			}
 		}
 	}
 

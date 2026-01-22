@@ -1,0 +1,91 @@
+{%extends "base.html"%}
+
+{%block title%}Videos - {{config.title}}{%endblock%}
+
+{%block body%}
+    <div class="vc_l">
+        <div class="vc_cats">
+            <div>Categories</div>
+            <ul>
+                {%for i, cat in categories%}
+                    {%if category != i%}
+                        <li><a href="/videos?c={{i}}&o={{order}}&t={{time}}">{{cat}}</a></li>
+                    {%else%}
+                        <li style="font-weight:bold;cursor:default">{{cat}}</li>
+                    {%endif%}
+                {%endfor%}
+            </ul>
+        </div>
+    </div>
+    <div class="vc_r">
+        <div class="vc_hd">
+            <ul>
+                {%for value, item in filters%}
+                    {%if value != order%}
+                    <li><a href="/videos?c={{category}}&o={{value}}&t={{time}}">{{item}}</a></li>
+                    {%else%}
+                    <li id="vc_selec">{{item}}</li>
+                    {%if order == "re"%}
+                    <li style="padding:0 29px"></li>
+                    {%elseif order == "mv"%}
+                    <li style="padding:0 48px"></li>
+                    {%elseif order == "md"%}
+                    <li style="padding:0 60px"></li>
+                    {%elseif order == "tr"%}
+                    <li style="padding:0 29px"></li>
+                    {%endif%}
+                    {%endif%}
+                {%endfor%}
+            </ul>
+        </div>
+        <div style="background:white;z-index:10;height:20px;width:600px;position:absolute"></div>
+        <div class="vc_nav">
+            <div style="float:left">
+                {%if category == 0%}
+                    in <strong>All Categories</strong>
+                {%else%}
+                    in <strong>{{categories[category]}}</strong>
+                {%endif%}
+            </div>
+            <div class="vc_nav_r">
+                <ul>
+                    <li>{%if time != 3%}<a href="/videos?c={{category}}&o={{order}}&t=3">Today</a>{%else%}<strong>Today</strong>{%endif%}</li>
+                    <li>{%if time != 1%}<a href="/videos?c={{category}}&o={{order}}&t=1">This Week</a>{%else%}<strong>This Week</strong>{%endif%}</li>
+                    <li>{%if time != 2%}<a href="/videos?c={{category}}&o={{order}}&t=2">This Month</a>{%else%}<strong>This Month</strong>{%endif%}</li>
+                    <li>{%if time != 0%}<a href="/videos?c={{category}}&o={{order}}&t=0">All Time</a>{%else%}<strong>All Time</strong>{%endif%}</li>
+                </ul>
+            </div>
+        </div>
+        {%if videos%}
+        <div class="v_v_bx" id="vc_videos">
+            {%for video in videos%}
+                <div>
+                    <div class="th">
+                        <div class="th_t">{{video.length}}</div>
+                        <a href="/watch?v={{video.url}}"><img class="vid_th" src="/vi/{{video.url}}/hqresdefault.jpg" width="176" height="107"></a>
+                    </div>
+                    <a href="/watch?v={{video.url}}" class="ba">{{video.title}}</a>
+                    <div class="vw s">{{video.views}} views</div>
+                    <a href="/user/{{video.displayname}}" class="ch_l s">{{video.displayname}}</a>
+                    <div class="s_r">{{ratings(video, 14, 13)}}</div>
+                </div>
+            {%endfor%}
+        </div>
+        {%if pagination.total > 1%}
+        <div class="vc_pagination">
+            {%for page in 1..pagination.total%}
+            {%if page == pagination.current%}
+            <span class="h_yes">{{page}}</span>
+            {%else%}
+            <a href="#">{{page}}</a>
+            {%endif%}
+            {%endfor%}
+        </div>
+        {%endif%}
+        {%else%}
+            <div style="text-align: center; font-size: 20px; margin-top: 146px; color: #616161">No Videos found</div>
+        {%endif%}
+    </div>
+    <div class="cl"></div>
+    <div style="width:970px;margin:0 auto"></div>
+{%endblock%}

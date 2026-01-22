@@ -1,0 +1,32 @@
+{%if modules.featured%}
+    <div class="wdg" id="ft_widget">
+        <div class="featured">
+            <a href="/special_videos?c=0&amp;t=v"><img src="/img/ft.png" alt="Featured Videos"><span>Featured Videos</span></a>
+            <div class="wdg_sel">
+                {%if session.session != -1%}
+                <div class="up1" onclick="move_up('ft_widget')"></div><div class="do1" onclick="move_down('ft_widget')"></div>
+                {%endif%}
+            </div>
+        </div>
+        <div>
+            {%if feed.featured_videos and feed.featured_videos.count > 0%}
+            {%for video in feed.featured_videos.data%}
+            <div>
+                <div class="th">
+                    <div class="th_t">{{video.length}}</div>
+                    <a href="/watch?v={{video.url}}"><img class="vid_th" src="/vi/{{video.url}}.jpg" width="140" height="88"></a>
+                </div>
+                <a href="/watch?v={{video.url}}" class="ba">{{video.title}}</a>
+                <div class="vw s">{{video.views}} views</div>
+                <a href="/user/{{video.uploaded_by}}" class="ch_l s">{{video.uploaded_by}}</a>
+                <div class="s_r">{{ratings(video, 14, 13)}}</div>
+            </div>
+            {%endfor%}
+            {%else%}
+            <div class="v_v_bx">
+                <p>There are no any featured videos</p>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+{%endif%}
