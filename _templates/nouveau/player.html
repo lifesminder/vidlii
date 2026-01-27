@@ -68,7 +68,7 @@
 		hdsrc: "/usfi/v/{{player_video.url}}.720.mp4",
 		img: "/vi/{{player_video.url}}/hqresdefault.jpg",
 		url: "{{player_video.url}}",
-		duration: {{player_video.length}},
+		duration: "{{player_video.length}}",
 		autoplay: "{%if player_video.autoplay is defined or player_video.autoplay == 1%}true{%else%}false{%endif%}",
 		skin: "{{player_skin}}",
 		btcolor: vlpColors[0],
@@ -76,7 +76,7 @@
 		adjust: true,
 		start: getTimeHash()
 	};
-    
+
 	for (var i in viValues) {
 		if (videoInfo[i] === void(0)) {
 			videoInfo[i] = viValues[i];
@@ -89,9 +89,10 @@
 		<div class="vlPlayer">
 			<script>
 				window[videoInfo.variable] = new VLPlayer({
+					url: videoInfo.url,
 					id: videoInfo.id,
 					src: videoInfo.src,
-					hdsrc: "null",
+					hdsrc: "",
 					preview: videoInfo.img,
 					videoUrl: "/watch?v="+videoInfo.url,
 					duration: videoInfo.duration,
@@ -167,23 +168,23 @@
 		</script>
 	{%endif%}
 {%else%}
-<? if ($Status != 1) : ?>
-<div style="display:table;background:black;width:100%;height:100%;color:white;font-size:17px;">
-	<div style="display:table-cell;text-align:center;vertical-align:middle;">
-		<? if ($Status == 1 || $Status == 0) : ?>
-		This video is still converting.....
-		<? elseif ($Status == -1) : ?>
-		This video is still uploading...
-		<? elseif ($Status == -2) : ?>
-		This video has failed conversion...
-		<? elseif ($Status == -3) : ?>
-		This video has been deleted for<br>violating our Community Guidelines.
-		<? endif ?>
+	{%if player_video.status != 1%}
+	<div style="display:table;background:black;width:100%;height:100%;color:white;font-size:17px;">
+		<div style="display:table-cell;text-align:center;vertical-align:middle;">
+			{%if status >= 0 and status <= 1%}
+			This video is still converting.....
+			{%elseif status == -1%}
+			This video is still uploading...
+			{%elseif status == -2%}
+			This video has failed conversion...
+			{%elseif status == -3%}
+			This video has been deleted for<br>violating our Community Guidelines.
+			{%endif%}
+		</div>
 	</div>
-</div>
-<? else : ?>
-<video width="320" height="240" style="width:100%;height:100%" autoplay loop>
-  <source src="/img/Untitled.mp4" type="video/mp4">
-</video>
-<? endif ?>
+	{%else%}
+	<video width="320" height="240" style="width:100%;height:100%" autoplay loop>
+	<source src="/img/Untitled.mp4" type="video/mp4">
+	</video>
+	{%endif%}
 {%endif%}
