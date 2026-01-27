@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/css/m.css">
     <link id="vlPlayer2007css" rel="stylesheet" href="/vlPlayer/skins/2007HD/skin.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <!--<script src="/vlPlayer/main19.js"></script>-->
+    <script src="/vlPlayer/main19.js"></script>
     <script src="/js/main3.js"></script>
     <script src="/js/main.js"></script>
     {%block head%}{%endblock%}
@@ -46,7 +46,7 @@
             </div>
         </div>
     {%endif%}
-    <div class="wrapper">
+    <div class="{%block wrapperClass%}wrapper{%endblock%}">
         {%block header%}
         {%if config.header is null or config.header == 1%}
         <header class="n_head">

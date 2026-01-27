@@ -15,10 +15,10 @@
 
                 $exists = (bool)$this->db("SELECT count(*) from users where username = \"$username\" or displayname = \"$username\" or email = \"$username\"");
                 if($exists) {
-                    $real_password = $this->db("SELECT password from users where username = \"$username\" or displayname = \"$username\" or email = \"$username\"")["data"]["password"];
-                    $valid = password_verify($password, $real_password);
+                    $userData = $this->db("SELECT username, password from users where username = \"$username\" or displayname = \"$username\" or email = \"$username\"", false)["data"];
+                    $valid = password_verify($password, $userData["password"]);
                     if($valid) {
-                        $_USER->username = $username;
+                        $_USER->username = $userData["username"];
                         if($_USER->login()) {
                             $data = $this->api_message(0, "Access Granted");
                         }

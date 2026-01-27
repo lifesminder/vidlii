@@ -448,10 +448,10 @@ function show_more(e, t) {
         }
     })
 }
-$("#pl_inf_i").click(function() {
+$("#pl_inf_i")?.click(function() {
     var e = $("#pl_url").html();
     $("#nav_ind").css("left", "15px"), get_video_info(e)
-}), $("#pl_inf_f").click(function() {
+}), $("#pl_inf_f")?.click(function() {
     var e = $("#pl_url").html();
     $("#pl_inf_i").removeClass("pl_nav_sel"), $("#pl_inf_f").addClass("pl_nav_sel"), $("#pl_inf_s").removeClass("pl_nav_sel"), $("#pl_inf_p").removeClass("pl_nav_sel"), $("#pl_inf_fl").removeClass("pl_nav_sel"), $("#nav_ind").css("left", "95px"), $.ajax({
         type: "POST",
@@ -463,10 +463,10 @@ $("#pl_inf_i").click(function() {
             "added" == e.response ? $("#pl_inf").html("<div style='padding:12px;background:white;font-size:14px'>This video has been <strong>added</strong> to your favorites.</div>") : "removed" == e.response ? $("#pl_inf").html("<div style='padding:12px;background:white;font-size:14px'>This video has been <strong>removed</strong> from your favorites.</div>") : "not_logged_in" == e.response && $("#pl_inf").html("<div style='padding:12px;background:white;font-size:14px'>You must <strong><a href='/login'>log in</a></strong> to favorite this video.</div>")
         }
     })
-}), $("#pl_inf_s").click(function() {
+}), $("#pl_inf_s")?.click(function() {
     var e = $("#pl_url").html();
     $("#pl_inf_i").removeClass("pl_nav_sel"), $("#pl_inf_f").removeClass("pl_nav_sel"), $("#pl_inf_s").addClass("pl_nav_sel"), $("#pl_inf_p").removeClass("pl_nav_sel"), $("#pl_inf_fl").removeClass("pl_nav_sel"), $("#nav_ind").css("left", "179px"), $("#pl_inf").html("<div style='font-size:14px;text-align:center'><div style='font-size:16px;margin-bottom:10px'>Share this Video with others:</div>Permalink:<br><input style='width: 300px;-moz-user-select: all;-ms-user-select: all;-webkit-user-select: all;user-select: all;text-align:center' type='text' value='/watch?v=" + e + "' readonly><br><br>Embed Link:<br><input style='width: 300px;-moz-user-select: all;-ms-user-select: all;-webkit-user-select: all;user-select: all;text-align:center' type='text' value='/embed?v=" + e + "' readonly><br><br><br><a href='#'>Twitter</a> || <a href='#'>Facebook</a> || <a href='#'>Reddit</a></div>")
-}), $("#pl_inf_p").click(function() {
+}), $("#pl_inf_p")?.click(function() {
     var e = $("#pl_url").html();
     $("#pl_inf_i").removeClass("pl_nav_sel"), $("#pl_inf_f").removeClass("pl_nav_sel"), $("#pl_inf_s").removeClass("pl_nav_sel"), $("#pl_inf_p").addClass("pl_nav_sel"), $("#pl_inf_fl").removeClass("pl_nav_sel"), $("#nav_ind").css("left", "265px"), $.ajax({
         type: "POST",
@@ -478,7 +478,7 @@ $("#pl_inf_i").click(function() {
             "logged_in" == e.response ? $("#pl_inf").html("<div style='font-size:14px;text-align:center'><div style='font-size:16px;margin-bottom:10px'>Select a Playlist:</div>" + e.select + "</div>") : $("#pl_inf").html("<div style='font-size:14px;text-align:center'><div style='font-size:16px;margin-bottom:10px'>Please <a href='/login'>log in</a> to add videos to playlists!</div></div>")
         }
     })
-}), $("#post_comment").click(function() {
+}), $("#post_comment")?.click(function() {
     var e = $("#comment_content").val(),
         t = $("#ch_user").html();
     $("#comment_content").val(""), e.length > 1 ? ($("#post_comment").attr("disabled", "disabled"), $.ajax({
@@ -497,7 +497,7 @@ $("#pl_inf_i").click(function() {
             }, 400)
         }
     })) : alert("Your comment must be at least 2 characters long!")
-}), $("#post_comment2").click(function() {
+}), $("#post_comment2")?.click(function() {
     var e = $("#comment_content2").val(),
         t = $("#ch_user").html();
     if ($("#comment_content2").val(""), e.length > 1) {
@@ -516,7 +516,7 @@ $("#pl_inf_i").click(function() {
         var s = document.getElementById("cc_count").innerText;
         s.indexOf(",") > -1 ? (s = s.replace(",", ""), s = (++s).toLocaleString("us")) : s++, $("#cc_count").html(s)
     } else alert("Your comment must be at least 2 characters long!")
-}), $("#post_comment1").click(function() {
+}), $("#post_comment1")?.click(function() {
     var e = $("#comment_content").val(),
         t = $("#ch_user").html();
     $("#comment_content").val(""), e.length > 1 ? ($("#post_comment1").attr("disabled", "disabled"), $.ajax({
@@ -535,7 +535,7 @@ $("#pl_inf_i").click(function() {
             }, 400)
         }
     })) : alert("Your comment must be at least 2 characters long!")
-}), $("#post_comment4").click(function() {
+}), $("#post_comment4")?.click(function() {
     var e = $("#comment_content2").val(),
         t = $("#ch_user").html();
     $("#comment_content2").val(""), e.length > 1 ? ($("#post_comment4").attr("disabled", "disabled"), $.ajax({
@@ -552,7 +552,7 @@ $("#pl_inf_i").click(function() {
             s.indexOf(",") > -1 ? (s = s.replace(",", ""), s = (++s).toLocaleString("us")) : s++, $("#cc_count").html(s)
         }
     })) : alert("Your comment must be at least 2 characters long!")
-}), $("#aaf").click(function() {
+}), $("#aaf")?.click(function() {
     var e = $("#aaf").html(),
         t = $("#ch_user").html();
     if ("Cancel Invite" == e) {
@@ -568,19 +568,19 @@ $("#pl_inf_i").click(function() {
             "0" == e.response ? $("#aaf").html("Add as Friend") : "1" == e.response ? $("#aaf").html("Unfriend") : "2" == e.response ? $("#aaf").html("Add as Friend") : "3" == e.response ? $("#aaf").html("Cancel Invite") : alert(e.response)
         }
     })
-}), $("#pr_all").click(function() {
+}), $("#pr_all")?.click(function() {
     $("#pr_favorites").removeClass("pl_nav_sel_hd"), $("#pr_all").addClass("pl_nav_sel_hd"), $("#pr_playlists").removeClass("pl_nav_sel_hd"), $("#pr_uploads").removeClass("pl_nav_sel_hd"), get_videos("all")
-}), $("#pr_uploads").click(function() {
+}), $("#pr_uploads")?.click(function() {
     $("#pr_all").removeClass("pl_nav_sel_hd"), $("#pr_uploads").addClass("pl_nav_sel_hd"), $("#pr_playlists").removeClass("pl_nav_sel_hd"), $("#pr_favorites").removeClass("pl_nav_sel_hd"), get_videos("uploads")
-}), $("#pr_playlists").click(function() {
+}), $("#pr_playlists")?.click(function() {
     $("#pr_all").removeClass("pl_nav_sel_hd"), $("#pr_playlists").addClass("pl_nav_sel_hd"), $("#pr_uploads").removeClass("pl_nav_sel_hd"), $("#pr_favorites").removeClass("pl_nav_sel_hd"), get_videos("playlists")
-}), $("#pr_favorites").click(function() {
+}), $("#pr_favorites")?.click(function() {
     $("#pr_all").removeClass("pl_nav_sel_hd"), $("#pr_playlists").removeClass("pl_nav_sel_hd"), $("#pr_favorites").addClass("pl_nav_sel_hd"), $("#pr_uploads").removeClass("pl_nav_sel_hd"), get_videos("favorites")
-}), $(".pl_toggler").click(function() {
+}), $(".pl_toggler")?.click(function() {
     $(".pl_toggler").attr("id", ""), $(this).attr("id", "pl_toggle_sel"), "Switch to Player View" == $(this).attr("title") ? $(".pr_tp_btm").removeClass("grid") : $(".pr_tp_btm").addClass("grid")
-}), $(".info_toggle").click(function() {
+}), $(".info_toggle")?.click(function() {
     $(this).next().toggleClass("opa"), $(this).parent().parent().next().find("input").toggleClass("opa"), $(this).parent().parent().next().find("select").toggleClass("opa"), $(this).parent().parent().next().find("textarea").toggleClass("opa"), $(this).parent().parent().next().find("span").toggleClass("opa")
-}), $(document.body).on("click", ".mnu_vid", function() {
+}), $(document.body)?.on("click", ".mnu_vid", function() {
     $(this);
     var e = $(this).attr("watch");
     $("#v_sel").attr("id", "");
@@ -604,10 +604,10 @@ $("#pl_inf_i").click(function() {
             }, "fast")
         }
     })
-}), $(".pr_edit_btn").click(function() {
+}), $(".pr_edit_btn")?.click(function() {
     var e = $(this).attr("id");
     if ($("#" + e).is(".pr_edit_btn_sel")) return $("#" + e).removeClass("pr_edit_btn_sel"), void $("#edit_" + e).toggleClass("hddn");
     "settings" == e ? ($("#settings").addClass("pr_edit_btn_sel"), $("#themes").removeClass("pr_edit_btn_sel"), $("#modules").removeClass("pr_edit_btn_sel"), $("#vap").removeClass("pr_edit_btn_sel"), $("#edit_themes").is(".hddn") || $("#edit_themes").addClass("hddn"), $("#edit_modules").is(".hddn") || $("#edit_modules").addClass("hddn"), $("#edit_vap").is(".hddn") || $("#edit_vap").addClass("hddn"), $("#edit_settings").toggleClass("hddn")) : "themes" == e ? ($("#settings").removeClass("pr_edit_btn_sel"), $("#themes").addClass("pr_edit_btn_sel"), $("#modules").removeClass("pr_edit_btn_sel"), $("#vap").removeClass("pr_edit_btn_sel"), $("#edit_settings").is(".hddn") || $("#edit_settings").addClass("hddn"), $("#edit_modules").is(".hddn") || $("#edit_modules").addClass("hddn"), $("#edit_vap").is(".hddn") || $("#edit_vap").addClass("hddn"), $("#edit_themes").toggleClass("hddn")) : "modules" == e ? ($("#settings").removeClass("pr_edit_btn_sel"), $("#themes").removeClass("pr_edit_btn_sel"), $("#modules").addClass("pr_edit_btn_sel"), $("#vap").removeClass("pr_edit_btn_sel"), $("#edit_settings").is(".hddn") || $("#edit_settings").addClass("hddn"), $("#edit_themes").is(".hddn") || $("#edit_themes").addClass("hddn"), $("#edit_vap").is(".hddn") || $("#edit_vap").addClass("hddn"), $("#edit_modules").toggleClass("hddn")) : "vap" == e && ($("#settings").removeClass("pr_edit_btn_sel"), $("#themes").removeClass("pr_edit_btn_sel"), $("#modules").removeClass("pr_edit_btn_sel"), $("#vap").addClass("pr_edit_btn_sel"), $("#edit_settings").is(".hddn") || $("#edit_settings").addClass("hddn"), $("#edit_themes").is(".hddn") || $("#edit_themes").addClass("hddn"), $("#edit_modules").is(".hddn") || $("#edit_modules").addClass("hddn"), $("#edit_vap").toggleClass("hddn"))
-}), $(".jscolor").click(function() {
+}), $(".jscolor")?.click(function() {
     "9" !== $("#theme_selectnum").val() && theme_select("custom")
 });

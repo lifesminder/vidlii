@@ -1,6 +1,15 @@
 {%if cookie.player is defined%}
-{%if cookie.player == 3%}{%set player_skin = "2012"%}{%elseif cookie.player == 2%}{%set player_skin = "2007HD"%}{%else%}{%set player_skin = "2009HD"%}{%endif%}
+	{%if cookie.player == 3%}
+		{%set player_skin = "2012"%}
+	{%elseif cookie.player == 2%}
+		{%set player_skin = "2007HD"%}
+	{%else%}
+		{%set player_skin = "2009HD"%}
+	{%endif%}
+{%else%}
+	{%set player_skin = "2009HD"%}
 {%endif%}
+
 <script id="heightAdjust">
 	if (!window.videoInfo)
 		var videoInfo = {};

@@ -73,6 +73,35 @@
                     echo "<img src='/img/no_star.png' width='$width' height='$height'>";
                 }
             });
+            $ago = new \Twig\TwigFunction("ago", function($time) {
+                $time = time() - strtotime($time);
+		        $time = ($time < 1)? 1 : $time;
+                $tokens = array (
+                    31536000 => 'year',
+                    2592000 => 'month',
+                    604800 => 'week',
+                    86400 => 'day',
+                    3600 => 'hour',
+                    60 => 'minute',
+                    1 => 'second'
+                );
+
+                foreach ($tokens as $unit => $text) {
+                    if ($time < $unit) continue;
+                    $numberOfUnits = floor($time / $unit);
+                    return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s ago':' ago');
+                }
+                foreach ($tokens as $unit => $text) {
+                    if ($time < $unit) continue;
+                    $numberOfUnits = floor($time / $unit);
+                    return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s ago':' ago');
+                }
+                foreach ($tokens as $unit => $text) {
+                    if ($time < $unit) continue;
+                    $numberOfUnits = floor($time / $unit);
+                    return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s ago':' ago');
+                }
+            });
             $secondsToTime = new \Twig\TwigFunction("secondsToTime", function($seconds) {
                 $hours = floor($seconds / 3600);
                 $minutes = floor(($seconds % 3600) / 60);
@@ -86,6 +115,7 @@
             $twig = new \Twig\Environment($loader);
             $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
             $twig->addFilter($filter);
+            $twig->addFunction($ago);
             $twig->addFunction($helpArticle);
             $twig->addFunction($secondsToTime);
             $twig->addFunction($ratings);
@@ -156,6 +186,10 @@
                 return $categories[$index];
             }
             return $categories;
+        }
+        final public function channels() {
+            $channels = [0 => "Members", 7 => "Animators", 3 => "Comedians", 1 => "Directors", 4 => "Gamers", 6 => "Gurus", 2 => "Musicians",  5 => "Reporters"];
+            return $channels;
         }
     }
 ?>

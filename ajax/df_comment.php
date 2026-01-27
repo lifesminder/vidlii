@@ -1,16 +1,14 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/init.php";
-header("Content-Type: application/json", true);
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/init.php";
+    header("Content-Type: application/json", true);
 
-//REQUIREMENTS / PERMISSIONS
-//- Requires Login
-//- Requires Activated
-//- Requires ($_POST["vl_comment"]) AND ($_POST["video_url"])
-if (!$_USER->logged_in)                                             { exit(); }
-if (!$_USER->Is_Activated)                                          { exit(); }
-if (!isset($_POST["vl_comment"]) || !isset($_POST["video_url"]))    { exit(); }
-if (!isset($_SESSION["deto"]))                                      { exit(); }
-
+    //REQUIREMENTS / PERMISSIONS
+    //- Requires Login
+    //- Requires Activated
+    //- Requires ($_POST["vl_comment"]) AND ($_POST["video_url"])
+    if (!$_USER->logged_in)                                             { exit(); }
+    if (!$_USER->Is_Activated)                                          { exit(); }
+    if (!isset($_POST["vl_comment"]) || !isset($_POST["video_url"]))    { exit(); }
 
 $_GUMP->validation_rules(array(
     "vl_comment"    => "required|max_len,1005|min_len,1",

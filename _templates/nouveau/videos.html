@@ -77,7 +77,7 @@
             {%if page == pagination.current%}
             <span class="h_yes">{{page}}</span>
             {%else%}
-            <a href="#">{{page}}</a>
+            <a href="/videos?c={{category}}&o={{order}}&t={{time}}&p={{page}}">{{page}}</a>
             {%endif%}
             {%endfor%}
         </div>

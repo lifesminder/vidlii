@@ -1,0 +1,29 @@
+<div id="playnav-play-favorites-scrollbox" class="scrollbox-wrapper inner-box-colors">
+    <input type="hidden" id="playnav-playlist-favorites-count" value="56">
+    <div class="scrollbox-content playnav-playlist-non-all">
+        <div class="scrollbox-body" style="height: 516px; zoom: 1;">
+            <div class="outer-scrollbox" onscroll="playnav.updateScrollbox('playnav-play-favorites-scrollbox');">
+                <div id="playnav-play-favorites-items" class="inner-scrollbox">
+                    <div id="playnav-play-favorites-page-0" class="scrollbox-page loaded{%if favorites.count > 12%} videos-rows-12{%endif%}" style="visibility: visible;">
+                        {%for i, video in videos.data%}
+                        <div id="playnav-video-play-favorites-{{i}}-{{video.url}}" class="playnav-item playnav-video">
+                            <div style="display:none" class="encryptedVideoId">{{video.url}}</div>
+                            <div id="playnav-video-play-favorites-{{i}}-{{video.url}}-selector" class="selector"></div>
+                            <div class="content">
+                                <div class="playnav-video-thumb link-as-border-color">
+                                    <a class="video-thumb-90 no-quicklist" href="/watch?v={{video.url}}" onclick="playnav.playVideo('favorites','{{i}}','{{video.url}}');return false;"><img title="{{video.title}}" src="/vi/{{video.url}}/default.jpg" class="vimg90 yt-uix-hovercard-target" alt="{{video.title}}"><span id="video-run-time-{{video.url}}" class="video-time"><span>{{video.duration}}</span></span></a>
+                                </div>
+                                <div class="playnav-video-info">
+                                    <a href="/watch?v={{video.url}}" class="playnav-item-title ellipsis" onclick="playnav.playVideo('favorites','{{i}}','{{video.url}}');return false;" id="playnav-video-title-play-favorites-{{i}}-{{video.url}}"><span>{{video.title}}</span></a>
+                                    <div class="metadata"><a href="/user/{{video.uploaded_by}}">{{video.uploaded_by}}</a> - {{video.views}} views</div>
+                                    <div style="display:none" id="playnav-video-play-favorites-{{i}}">{{video.url}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

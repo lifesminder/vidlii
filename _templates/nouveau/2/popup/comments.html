@@ -1,0 +1,36 @@
+<div id="playnav-panel-comments" style="margin: -2px 0; float: left;">
+    <h2>Comments ({{comments.count}})</h2>
+    <div class="playnav_comments">
+        {%if comments.count > 0%}
+        {%for comment in comments.data%}
+        <div class="watch-comment-entry">
+            <div class="watch-comment-head">
+                <div class="watch-comment-info">
+                    <a class="watch-comment-auth" href="/user/{{comment.by_user}}" rel="nofollow">{{comment.by_user}}</a>
+                    <span class="watch-comment-time">({{ago(comment.date_sent)}})</span>
+                </div>
+                <div class="clearL"></div>
+            </div>
+            <div>
+                <div class="watch-comment-body">
+                    <div>{{comment.comment}}</div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+    <a href="/watch?v={{video.data.url}}" id="playnav-watch-link" onclick="playnav.goToWatchPage()">See all comments and video responses</a>
+</div>
+<div id="playnav-comment-post" style="float: right; width: 240px;">
+    <form action="/watch?v=PB4GTI57" method="post" style="margin: 0 0 1em 0;">
+        {%if session.user.id != -1%}
+        <h2>Comment on this video</h2>
+        <textarea cols="36" rows="6" id="comment_text" class="comments-textarea" name="comment_text" maxlength="500" oninput="chars_remaining()"></textarea><br>
+        <input style="margin-top: 5px" type="button" onclick="post_comment('{{video.data.url}}')" name="comment_submit" id="comment_submit" value="Post Comment"><span class="charcount">&nbsp;<span id="char-counter">500</span></span>
+        {%else%}
+        <h2>Would you like to Comment?</h2>
+        <p><a href="/signup">Join {{config.title}}</a> for a free account or sign in if you are already a member.</p>
+        {%endif%}
+    </form>
+</div>

@@ -1,4 +1,1163 @@
-<h1>Channel 2</h1>
-<p>
-    Everything in one dynamic place - what a greatness
-</p>
+{%if owner%}
+<div class="pr_edit_ch">
+    <div>
+        <div class="pr_edit_btn" id="settings">Settings</div><div class="pr_edit_btn" id="themes">Themes and Colors</div><div class="pr_edit_btn" id="modules">Modules</div><div class="pr_edit_btn" id="vap">Videos and Playlists</div>
+        <div class="pr_edit_box hddn" id="edit_settings">
+            <form action="/{{handle}}" method="POST">
+                <div style="padding: 0 10px 0 0;border-right:1px dotted #bbb;width:50%;float:left;">
+                    <table cellpadding="7" cellspacing="0" style="width: 100%;">
+                        <tr>
+                            <td>URL:</td>
+                            <td align="right"><a href="/{{handle}}">/{{handle}}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Channel Title:</td>
+                            <td align="right"><input type="text" name="channel_title" maxlength="80" style="width: 225px" value="{{profile.channel_title}}"></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0">Channel Type:</td>
+                            <td style="border: 0" align="right">
+                                <select name="channel_type" style="padding:1.5px;">
+                                    <option value="0"{%if profile.channel_type == 0%} selected{%endif%}>Default</option>
+                                    <option value="1"{%if profile.channel_type == 1%} selected{%endif%}>Director</option>
+                                    <option value="2"{%if profile.channel_type == 2%} selected{%endif%}>Musician</option>
+                                    <option value="3"{%if profile.channel_type == 3%} selected{%endif%}>Comedian</option>
+                                    <option value="4"{%if profile.channel_type == 4%} selected{%endif%}>Gamer</option>
+                                    <option value="5"{%if profile.channel_type == 5%} selected{%endif%}>Reporter</option>
+                                    <option value="6"{%if profile.channel_type == 6%} selected{%endif%}>Guru</option>
+                                    <option value="7"{%if profile.channel_type == 7%} selected{%endif%}>Animator</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            <div style="width:47%;float:left;padding-left:8px">
+                <table cellpadding="7" cellspacing="0" style="width: 100%">
+                    <tr>
+                        <td style="border: 0" valign="top">Channel Tags:</td>
+                        <td style="border: 0" align="right"><textarea name="channel_tags" maxlength="256" style="width:330px;height:62px;resize:none">{{profile.channel_tags}}</textarea><br><span style="font-size:12.5px;position:relative;left:-16px;">Tags are keywords used to help people find your channel.</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="clear:both"></div>
+            <div style="height:10px;"></div>
+            <div style="width: 100%; border-top: 1px solid #ccc;padding-top:6px">
+                <input type="submit" value="Save Changes" name="save_settings">
+            </div>
+            </form>
+        </div>
+        <div class="pr_edit_box hddn" id="edit_themes">
+            <div style="margin-bottom:10px">
+                <div id="default" onclick="theme_select('grey')" class="theme_selector{%if profile.theme == 0%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #CCCCCC;color:#333333;padding: 3px;line-height:120%"><div style="background-color: #999999;color: #000000;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#eeeeff;font-size:9px;padding-left:1px;color:#333333"><span style="color:#000000;font-size:120%">A</span> &nbsp;<span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div><span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Grey</span></div></div>
+                <div id="blue" onclick="theme_select('blue')" class="theme_selector{%if profile.theme == 1%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #003366;color:#ffffff;padding: 3px;line-height:120%"><div style="background-color: #0066CC;color: #ffffff;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#3D8BD8;font-size:9px;padding-left:1px;color:#ffffff"><span style="color:#ffffff;font-size:120%">A</span> &nbsp;<span style="color:#99C2EB;text-decoration:underline">url</span><br>abc</div><span style="color:#0000CC;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Blue</span><br></div></div>
+                <div id="red" onclick="theme_select('red')" class="theme_selector{%if profile.theme == 2%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #660000;color:#FFFFFF;padding: 3px;line-height:120%"><div style="background-color: #990000;color: #FFFFFF;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#660000;font-size:9px;padding-left:1px;color:#FFFFFF"><span style="color:#FFFFFF;font-size:120%">A</span> &nbsp;<span style="color:#FF0000;text-decoration:underline">url</span><br>abc</div><span style="color:#FF0000;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Red</span><br></div></div>
+                <div id="yellow" onclick="theme_select('yellow')" class="theme_selector{%if profile.theme == 3%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #FFE599;color:#E69138;padding: 3px;line-height:120%"><div style="background-color: #E69138;color: #FFFFFF;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#FFD966;font-size:9px;padding-left:1px;color:#E69138"><span style="color:#E69138;font-size:120%">A</span> &nbsp;<span style="color:#E69138;text-decoration:underline">url</span><br>abc</div><span style="color:#FFD966;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Sunlight</span><br></div></div>
+                <div id="green" onclick="theme_select('green')" class="theme_selector{%if profile.theme == 4%} theme_sel{%endif%}" style="font-family:Arial"><div style="background-color: #274E13;color:#274E13;padding: 3px;line-height:120%"><div style="background-color: #38761D;color: #ffffff;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#6AA84F;font-size:9px;padding-left:1px;color:#274E13"><span style="color:#274E13;font-size:120%">A</span> &nbsp;<span style="color:#38761D;text-decoration:underline">url</span><br>abc</div><span style="color:#FFFFFF;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Forest</span><br></div></div>
+                <div id="black" onclick="theme_select('black')" class="theme_selector{%if profile.theme == 5%} theme_sel{%endif%}" style="font-family:Courier New"><div style="background-color: #666666;color:#666666;padding: 3px;line-height:120%"><div style="background-color: #444444;color: #FFFFFF;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#000000;font-size:9px;padding-left:1px;color:#666666"><span style="color:#AAAAAA;font-size:120%">A</span> &nbsp;<span style="color:#FF0000;text-decoration:underline">url</span><br>abc</div><span style="color:#FF0000;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">8-bit</span><br></div></div>
+                <div id="pink" onclick="theme_select('pink')" class="theme_selector{%if profile.theme == 6%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #ff99cc;color:#333366;padding: 3px;line-height:120%"><div style="background-color: #aa66cc;color: #ffffff;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#ffffff;font-size:9px;padding-left:1px;color:#333366"><span style="color:#8a2c87;font-size:120%">A</span> &nbsp;<span style="color:#351C75;text-decoration:underline">url</span><br>abc</div><span style="color:#351C75;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Princess</span><br></div></div>
+                <div id="fire" onclick="theme_select('fire')" class="theme_selector{%if profile.theme == 7%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #660000;color:#ffffff;padding: 3px;line-height:120%"><div style="background-color: #FF0000;color: #ffffff;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#FF9900;font-size:9px;padding-left:1px;color:#ffffff"><span style="color:#FFFF00;font-size:120%">A</span> &nbsp;<span style="color:#FFDBA6;text-decoration:underline">url</span><br>abc</div><span style="color:#FFFF00;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Fire</span><br></div></div>
+                <div id="stealth" onclick="theme_select('stealth')" class="theme_selector{%if profile.theme == 8%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #000000;color:#444444;padding: 3px;line-height:120%"><div style="background-color: #444444;color: #000000;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#666666;font-size:9px;padding-left:1px;color:#444444"><span style="color:#000000;font-size:120%">A</span> &nbsp;<span style="color:#444444;text-decoration:underline">url</span><br>abc</div><span style="color:#CCCCCC;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Stealth</span><br></div></div>
+                <div id="custom" onclick="theme_select('custom')" class="theme_selector{%if profile.theme == 9%} theme_sel{%endif%}" style="font-family:arial"><div style="background-color: #CCCCCC;color:#333333;padding: 3px;line-height:120%"><div style="background-color: #999999;color: #000000;padding:3px;font-size:10px"><div style="float:right;width:4em;background-color:#eeeeff;font-size:9px;padding-left:1px;color:#333333"><span style="color:#000000;font-size:120%">A</span> &nbsp;<span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div><span style="color:#0000cc;text-decoration:underline">url</span><br>abc</div></div><div style="text-align:center;"><span class="theme_title" style="padding:2px;height:2em;overflow:hidden">Custom</span></div></div>
+            </div>
+            <div style="clear:both"></div>
+            <form action="/{{handle}}" method="POST" enctype="multipart/form-data">
+            <div style="background-color: #eee;border-radius:5px;padding:12px;margin:15px 0 0;overflow:hidden">
+                <div style="float:left;font-size:20px;position: relative;top:2px;">"<span id="theme_title">{%if profile.theme == 0%}Grey{%elseif profile.theme == 1%}Blue{%elseif profile.theme == 2%}Red{%elseif profile.theme == 3%}Sunlight{%elseif profile.theme == 4%}Forest{%elseif profile.theme == 5%}8-Bit{%elseif profile.theme == 6%}Princess{%elseif profile.theme == 7%}Fire{%elseif profile.theme == 8%}Stealth{%else%}Custom{%endif%}</span>"</div>
+                <a href="javascript:void(0)" onclick="show_advanced_custom()" id="show_advanced_btn" style="position:relative;top:5.5px;left:16px;">show advanced options</a>
+                <div style="float:right"><input type="submit" value="Save Changes" name="save_customization" style="padding:3px"></div>
+            </div>
+            <div id="advanced_customization" style="display:none;margin-top:14px">
+            <input type="hidden" name="theme" id="theme_selectnum" value="<?= $Profile["theme"] ?>">
+            <div style="width:49%;float:left;padding:0 15px;border-right:1px dotted #aaa">
+                <span>General</span>
+                <table cellpadding="6" cellspacing="0" style="width:100%">
+                    <tr>
+                        <td>Background Color</td>
+                        <td align="right"><input type="text" id="ed_bg_color" name="bgcolor" value="#{{profile.bg}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'bg(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Wrapper Color</td>
+                        <td align="right"><input type="text" id="ed_wrp_color" name="wrappercolor" value="#{{profile.h_head}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'wrapper(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Wrapper Text Color</td>
+                        <td align="right"><input type="text" id="ed_wrptxt_color" name="wrappertxtcolor" value="#{{profile.h_in_fnt}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'wrapper_text(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Wrapper Link Color</td>
+                        <td align="right"><input type="text" id="ed_wrplnk_color" name="wrapperlinkcolor" value="#{{profile.h_head_fnt}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'wrapper_links(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Wrapper Transparency</td>
+                        <td style="text-align:right"><input type="range" maxlength="7" min="0" max="100" step="1" name="n_trans" value="{{profile.n_trans}}" oninput="trans1 = (100 - this.value);wrapper(document.getElementById('ed_wrp_color').value.replace('#',''));document.getElementById('hb_v2').innerHTML = this.value+'%'" onchange="document.getElementById('hb_v2').innerHTML = this.value+'%'"><span style="position:relative;font-size: 14px;bottom: 5.5px; left:6px" id="hb_v2">{{profile.n_trans}}%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Channel Background</td>
+                        <td align="right"><input type="file" name="bg_upload" id="bg_upload"{%if has_background%} style="display: none;width:250px"{%endif%}style="width:250px"><button id="bg_delete" onclick="delete_background()" type="button"{%if has_background == false%} style="display: none"{%endif%}>Delete Background</button><span id="bg_info" style="display:block;font-size:11px;width:250px;text-align:left;color:gray;margin:3px 0 0;{%if has_background%} display:none{%endif%}">Upload an image that will display as a background on your channel (maximum 500KB).</span></td>
+                    </tr>
+                    <tr>
+                        <td>Background Repeat / Position</td>
+                        <td align="right">
+                            <select name="bg_repeat">
+                                <option value="1"{%if profile.bg_repeat == 1%} selected{%endif%}>No Repeat</option>
+                                <option value="2"{%if profile.bg_repeat == 2%} selected{%endif%}>Repeat</option>
+                                <option value="3"{%if profile.bg_repeat == 3%} selected{%endif%}>Repeat X</option>
+                                <option value="4"{%if profile.bg_repeat == 4%} selected{%endif%}>Repeat Y</option>
+                            </select>
+                            <select name="bg_position">
+                                <option value="1"{%if profile.bg_position == 1%} selected{%endif%}>Top</option>
+                                <option value="2"{%if profile.bg_position == 2%} selected{%endif%}>Middle</option>
+                                <option value="3"{%if profile.bg_position == 3%} selected{%endif%}>Bottom</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="middle"><label><input type="checkbox" name="bg_stretch"{%if profile.bg_stretch == 1%} checked{%endif%}> <span style="position:relative;bottom:2px">Stretch Background</span></label> <label style="margin:0 0 0 100px"><input type="checkbox" name="bg_fixed"{%if profile.bg_fixed == 1%} checked{%endif%}> <span style="position:relative;bottom:2px">Fixed Background</span></label></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="width:46%;float:left;padding-left:15px">
+                <span>Other Options</span>
+                <table cellpadding="6" cellspacing="0" style="width:100%">
+                    <tr>
+                        <td>Background Color</td>
+                        <td align="right"><input id="in_wrapper" name="inbgcolor" value="#{{profile.n_in}}" type="text" class="jscolor {mode:'HVS', hash:true, onFineChange:'in_bg(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Title Text Color</td>
+                        <td align="right"><input type="text" name="titletxtcolor" value="#{{profile.n_head_fnt}}" id="col_wrapper" class="jscolor {mode:'HVS', hash:true, onFineChange:'in_hd(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Link Color</td>
+                        <td align="right"><input type="text" id="in_link" name="inlinkcolor" value="#{{profile.links}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'in_link(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Body Text Color</td>
+                        <td align="right"><input type="text" id="in_txt" name="intxtcolor" value="#{{profile.n_in_fnt}}" class="jscolor {mode:'HVS', hash:true, onFineChange:'in_text(this)'}"></td>
+                    </tr>
+                    <tr>
+                        <td>Transparency</td>
+                        <td style="text-align:right"><input type="range" maxlength="7" min="0" max="100" step="1" name="h_trans" value="{{profile.h_trans}}" oninput="trans2 = (100 - this.value);in_bg(document.getElementById('in_wrapper').value.replace('#',''));document.getElementById('hb_v1').innerHTML = this.value+'%'" onchange="document.getElementById('hb_v1').innerHTML = this.value+'%'"><span style="position:relative;font-size: 14px;bottom: 5.5px; left:6px" id="hb_v1">{{profile.h_trans}}%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Font</td>
+                        <td style="text-align:right">
+                            <select name="ch_fnt" onchange="fntpreview()" id="ch_fnt">
+                                <option value="0"{%if profile.font == 0%} selected{%endif%}>Arial</option>
+                                <option value="1"{%if profile.font == 1%} selected{%endif%}>Georgia</option>
+                                <option value="2"{%if profile.font == 2%} selected{%endif%}>Times New Roman</option>
+                                <option value="3"{%if profile.font == 3%} selected{%endif%}>Comic Sans MS</option>
+                                <option value="4"{%if profile.font == 4%} selected{%endif%}>Impact</option>
+                                <option value="5"{%if profile.font == 5%} selected{%endif%}>Tahoma</option>
+                                <option value="6"{%if profile.font == 6%} selected{%endif%}>Courier New</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Channel Radius</td>
+                        <td style="text-align:right"><input type="range" maxlength="7" min="0" max="9" step="1" name="chn_radius" value="{{profile.chn_radius}}" oninput="$('.ob_col, .mnu_vid, .in_box, .pr_tp_pl_inf, .pr_pl_mnu').css('border-radius',this.value+'px');$('.pr_pl_title').css('border-bottom-right-radius','0');$('.pr_pl_title').css('border-top-right-radius','0');document.getElementById('hb_v4').innerHTML = this.value+'px'" onchange="$('.ob_col, .pr_pl_mnu, .in_box, .mnu_vid, .pr_tp_pl_inf').css('border-radius',this.value+'px');$('.pr_pl_title').css('border-bottom-right-radius','0');$('.pr_pl_title').css('border-top-right-radius','0');document.getElementById('hb_v4').innerHTML = this.value+'px'"><span style="position:relative;font-size: 14px;bottom: 5.5px; left:6px" id="hb_v4">{{profile.chn_radius}}px</span></td>
+                    </tr>
+                    <tr>
+                        <td>Avatar Radius</td>
+                        <td style="text-align:right"><input type="range" maxlength="7" min="0" max="9" step="1" name="avt_radius" value="{{profile.avt_radius}}" oninput="$('.pr_avt, .avt2').css('border-radius',this.value+'px');document.getElementById('hb_v3').innerHTML = this.value+'px'" onchange="$('.pr_avt, .avt2').css('border-radius',this.value+'px');document.getElementById('hb_v3').innerHTML = this.value+'px'"><span style="position:relative;font-size: 14px;bottom: 5.5px; left:6px" id="hb_v3">{{profile.avt_radius}}px</span></td>
+                    </tr>
+                </table>
+            </div>
+            </div>
+        </div>
+        </form>
+        <form action="/{{handle}}" method="POST">
+        <div class="pr_edit_box hddn" id="edit_modules">
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="comments"{%if profile.c_comments%} checked{%endif%}> Comments</label></div>
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="friends"{%if profile.c_friend%} checked{%endif%}> Friends</label></div>
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="featured_channels"{%if profile.c_featured_channels%} checked{%endif%}> Featured Channels</label></div>
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="recent"{%if profile.c_recent%} checked{%endif%}> Recent Activity</label></div>
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="subscribers"{%if profile.c_subscriber%} checked{%endif%}> Subscribers</label></div>
+            <div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="subscriptions"{%if profile.c_subscription%} checked{%endif%}> Subscriptions</label></div>
+            {%if session.user.partner%}<div style="width:32%;float:left;padding:4px"><label><input style="position:relative;top:1.5px" type="checkbox" name="custom"{%if profile.c_custom%} checked{%endif%}> Custom Box</label></div>{%endif%}
+            <div style="clear:both"></div>
+            <div style="height:10px;"></div>
+            <div style="width: 100%; border-top: 1px solid #ccc;padding-top:6px">
+                <input type="submit" value="Save Changes" name="save_modules">
+            </div>
+        </form>
+        </div>
+        <div class="pr_edit_box hddn" id="edit_vap">
+            <form action="/{{handle}}" method="POST">
+            <div style="padding: 3px 10px 0 4px;border-right:1px dotted #bbb;width:33%;float:left;height:140px;font-size:13px;">
+                <div style="margin-bottom:5px">Which content would you like to display?</div>
+                <div style="border:1px solid #bbb;padding:8px 10px 10px">
+                    <style>
+                        .show_label input {
+                            margin: 6px 7px 6px 0;
+                            position: relative;
+                            top: 1.5px
+                        }
+                    </style>
+                    <label class="show_label"><input type="checkbox" name="show_all"{%if profile.c_all == 1%} checked{%endif%}>All</label><br>
+                    <label class="show_label"><input type="checkbox" name="show_videos"{%if profile.c_videos == 1%} checked{%endif%}>My Uploads</label><br>
+                    <label class="show_label"><input type="checkbox" name="show_favorites"{%if profile.c_favorites == 1%} checked{%endif%}>My Favorites</label><br>
+                    <label class="show_label"><input type="checkbox" name="show_playlists"{%if profile.c_playlists == 1%} checked{%endif%}>My Playlists</label>
+                </div>
+            </div>
+            <div style="padding: 0 10px 0 10px;border-right:1px dotted #bbb;width:31%;float:left;height:143px;font-size:13px;line-height:23px">
+                Featured Layout<br>
+                <select name="pl_layout" style="width:180px;padding:2px;">
+                    <option value="0"{%if profile.default_view == 0%} selected{%endif%}>Player View</option>
+                    <option value="1"{%if profile.default_view == 1%} selected{%endif%}>Grid View</option>
+                </select>
+                <br>
+                <br>
+                <br>
+                Featured Video<br>
+                <select name="ft_video" style="width:180px;padding:2px;" onchange="$('#f_cha').toggleClass('hddn')">
+                    <option{%if profile.c_featured%} selected{%endif%} value="1">Most Recent Video</option>
+                    <option{%if profile.default_view%} selected{%endif%} value="0">Custom Video</option>
+                </select>
+            </div>
+            <div style="padding: 0 10px 0 0;width:30%;float:left;">
+                <div id="f_cha"{%if profile.c_featured%} class="hddn"{%endif%} style="padding:5px 0 0 10px">
+                    Featured Video
+                    <div style="margin: 18px 0 13px">
+                        <div style="margin-bottom:4px">For Non-Subscribers</div>
+                        <input type="url" style="width:225px" name="n_url" value="{%if profile.featured_n_url != ''%}/watch?v={{profile.featured_n_url}}{%endif%}" placeholder="/watch?v=..." maxlength="128" autocomplete="off">
+                    </div>
+                    <div>
+                        <div style="margin-bottom:4px">For Subscribers</div>
+                        <input type="url" style="width:225px" name="s_url" value="{%if profile.featured_s_url != ''%}/watch?v={{profile.featured_s_url}}{%endif%}" placeholder="/watch?v=..." maxlength="128" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+            <div style="height:10px;"></div>
+            <div style="width: 100%; border-top: 1px solid #ccc;padding-top:6px">
+                <input type="submit" value="Save Changes" name="save_players">
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>$("#modules").trigger("click");</script>
+{%endif%}
+<div id="channel-body" class="jsloaded" style="min-height: 891px;">
+    <div id="channel-base-div">
+        <div class="inner-box" id="global-messages" style="z-index:0;display:none"></div>
+        <div id="user_playlist_navigator" class="outer-box yt-rounded">
+            <div id="playnav-channel-header" class="inner-box-bg-color">
+                {%if videos.count > 0%}
+                <div id="playnav-navbar-toggle">
+                    <a title="Switch to Grid View" href="javascript:;" onmousedown="playnav.selectView('grid');" id="gridview-icon" class="view-button">
+                        <div class="contents">
+                            <div class="a yt xl"></div>
+                            <div class="a yt xc"></div>
+                            <div class="a yt xr"></div>
+                            <div class="a yc xl"></div>
+                            <div class="a yc xc"></div>
+                            <div class="a yc xr"></div>
+                            <div class="a yb xl"></div>
+                            <div class="a yb xc"></div>
+                            <div class="a yb xr"></div>
+                        </div>
+                    </a>
+                    <a title="Switch to Player View" href="javascript:;" onmousedown="playnav.selectView('play');" id="playview-icon" class="view-button view-button-selected">
+                        <div class="contents">
+                            <div class="a box"></div>
+                            <div class="a tri"></div>
+                            <div class="a yt"></div>
+                            <div class="a yc"></div>
+                            <div class="a yb"></div>
+                        </div>
+                    </a>
+			    </div>
+                {%endif%}
+                <div id="playnav-title-bar">
+                    <div id="playnav-channel-name" class="outer-box-bg-color">
+                        <div class="channel-thumb-holder outer-box-color-as-border-color">
+                            <div class="user-thumb-semismall">
+                                <div>
+                                    <img id="" src="/vi/ava/{{profile.displayname}}.jpg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="float:left;padding:0.4em;">
+                            <div class="channel-title outer-box-color" style="{%if profile.channel_title == ''%}display:none{%endif%}" id="channel_title">{{profile.channel_title}}</div>
+                            <div class="channel-title outer-box-color" style="{%if profile.channel_title == ''%}padding:9px 0 0 0{%else%}font-size:11px{%endif%}" id="channel_base_title">{{profile.displayname}}'s Channel</div>
+                        </div>
+                        <div style="float:left;padding-top:10px;_display:inline" id="subscribe-buttons">
+							<div id="subscribe_user_playlist_navigator" class="subscribe-div">
+                                <a class="yt-button yt-button-urgent sub_button" id="" style="" href="#" onclick="">
+                                    <span>Subscribe</span>
+                                </a>
+                            </div>
+				        </div>
+                    </div>
+                    <div id="playnav-chevron">&nbsp;</div>
+                </div>
+                <div id="playnav-navbar">
+                    <table>
+                        <tbody>
+                            <tr>
+                                {%if videos.count > 0%}
+                                <td>
+                                    <a class="navbar-tab inner-box-link-color navbar-tab-selected" id="playnav-navbar-tab-all" href="javascript:;" onmousedown="playnav.selectTab('all');yt.analytics.trackEvent('menu', 'all');">All</a>
+                                </td>
+                                <td>
+                                    <a class="navbar-tab inner-box-link-color" id="playnav-navbar-tab-uploads" href="javascript:;" onmousedown="playnav.selectTab('uploads');yt.analytics.trackEvent('menu', 'uploads');">Uploads</a>
+                                </td>
+                                <td>
+                                    <a class="navbar-tab inner-box-link-color" id="playnav-navbar-tab-favorites" href="javascript:;" onmousedown="playnav.selectTab('favorites');yt.analytics.trackEvent('menu', 'favorites');">Favorites</a>
+                                </td>
+                                {%else%}
+                                <td style="padding: 5px;">
+                                    {{profile.displayname}} has no videos available
+                                </td>
+                                {%endif%}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cb"></div>
+            </div>
+            <div id="subscribeMessage" class="hid">&nbsp;</div>
+            <div id="user_playlist_navigator-messages" style="color:#333;display:none"></div>
+            <script type="text/javascript">
+                yt.setConfig({
+                    'SWF_SET_WMODE': true,
+                    'SWF_AD_EURL': '{{handle}}'
+                });
+                playnav.setVideoId('{{featured_video.url}}'); // real vId
+                window.defaultPlaylistName = 'all'; // to regulate
+                window.isLoggedIn = {%if session.user.id != -1%}true{%else%}false{%endif%};
+            </script>
+            {%if videos.count > 0%}
+            <div id="playnav-body">
+                <div id="playnav-player" class="playnav-player-container" style="visibility: visible;">
+                    <div id="profile-noplayer-div" style="">
+                        Hello, you either have JavaScript turned off or an old version of Adobe's Flash Player. <a href="http://www.adobe.com/go/getflashplayer/" target="_blank">Get the latest Flash player</a>.
+                    </div>
+                    {%if featured_video is defined%}
+                    {%set player_video = featured_video%}
+                    {%set player_skin = "2009"%}
+                    {%include "nouveau/player.html"%}
+                    {%endif%}
+                </div>
+                <script type="text/javascript">
+                    var featuredVideoMetadata = {"swf_args": {"el": "profilepage", "showinfo": "0", "allow_embed": "1", "fmt_stream_map": "/", "fmt_url_map": "/", "allow_ratings": "1", "keywords": "Armenia+Tv%2CNews%2CLurer", "track_embed": "0", "ps": "as3", "fmt_list": "35%2F640000%2F9%2F0%2F115%2C34%2F0%2F9%2F0%2F115%2C5%2F0%2F7%2F0%2F0", "author": "{{profile.displayname}}", "muted": "0", "lpbb": "http%3A%2F%2Fs.ytimg.com%2Fyt%2Fswf%2Flpbb-vfl54521.swf", "length_seconds": "615", "rel": "0", "plid": "AASCmd_cvxj6dUSC", "ftoken": "", "status": "ok", "fs": "1", "watermark": "http%3A%2F%2Fs.ytimg.com%2Fyt%2Fswf%2Flogo-vfl106645.swf%2Chttp%3A%2F%2Fs.ytimg.com%2Fyt%2Fswf%2Fhdlogo-vfl100714.swf", "lpbf": "http%3A%2F%2Fs.ytimg.com%2Fyt%2Fswf%2Flpbf-vfl54521.swf", "timestamp": "1269497304", "fmt_map": "35%2F640000%2F9%2F0%2F115%2C34%2F0%2F9%2F0%2F115%2C5%2F0%2F7%2F0%2F0", "hl": "en_US", "eurl": "{{handle}}", "iurl": "/vi/{{featured_video.url}}/hqredefault.jpg", "vq": "None", "ss": "1", "referrer": "None", "avg_rating": "0.0", "video_id": "{{featured_video.url}}", "sk": "Qp_qRZfrwdhzgeQeGHBEogWdJMR9zHZZC", "token": "vjVQa1PpcFOXHBiul7_Q8uE8g6E2Vi03uxi_FxVrQAw%3D", "thumbnail_url": "/vi/{{featured_video.url}}/default.jpg", "showsearch": "0", "autoplay": "0"}, "swf_url": "https://web.archive.org/web/20100325060824/http://s.ytimg.com/yt/swf/watch_as3-vfl155676.swf", "info_panel_html": "<div id='playnav-curvideo-rating'>\n\t\t\n\n\t\t<script language=\"javascript\">\n\n\n\t\tdocument.getElementById('playnav-curvideo-rating').onmouseover = function() { _hidediv('defaultRatingMessage'); _showdiv('hoverMessage'); };\n\t\tdocument.getElementById('playnav-curvideo-rating').onmouseout = function() { _showdiv('defaultRatingMessage'); _hidediv('hoverMessage'); };\n \t\n\t\t<\/script>\n\n<div id=\"ratingWrapper\"><div class=\"floatL\" onclick=\"yt.analytics.urchinTracker('/Events/VideoWatch/Rated');\"><div id=\"ratingMessage\" class=\"floatL\"><div id=\"defaultRatingMessage\"><span class=\"smallText\">0 ratings</span></div><div id=\"hoverMessage\" style=\"width:100%\" class=\"hid\"><a href=\"/login?next=user/{{profile.displayname}}\">Sign in</a> to rate</div></div><div id=\"ratingStars\" class=\"floatL\">\n<button class=\"master-sprite ratingL ratingL-0.0\" title=\"0.0\"></button></div></div></div>\n\n\t</div>\n\n\t<div id='playnav-curvideo-title' class='inner-box-title' >\n\n\t\t<span style=\"cursor:pointer;margin-right:7px\"\t\t\t\tonclick=\"document.location.href='/watch?v={{featured_video.url}}'\"\t\t\t\tonmouseover=\"this.style.textDecoration='underline'\"\t\t\t\tonmouseout=\"this.style.textDecoration='none'\">\n\t\t\t{{featured_video.title}}\n\t\t</span>\n\t</div>\n\t\t\t\n\t\n\t<div id='playnav-curvideo-info-line'>\n\t\t\n\t\tFrom: <span id='playnav-curvideo-channel-name'><a href=\"{{handle}}\">{{profile.displayname}}</a></span>&nbsp;|\n\t\t{{featured_video.uploaded_on|date('M d, Y')}}&nbsp;|\n\t\t<span id='playnav-curvideo-view-count'>{{featured_video.displayviews}} views</span>\n\t</div>\n\n\t<div class=\"cb\"></div>\n\t\n\t<div id='playnav-curvideo-description-container'>\n\t\t<div id='playnav-curvideo-description' >{{featured_video.description|e('js')}}\n\t\t\t<div id=\"playnav-curvideo-description-more-holder\">\n\t\t\t\t<div id=\"playnav-curvideo-description-more\" class=\"inner-box-bg-color\">\n\t\t\t\t\t...&nbsp;<a class=\"channel-cmd\" href=\"javascript:;\" onclick=\"playnav.toggleFullVideoDescription(true)\">(more info)</a>&nbsp;&nbsp;\n\t\t\t\t</div>\t\t\t\n\t\t\t\t<div class=\"cb\"></div>\t\t\t\n\t\t\t</div>\n\t\t\t<span id=\"playnav-curvideo-description-less\">\n\t\t\t\t<a href=\"javascript:;\" class=\"channel-cmd\" onclick=\"playnav.toggleFullVideoDescription(false)\">(less info)</a>\n\t\t\t</span>\n\t\t</div>\n\t</div>\n\t\n\t<a href=\"/watch?v={{featured_video.url}}\" id=\"playnav-watch-link\" onclick=\"playnav.goToWatchPage()\">View comments, related videos, and more</a>\n\t\n\t\n\t<div id='playnav-curvideo-controls'>\n\t</div>\n\t\n\t<div class=\"cb\"></div>\n\t\n\t<script>\n\t\tif (_gel('playnav-curvideo-description').offsetHeight > 28) {\n\t\t\t_gel('playnav-curvideo-description-more-holder').style.display = 'block';\n\t\t}\n\t<\/script>"};
+                    playnav.setInitialView('play');
+                    playnav.setInitialTab('all');
+                    playnav.handleVideoMetadata("{{featured_video.url}}", featuredVideoMetadata, true);
+                </script>
+                <div id="playnav-playview" class="" style="display: block;">
+                    <div id="playnav-player-restricted" class="inner-box-colors" style="display: none">
+                        <div id="playnav-inner-restricted">
+                            <div id="playnav-restricted-title-div"><h3 id="playnav-restricted-title"></h3></div>
+                            <div id="playnav-login-required" class="playnav-restricted-msg">
+                                <h3>You must be <a class="playnav-restricted-link" href="">logged in</a> to view this video.</h3>
+                            </div>
+                            <div id="playnav-controversy" class="playnav-restricted-msg">
+                                <h3>
+                                    The following content has been identified by the {{config.title}} community as being potentially offensive or
+                                    inappropriate. Viewer discretion is advised. Please
+                                    <a class="playnav-restricted-link" href="">confirm</a> that you wish to view this video.
+                                </h3>
+                            </div>
+                            <div id="playnav-verify-age" class="playnav-restricted-msg">
+                                <h3>
+                                    This video or group may contain content that is inappropriate for some users, as flagged by {{config.title}}'s
+                                    user community. Please <a class="playnav-restricted-link" href="">confirm</a> that you wish to view this
+                                    video.
+                                </h3>
+                            </div>
+                            <div id="playnav-unavailable" class="playnav-restricted-msg">
+                                <h3>This video is unavailable.</h3>
+                            </div>
+                            <div id="playnav-rental" class="playnav-restricted-msg">
+                                <a class="playnav-restricted-link" href="">This featured video is available for rental by clicking here.</a>
+                            </div>
+                            <div id="playnav-custom-error-message" class="playnav-restricted-msg"></div>
+                        </div>
+                    </div>
+                    <div id="playnav-left-panel" style="display: block">
+                        <div class="playnav-player-container"></div>
+                        <div id="playnav-video-details">
+                            <div id="playnav-bottom-links">
+                                <div id="playnav-bottom-links-clip">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td id="playnav-panel-tab-info" class="panel-tab-selected">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div class="playnav-panel-tab-icon" id="panel-icon-info" onmouseover="_addclass(_gel('playnav-panel-tab-info'), 'panel-tab-hovered')" onmouseout="_removeclass(_gel('playnav-panel-tab-info'), 'panel-tab-hovered')" onmousedown="playnav.selectPanel('info')"
+                                                                    ></div>
+                                                                    <div class="playnav-bottom-link" id="info-bottom-link">
+                                                                        <a href="javascript:;" onmouseover="_addclass(_gel('playnav-panel-tab-info'), 'panel-tab-hovered')" onmouseout="_removeclass(_gel('playnav-panel-tab-info'), 'panel-tab-hovered')" onmousedown="playnav.selectPanel('info')">Info</a>
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td id="playnav-panel-tab-comments">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div
+                                                                        class="playnav-panel-tab-icon"
+                                                                        id="panel-icon-comments"
+                                                                        onmouseover="_addclass(_gel('playnav-panel-tab-comments'), 'panel-tab-hovered')"
+                                                                        onmouseout="_removeclass(_gel('playnav-panel-tab-comments'), 'panel-tab-hovered')"
+                                                                        onmousedown="playnav.selectPanel('comments')"
+                                                                    ></div>
+                                                                    <div class="playnav-bottom-link" id="comments-bottom-link">
+                                                                        <a
+                                                                            href="javascript:;"
+                                                                            onmouseover="_addclass(_gel('playnav-panel-tab-comments'), 'panel-tab-hovered')"
+                                                                            onmouseout="_removeclass(_gel('playnav-panel-tab-comments'), 'panel-tab-hovered')"
+                                                                            onmousedown="playnav.selectPanel('comments')"
+                                                                            >Comments</a
+                                                                        >
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td id="playnav-panel-tab-favorite">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div class="playnav-panel-tab-icon" id="panel-icon-favorite" onmouseover="_addclass(_gel('playnav-panel-tab-favorite'), 'panel-tab-hovered')" onmouseout="_removeclass(_gel('playnav-panel-tab-favorite'), 'panel-tab-hovered')" onmousedown="playnav.selectPanel('favorite')"></div>
+                                                                    <div class="playnav-bottom-link" id="favorite-bottom-link">
+                                                                        <a href="javascript:;" onmouseover="_addclass(_gel('playnav-panel-tab-favorite'), 'panel-tab-hovered')" onmouseout="_removeclass(_gel('playnav-panel-tab-favorite'), 'panel-tab-hovered')" onmousedown="playnav.selectPanel('favorite')">Favorite</a>
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td id="playnav-panel-tab-share">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div
+                                                                        class="playnav-panel-tab-icon"
+                                                                        id="panel-icon-share"
+                                                                        onmouseover="_addclass(_gel('playnav-panel-tab-share'), 'panel-tab-hovered')"
+                                                                        onmouseout="_removeclass(_gel('playnav-panel-tab-share'), 'panel-tab-hovered')"
+                                                                        onmousedown="playnav.selectPanel('share')"
+                                                                    ></div>
+                                                                    <div class="playnav-bottom-link" id="share-bottom-link">
+                                                                        <a
+                                                                            href="javascript:;"
+                                                                            onmouseover="_addclass(_gel('playnav-panel-tab-share'), 'panel-tab-hovered')"
+                                                                            onmouseout="_removeclass(_gel('playnav-panel-tab-share'), 'panel-tab-hovered')"
+                                                                            onmousedown="playnav.selectPanel('share')"
+                                                                            >Share</a
+                                                                        >
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td id="playnav-panel-tab-playlists">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div
+                                                                        class="playnav-panel-tab-icon"
+                                                                        id="panel-icon-playlists"
+                                                                        onmouseover="_addclass(_gel('playnav-panel-tab-playlists'), 'panel-tab-hovered')"
+                                                                        onmouseout="_removeclass(_gel('playnav-panel-tab-playlists'), 'panel-tab-hovered')"
+                                                                        onmousedown="playnav.selectPanel('playlists')"
+                                                                    ></div>
+                                                                    <div class="playnav-bottom-link" id="playlists-bottom-link">
+                                                                        <a
+                                                                            href="javascript:;"
+                                                                            onmouseover="_addclass(_gel('playnav-panel-tab-playlists'), 'panel-tab-hovered')"
+                                                                            onmouseout="_removeclass(_gel('playnav-panel-tab-playlists'), 'panel-tab-hovered')"
+                                                                            onmousedown="playnav.selectPanel('playlists')"
+                                                                            >Playlists</a
+                                                                        >
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                                <td id="playnav-panel-tab-flag">
+                                                    <table class="panel-tabs">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="panel-tab-title-cell">
+                                                                    <div
+                                                                        class="playnav-panel-tab-icon"
+                                                                        id="panel-icon-flag"
+                                                                        onmouseover="_addclass(_gel('playnav-panel-tab-flag'), 'panel-tab-hovered')"
+                                                                        onmouseout="_removeclass(_gel('playnav-panel-tab-flag'), 'panel-tab-hovered')"
+                                                                        onmousedown="playnav.selectPanel('flag')"
+                                                                    ></div>
+                                                                    <div class="playnav-bottom-link" id="flag-bottom-link">
+                                                                        <a
+                                                                            href="javascript:;"
+                                                                            onmouseover="_addclass(_gel('playnav-panel-tab-flag'), 'panel-tab-hovered')"
+                                                                            onmouseout="_removeclass(_gel('playnav-panel-tab-flag'), 'panel-tab-hovered')"
+                                                                            onmousedown="playnav.selectPanel('flag')"
+                                                                            >Flag</a
+                                                                        >
+                                                                    </div>
+                                                                    <div class="spacer">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="panel-tab-indicator-cell inner-box-opacity">
+                                                                    <div class="panel-tab-indicator-arrow"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="cb"></div>
+                                <div class="playnav-video-panel inner-box-colors border-box-sizing">
+                                    <div id="playnav-video-panel-inner" class="border-box-sizing" style="overflow: auto">
+                                        <div id="playnav-panel-info" class="scrollable" style="display: block">
+                                            <div id="playnav-curvideo-rating">
+                                                <script language="javascript">
+                                                    document.getElementById("playnav-curvideo-rating").onmouseover = function () {
+                                                        _hidediv("defaultRatingMessage");
+                                                        _showdiv("hoverMessage");
+                                                    };
+                                                    document.getElementById("playnav-curvideo-rating").onmouseout = function () {
+                                                        _showdiv("defaultRatingMessage");
+                                                        _hidediv("hoverMessage");
+                                                    };
+                                                </script>
+                                                <div id="ratingWrapper">
+                                                    <div class="floatL" onclick="yt.analytics.urchinTracker('/Events/VideoWatch/Rated');">
+                                                        <div id="ratingMessage" class="floatL">
+                                                            <div id="defaultRatingMessage"><span class="smallText">0 ratings</span></div>
+                                                            {%if session.user.id == -1%}
+                                                            <div id="hoverMessage" style="width: 100%" class="hid">
+                                                                <a href="/login?next=user/{{profile.displayname}}">Sign in</a>
+                                                                to rate
+                                                            </div>
+                                                            {%endif%}
+                                                        </div>
+                                                        <div id="ratingStars" class="floatL">
+                                                            <button class="master-sprite ratingL ratingL-0.0" title="0.0"></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="playnav-curvideo-title" class="inner-box-title">
+                                                <span style="cursor: pointer; margin-right: 7px" onclick="document.location.href='/watch?v={{featured_video.url}}'" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                                                    {{featured_video.title}}
+                                                </span>
+                                            </div>
+                                            <div id="playnav-curvideo-info-line">
+                                                From:
+                                                <span id="playnav-curvideo-channel-name">   <a href="{{handle}}">{{profile.displayname}}</a></span>&nbsp;| {{featured_video.uploaded_on|date("M d, Y")}}&nbsp;|
+                                                <span id="playnav-curvideo-view-count">{{featured_video.displayviews}} views</span>
+                                            </div>
+                                            <div class="cb"></div>
+                                            <div id="playnav-curvideo-description-container">
+                                                <div id="playnav-curvideo-description">
+                                                    {{featured_video.description}}
+                                                    <div id="playnav-curvideo-description-more-holder">
+                                                        <div id="playnav-curvideo-description-more" class="inner-box-bg-color">
+                                                            ...&nbsp;
+                                                            <a class="channel-cmd" href="javascript:;" onclick="playnav.toggleFullVideoDescription(true)">(more info)</a>&nbsp;&nbsp;
+                                                        </div>
+                                                        <div class="cb"></div>
+                                                    </div>
+                                                    <span id="playnav-curvideo-description-less">
+                                                        <a href="javascript:;" class="channel-cmd" onclick="playnav.toggleFullVideoDescription(false)">(less info)</a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <a href="/watch?v={{featured_video.url}}" id="playnav-watch-link" onclick="playnav.goToWatchPage()">View comments, related videos, and more</a>
+                                            <div id="playnav-curvideo-controls"></div>
+                                            <div class="cb"></div>
+                                            <script>
+                                                if (_gel("playnav-curvideo-description").offsetHeight > 28) {
+                                                    _gel("playnav-curvideo-description-more-holder").style.display = "block";
+                                                }
+                                            </script>
+                                        </div>
+                                        <div id="playnav-panel-comments" class="hid"></div>
+                                        <div id="playnav-panel-favorite" class="hid"></div>
+                                        <div id="playnav-panel-share" class="hid scrollable"></div>
+                                        <div id="playnav-panel-playlists" class="hid"></div>
+                                        <div id="playnav-panel-flag" class="hid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="playnav-play-panel">
+                        {#
+                        <div id="watch-longform-ad" style="display: none">
+                            <div id="watch-longform-text">Advertisement</div>
+                            <div id="watch-longform-ad-placeholder">
+                                <img src="https://web.archive.org/web/20100325060824im_/http://s.ytimg.com/yt/img/pixel-vfl73.gif" height="60" width="300"/>
+                            </div>
+                            <div id="instream_google_companion_ad_div" style="visibility: hidden; overflow: hidden; width: 300px; height: 80px"></div>
+                        </div>
+                        #}
+                        <div id="watch-channel-brand-div" style="display: none">
+                            <div id="ad300x250" class="alignC"></div>
+                            <div id="google_companion_ad_div" class="alignC" style="visibility: hidden"></div>
+                            <div class="alignC grayText inner-box-colors" style="font-size: 10px; padding-top: 3px">Advertisement</div>
+                        </div>
+                        <div id="playnav-play-content" style="height: 595px">
+                            <div class="playnav-playlist-holder" id="playnav-play-playlist-all-holder">
+                                <div id="playnav-play-all-scrollbox" class="scrollbox-wrapper inner-box-colors">
+                                    <div class="scrollbox-content playnav-playlist-all">
+                                        <div class="scrollbox-body" style="height: 585px; zoom: 1">
+                                            <div class="outer-scrollbox" onscroll="playnav.updateScrollbox('playnav-play-all-scrollbox');">
+                                                <div id="playnav-play-all-items" class="inner-scrollbox">
+                                                    <input type="hidden" id="playnav-playlist-uploads-count" value="1108" />
+                                                    <div class="playnav-playlist-header">
+                                                        <a
+                                                            href="javascript:;"
+                                                            style="text-decoration: none"
+                                                            onclick="playnav.selectTab('uploads')"
+                                                            class="title title-text-color"
+                                                        >
+                                                            <span id="playnav-playlist-uploads-all-title" class="title">Uploads</span>
+                                                            ({{profile.videos}})
+                                                        </a>
+                                                    </div>
+                                                    {%if profile.videos > 0%}
+                                                    {%for i in 0..(profile.videos > 3 ? 3 : profile.videos) - 1%}
+                                                    {%set video = videos.data[i]%}
+                                                    <div id="playnav-video-play-uploads-all-{{i}}-{{video.url}}" class="playnav-item playnav-video">
+                                                        <div style="display: none" class="encryptedVideoId">{{video.url}}</div>
+                                                        <div id="playnav-video-play-uploads-all-{{i}}-{{video.url}}-selector" class="selector"></div>
+                                                        <div class="content">
+                                                            <div class="playnav-video-thumb link-as-border-color">
+                                                                <a class="video-thumb-90 no-quicklist" href="/watch?v={{video.url}}" onclick="playnav.playVideo('uploads-all','0','{{video.url}}');return false;">
+                                                                    <img
+                                                                        title="{{video.title}}"
+                                                                        src="/vi/{{video.url}}/hqresdefault.jpg"
+                                                                        class="vimg90 yt-uix-hovercard-target"
+                                                                        alt="{{video.title}}"
+                                                                    />
+                                                                    <span id="video-run-time-{{video.url}}" class="video-time"><span>{{secondsToTime(video.length)}}</span></span>
+                                                                </a>
+                                                            </div>
+                                                            <div class="playnav-video-info">
+                                                                <a
+                                                                    href="/watch?v={{video.title}}"
+                                                                    class="playnav-item-title ellipsis"
+                                                                    onclick="playnav.playVideo('uploads-all', '{{i}}', '{{video.url}}');return false;"
+                                                                    id="playnav-video-title-play-uploads-all-{{i}}-{{video.url}}"
+                                                                    ><span>{{video.title}}</span></a
+                                                                >
+                                                                <div class="metadata">{{video.displayviews}} views - {{ago(video.uploaded_on)}}</div>
+                                                                <div style="display: none" id="playnav-video-play-uploads-all-0">
+                                                                    {{video.url}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {%endfor%}
+                                                    <div class="playnav-play-column-all" style="margin-top: 6px;">
+                                                        <div class="playnav-more">
+                                                            <a class="channel-cmd" href="javascript:;" onclick="playnav.selectTab('uploads');">see all</a>
+                                                        </div>
+                                                    </div>
+                                                    {%endif%}
+                                                    <div class="spacer">&nbsp;</div>
+                                                    <div class="scrollbox-separator">
+                                                        <div class="outer-box-bg-as-border"></div>
+                                                    </div>
+                                                    <input type="hidden" id="playnav-playlist-favorites-count" value="0" />
+                                                    <div class="playnav-playlist-header">
+                                                        <a href="javascript:;" style="text-decoration: none" onclick="playnav.selectTab('favorites')" class="title title-text-color">
+                                                            <span id="playnav-playlist-favorites-all-title" class="title">Favorites</span>
+                                                            ({{favorites.count}})
+                                                        </a>
+                                                    </div>
+                                                    {%if favorites.count > 0%}
+                                                    {%for i in 0..(favorites.count > 3 ? 3 : favorites.count) - 1%}
+                                                    {%set video = favorites.data[i]%}
+                                                    <div id="playnav-video-play-favorites-all-{{i}}-{{video.url}}" class="playnav-item playnav-video">
+		                                                <div style="display:none" class="encryptedVideoId">{{video.url}}</div>
+                                                        <div id="playnav-video-play-favorites-all-{{i}}-{{video.url}}-selector" class="selector"></div>
+                                                        <div class="content">
+                                                            <div class="playnav-video-thumb link-as-border-color">
+                                                                <a class="video-thumb-90 no-quicklist" href="/watch?v={{video.url}}" onclick="playnav.playVideo('uploads-all','0','{{video.url}}');return false;">
+                                                                    <img
+                                                                        title="{{video.title}}"
+                                                                        src="/vi/{{video.url}}/hqresdefault.jpg"
+                                                                        class="vimg90 yt-uix-hovercard-target"
+                                                                        alt="{{video.title}}"
+                                                                    />
+                                                                    <span id="video-run-time-{{video.url}}" class="video-time"><span>{{secondsToTime(video.length)}}</span></span>
+                                                                </a>
+                                                            </div>
+                                                            <div class="playnav-video-info">
+                                                                <a
+                                                                    href="/watch?v={{video.title}}"
+                                                                    class="playnav-item-title ellipsis"
+                                                                    onclick="playnav.playVideo('uploads-all', '{{i}}', '{{video.url}}');return false;"
+                                                                    id="playnav-video-title-play-uploads-all-{{i}}-{{video.url}}"
+                                                                    ><span>{{video.title}}</span></a
+                                                                >
+                                                                <div class="metadata">{{video.views}} views - {{ago(video.uploaded_on)}}</div>
+                                                                <div style="display: none" id="playnav-video-play-uploads-all-0">
+                                                                    {{video.url}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {%endfor%}
+                                                    <div class="playnav-play-column-all" style="margin-top: 6px;">
+                                                        <div class="playnav-more">
+                                                            <a class="channel-cmd" href="javascript:;" onclick="playnav.selectTab('favorites');">see all</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacer">&nbsp;</div>
+                                                    {%endif%}
+                                                    <div class="scrollbox-separator">
+                                                        <div class="outer-box-bg-as-border"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="playnav-play-loading" class="loading">
+                        <div class="cover outer-box-bg-color"></div>
+                        <div class="image-holder">
+                            <div class="image-holder-middle">
+                                <div class="image-holder-inner">
+                                    <img src="https://web.archive.org/web/20100325060824im_/http://s.ytimg.com/yt/img/icn_loading_animated-vfl24663.gif">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="playnav-gridview" class="" style="display: none;">
+                    <div id="playnav-grid-panel">
+                        <div id="playnav-grid-content"> </div>
+                    </div>
+                    <div id="playnav-grid-loading" class="loading">
+                        <div class="cover outer-box-bg-color"></div>
+                        <div class="image-holder">
+                            <div class="image-holder-middle">
+                                <div class="image-holder-inner">
+                                    <img src="https://web.archive.org/web/20100325060824im_/http://s.ytimg.com/yt/img/icn_loading_animated-vfl24663.gif">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            <script type="text/javascript">
+                yt.pubsub.subscribe('init', function() { playnav.initDom(); });
+            </script>
+        </div>
+        <div style="display: none">
+			<div id="playnav-spinny-graphic">
+                <img src="https://web.archive.org/web/20100325060824im_/http://s.ytimg.com/yt/img/icn_loading_animated-vfl24663.gif" style="text-align:center; padding:30px 280px">
+            </div>
+            <div id="playnav-centered-spinny-graphic">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="vertical-align:top; text-align: center">
+                                <img src="https://web.archive.org/web/20100325060824im_/http://s.ytimg.com/yt/img/icn_loading_animated-vfl24663.gif" style="text-align:center; padding:30px 300px">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+	    </div>
+        <div style="display: none" id="playnav-debug-log">---</div>
+        <div class="outer-box" id="main-channel-content" style="z-index: 0">
+            <div class="left-column" id="main-channel-left">
+                <div class="inner-box">
+                    <div style="float: left; padding: 0 4px 4px 0" class="link-as-border-color">
+                        <div class="user-thumb-xlarge link-as-border-color">
+                            <div>
+                                <a href="{{handle}}">
+                                    <img id="" src="/vi/ava/{{profile.displayname}}.jpg" alt="{{profile.displayname}}"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float: left; width: 170px">
+                        {% set len = profile.displayname|length %}
+                        {% set size = 150 - max(0, len - 18) * 10 %}
+                        {% set size = max(100, size) %}
+                        <div class="box-title title-text-color" title="{{profile.displayname}}" style="float: none; padding-left: 4px; margin-top: -2px; width: 170px; overflow: hidden; font-size: {{size}}%">
+                            {{profile.displayname}}
+                        </div>
+                        <div style="whitespace: no-wrap; position: relative; width: 170px">
+                            {%if owner%}
+                            <div class="opacity70" style="padding-left: 8px;width:170px">Your channel viewers will see links here, including "subscribe" and "add as friend".</div>
+                            {%else%}
+                            <div>
+                                <div id="subscribe_user_profile" class="subscribe-div">
+                                    <a class="yt-button yt-button-urgent" id="" style="" href="#" onclick=""><span>Subscribe</span></a>
+                                </div>
+                                <div class="cb"></div>
+                            </div>
+                            <div style="padding: 4px">
+                                {%if session.username == -1%}
+                                <span class="nowrap"><a href="/login?next=user/{{profile.displayname}}">Add as Friend</a>&nbsp;|&nbsp;</span>
+                                {%else%}
+                                <span id="aProfileAddFriend" class="nowrap"><a href="#" onclick="add_friend('{{profile.displayname}}'); return false;">Add as Friend</a>&nbsp;|&nbsp;</span>
+                                <span id="aProfileRemoveFriend" class="nowrap" style="display: none;"><a href="#" onclick="remove_friend('{{profile.displayname}}'); return false;">Remove Friend</a>&nbsp;|&nbsp;</span>
+                                <span id="aProfileInvitedFriend" class="nowrap" style="display: none;"><a href="#" onclick="add_friend('{{profile.displayname}}'); return false;">Accept Invite</a>&nbsp;|&nbsp;</span>
+                                <span id="aProfileRemoveFriend" class="nowrap" style="display: none;"><a href="#" onclick="remove_friend('{{profile.displayname}}'); return false;">Cancel Invite</a>&nbsp;|&nbsp;</span>
+                                {%endif%}
+                                <span class="nowrap"><a id="aProfileBlockUser" href="#" onclick="yt.www.watch.user.blockUserLink('{{featured_video.url ?? ''}}', '{{handle}}');return false;">Block User</a>&nbsp;|&nbsp;</span>
+                                <span class="nowrap">
+                                    <a id="aProfileSendMsg" href="/inbox?page=send_message&to={{profile.displayname}}">Send Message</a>
+                                </span>
+                            </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div id="position-edit-subscription-in-channel"></div>
+                    <div class="cb"></div>
+                </div>
+                <div class="inner-box" id="user_profile">
+                    <div style="float:left;" class="box-title title-text-color">Profile</div>
+                    <div style="float:right;;_display:inline;white-space:nowrap">
+                        {%if owner%}
+                        <a href="#" class="channel-cmd">edit</a>
+                        {%endif%}
+                    </div>
+                    <div class="cb"></div>
+                    <div id="user_profile-body">
+                        <div id="user_profile-messages" style="color: #333; margin: 1em; padding: 1em; display: none;"></div>
+                        <div class="edit_info spacer">&nbsp;</div>
+                        <div class="profile_info">
+                            {%if profile.name != ""%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Name:</div>
+                                <div style="float: right" id="profile_show_first_name">{{profile.name}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            {%endif%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Channel Views:</div>
+                                <div style="float: right" id="profile_show_viewed_count">{{profile.channel_views}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Total Upload Views:</div>
+                                <div style="float: right" id="profile_show_total_video_views">{{profile.video_views}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            {%if profile.channel_type%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Style:</div>
+                                <div style="float: right" id="profile_show_genre">
+                                    {%if profile.channel_type == 1%}
+                                    Director
+                                    {%elseif profile.channel_type == 2%}
+                                    Musician
+                                    {%elseif profile.channel_type == 3%}
+                                    Comedian
+                                    {%elseif profile.channel_type == 4%}
+                                    Gamer
+                                    {%elseif profile.channel_type == 5%}
+                                    Reporter
+                                    {%elseif profile.channel_type == 6%}
+                                    Guru
+                                    {%elseif profile.channel_type == 7%}
+                                    Animator
+                                    {%else%}
+                                    ---
+                                    {%endif%}
+                                </div>
+                                <div class="cb"></div>
+                            </div>
+                            {%endif%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Age:</div>
+                                <div style="float: right" id="profile_show_age">{{profile.age}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Joined:</div>
+                                <div style="float: right" id="profile_show_member_since">{{profile.reg_date|date("F d, Y")}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Last Sign In:</div>
+                                <div style="float: right" id="profile_show_last_login">{{ago(profile.last_login)}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Subscribers:</div>
+                                <div style="float: right" id="profile_show_subscriber_count">{{profile.subscribers}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            {%if profile.website != ""%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Website:</div>
+                                <div style="float: right">
+                                    <a href="{{profile.website}}" target="_blank">{{profile.website}}</a>
+                                </div>
+                                <div class="cb"></div>
+                            </div>
+                            {%endif%}
+                            {%if profile.channel_description != ""%}
+                            <div class="show_info outer-box-bg-as-border" style="border-bottom-width: 1px; margin-bottom: 4px; line-height: 140%">
+                                {{profile.channel_description}}
+                            </div>
+                            {%endif%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left; font-weight: bold">Country:</div>
+                                <div style="float: right" id="profile_show_country">{{profile.country}}</div>
+                                <div class="cb"></div>
+                            </div>
+                            {%if session.user.username != -1 and profile.avatar|length > 0%}
+                            <div class="show_info outer-box-bg-as-border">
+                                <div style="float: left;"><a href="javascript:void(0);" onclick="report(this, '{{profile.displayname}}', 'pfp')">Report</a> profile image violation</div>
+                                <div class="cb"></div>
+                            </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div class="cb"></div>
+                </div>
+                <div class="inner-box" id="user_recent_activity">
+                    <div style="zoom:1">
+                        <div class="box-title title-text-color">Recent Activity</div>
+                        <div style="float:right;zoom:1;_display:inline;white-space:nowrap">
+                            <div style="float:right"></div>
+                        </div>
+                        <div class="cb"></div>
+                    </div>
+                </div>
+                <div class="inner-box" id="user_subscriptions">
+                    <div style="zoom:1">
+                        <div class="box-title title-text-color">Subscriptions ({%if profile.subscriptions > 0%}<a href="{{handle}}/subscriptions" class="headersSmall" name="channel-box-item-count">{{profile.subscriptions}}</a>{%else%}0{%endif%})
+                        </div>
+                        <div style="float:right;zoom:1;_display:inline;white-space:nowrap">
+                            <div style="float:right"></div>
+                        </div>
+                        <div class="cb"></div>
+                    </div>
+                    <div id="user_subscriptions-messages" style="color:#333;margin:1em;padding:1em;display:none"></div>
+                    <div id="user_subscriptions-body">
+                        <div style="zoom:1;margin: 0 -12px">
+                            {%if subscriptions.count > 0%}
+                            {%for subscriber in subscriptions.data%}
+                            <div class="user-peep" style="width:33%;">
+                                <center>
+                                    <div class="user-thumb-large link-as-border-color"><div>
+                                        <a href="/user/{{subscriber.subscription}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_image_link', '{{profile.displayname}} - {{subscriber.subscription}}')">
+                                            <img id="" src="/vi/ava/{{subscriber.subscription}}.jpg" alt="{{subscriber.subscription}}">
+                                        </a>
+                                        </div>
+                                    </div>
+                                    <a href="/user/{{subscriber.subscription}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_text_link', '{{profile.displayname}} - {{subscriber.subscription}}')" title="{{subscriber.subscription}}">{{subscriber.subscription}}</a>
+                                </center>
+                            </div>
+                            {%endfor%}
+                            <div style="clear:both;font-height:1px"></div>
+                            {%endif%}
+                        </div>
+                        {%if subscriptions.count > 8%}
+                        <div>
+                            <div style="font-size: 12px; text-align: right; margin-top: 7px;">
+                                <b><a name="channel-box-see-all" href="{{handle}}/subscriptions">see all</a></b>
+                            </div>
+                        </div>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+            <div class="right-column" id="main-channel-right">
+                <div class="inner-box" id="user_subscribers">
+                    <div style="zoom:1">
+                        <div class="box-title title-text-color">Subscribers ({%if profile.subscribers > 0%}<a href="{{handle}}/subscribers" class="headersSmall" name="channel-box-item-count">{{profile.subscribers}}</a>{%else%}0{%endif%})</div>
+                        <div style="float:right;zoom:1;_display:inline;white-space:nowrap">
+                            <div style="float:right"></div>
+                        </div>
+                        <div class="cb"></div>
+                    </div>
+                    <div id="user_subscribers-messages" style="color:#333;margin:1em;padding:1em;display:none"></div>
+                    <div id="user_subscribers-body">
+                        <div style="zoom:1;margin: 0 -12px">
+                            {%if subscribers.count > 0%}
+                            {%for subscriber in subscribers.data%}
+                            <div class="user-peep" style="width:14.2%;">
+                                <center>
+                                    <div class="user-thumb-large link-as-border-color"><div>
+                                        <a href="/user/{{subscriber.subscriber}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_image_link', '{{profile.displayname}} - {{subscriber.subscriber}}')">
+                                            <img id="" src="/vi/ava/{{subscriber.subscriber}}.jpg" alt="{{subscriber.subscriber}}">
+                                        </a>
+                                        </div>
+                                    </div>
+                                    <a href="/user/{{subscriber.subscriber}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_text_link', '{{profile.displayname}} - {{subscriber.subscriber}}')" title="{{subscriber.subscriber}}">{{subscriber.subscriber}}</a>
+                                </center>
+                            </div>
+                            {%endfor%}
+                            <div style="clear:both;font-height:1px"></div>
+                            {%endif%}
+                        </div>
+                        {%if subscribers.count > 14%}
+                        <div>
+                            <div style="font-size: 12px; text-align: right; margin-top: 7px;">
+                                <b><a name="channel-box-see-all" href="{{handle}}/subscribers">see all</a></b>
+                            </div>
+                        </div>
+                        {%endif%}
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="inner-box" id="user_comments">
+                    <div style="zoom:1">
+                        <div class="box-title title-text-color">Channel Comments (<span name="channel-box-item-count">0</span>)</div>
+                        <div style="float:right;zoom:1;_display:inline;white-space:nowrap">
+                            <div style="float:right"></div>
+                        </div>
+                        <div class="cb"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="cb"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	window.boxes = {
+        "user_playlist_navigator" : {
+            'name' : "user_playlist_navigator",
+            'x_position' : -1,
+            'y_position' : -1,
+            'palette' : "default"
+        },
+        "user_profile" : {
+            'name' : "user_profile",
+            'x_position' : 0,
+            'y_position' : 0,
+            'palette' : "default"
+        },
+        "user_recent_activity" : {
+            'name' : "user_recent_activity",
+            'x_position' : 0,
+            'y_position' : 16,
+            'palette' : "default"
+        },
+        "user_subscriptions" : {
+            'name' : "user_subscriptions",
+            'x_position' : 0,
+            'y_position' : 36,
+            'palette' : "default"
+        },
+        "user_subscribers" : {
+            'name' : "user_subscribers",
+            'x_position' : 1,
+            'y_position' : 39,
+            'palette' : "default"
+        },
+        "user_friends" : {
+            'name' : "user_friends",
+            'x_position' : 1,
+            'y_position' : 42,
+            'palette' : "default"
+        },
+        "user_comments" : {
+            'name' : "user_comments",
+            'x_position' : 1,
+            'y_position' : 48,
+            'palette' : "default"
+        },
+        "user_groups" : {
+            'name' : "user_groups",
+            'x_position' : 1,
+            'y_position' : 51,
+            'palette' : "default"
+        }
+    };
+	function fix_background_height() {
+		var body = _gel('channel-body');
+		var browser_height = window.innerHeight || document.documentElement.clientHeight;
+		if (body.offsetHeight < browser_height) {
+			body.style.height = (browser_height - _gel('masthead').offsetHeight) + 'px';
+		}
+	}
+	yt.pubsub.subscribe('init', fix_background_height);
+	window.onresize = fix_background_height;
+	function maybe_revert() {
+		if (confirm("Are you sure you wish to continue?")) {
+			_gel('revert_migration').submit();
+		}
+	}
+</script>
+<div class="cb">
+	<div id="promos" class="clear"></div>
+    <div id="footer"></div>
+</div>
+<script>
+	if (document.documentElement["getBoundingClientRect"]) {
+		yt.events.listen(window, 'scroll', yt.www.thumbnailDelayLoad.loadImages);
+		yt.events.listen(window, 'resize', yt.www.thumbnailDelayLoad.loadImages);
+	}
+	yt.www.thumbnailDelayLoad.loadImages();
+    yt.setTimeout(function() {
+        window.yt.www.suggest.install(document.searchForm,
+            document.searchForm.search_query,
+            'en','close',
+            'Suggestions',
+            'Web search',
+            -1,
+            null);
+        }, 100);
+</script>

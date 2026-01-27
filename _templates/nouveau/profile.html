@@ -1,0 +1,101 @@
+{%extends "base.html"%}
+
+{%block title%}
+    {%if profile.channel_version == 2%}
+    {{config.title}} - {{profile.displayname}}'s Channel
+    {%else%}
+    {{profile.displayname}} - {{config.title}}
+    {%endif%}
+{%endblock%}
+
+{%block head%}
+    {%if profile.channel_version == 2%}
+    <link rel="stylesheet" href="/css/2010/core.css">
+    <link rel="stylesheet" href="/css/2010/rest.css">
+    <link rel="stylesheet" href="/css/2010/channel.css">
+    {%if owner%}
+    <link rel="stylesheet" href="/css/profile.css">
+    {%endif%}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/js/2010/base.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/google-closure-library/closure/goog/base.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/google-closure-library/closure/goog/dom/dom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/google-closure-library/closure/goog/dom/query.js"></script>
+    <script src="/js/2010/google.js"></script>
+    <script id="www-core-js" src="/js/2010/core.js"></script>
+    <script src="/js/2010/channel.js"></script>
+    <script src="/js/2010/channelLegacy.js"></script>
+    <script>swfobject.registerObject("flPlayer", "9.0.0");</script>
+    <style>
+        .n_head {
+            z-index: 999 !important;
+        }
+    </style>
+    <style type="text/css" id="channel-theme-css" name="channel-theme-css">
+		#channel-body { background-color: #CCCCCC }.channel-bg-color { background-color: #CCCCCC }
+        #channel-body { background-repeat: no-repeat }
+        .outer-box { background-color: #999999 }.outer-box-bg-color { background-color: #999999 }.outer-box-bg-as-border { border-color: #999999; }#playnav-chevron { border-left-color: #999999 }.panel-tab-indicator-arrow { border-color: #999999; } .playnav-item .selector { background-color: #999999 }
+        .outer-box {color: #000000;}.outer-box-bg-color {color: #000000;}.outer-box-color { color: #000000; }.panel-tab-selected a { color: #000000 !important; }.outer-box-color-as-border-color { border-color: #000000; }
+        .outer-box a {color: #0000cc;}
+        .outer-box-bg-color a {color: #0000cc;}.outer-box-link-color { color: #0000cc }.outer-box-link-as-border-color { border-color: #0000cc }
+        #channel-body { font-family: arial }
+        .title-text-color { color: #000000 !important; }
+        a.title-text-color, .title-text-color a { color: #000000 !important; }#playnav-navbar a.navbar-tab-selected, #playnav-navbar a.navbar-tab:hover { background-color: #000000; }.title-text { color: #000000 !important; }title-text-as-border-color { border-color: #000000; }a.view-button-selected, a.view-button:hover { background-color: #000000; }a.view-button-selected .tri, a.view-button:hover .tri { border-left-color: #000000; }
+        .outer-box .inner-box a, .outer-box .inner-box-colors a { color: #0000cc }.outer-box .inner-box-bg-color a { color: #0000cc }.outer-box .inner-box-link-color { color: #0000cc }.channel-cmd { border-bottom-color: #0000cc }.link-as-border-color { border-color: #0000cc }.view-button .a { background-color: #0000cc }.view-button .tri { border-top-color: #0000cc; border-bottom-color: #0000cc; }.view-button .tri { background-color: #0000cc; }
+        .inner-box { color: #333333; }.inner-box-color { color: #333333; }.inner-box-colors { color: #333333; }.inner-box-colors .playnav-show .show-facets .show-mini-description { color: #333333; }.box-outline-color { border-color: #333333; }a.inner-box-color-as-link { color: #333333; }
+        .inner-box { background-color: #eeeeff }.inner-box-colors { background-color: #eeeeff }.inner-box-bg-color { background-color: #eeeeff }.inner-box-bg-as-border-color { border-color: #eeeeff; }.inner-box-bg-color-as-border-color { border-color: #eeeeff }.panel-tab-selected .panel-tab-indicator-arrow { border-bottom-color: #eeeeff !important }.view-button .tri { border-left-color: #eeeeff }a.view-button-selected .a, .view-button:hover .a { background-color: #eeeeff }a.view-button-selected .tri, .view-button:hover .tri { border-top-color: #eeeeff; border-bottom-color: #eeeeff; background-color: #eeeeff }#playnav-navbar a.navbar-tab-selected, #playnav-navbar a.navbar-tab:hover { color: #eeeeff !important; }
+        .transparent-link-as-bg-color { background-color: rgba(0,0,204,0.25) }
+        .transparent-link-as-bg-color { filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr=#400000cc, endColorstr=#400000cc); -ms-filter: "progid:DXImageTransform.Microsoft.Gradient(startColorstr=#400000cc, endColorstr=#400000cc)"; }
+        #page #masthead-container { border-bottom: 3px solid #999999; }
+        #promos, #footer, #copyright {
+			display: none;
+		}
+	</style>
+    <script type="text/javascript">
+		window.channel_new_ui = true;
+        yt.setMsg({
+            'SUCCESS': "Changes saved.",
+            'PROGRESS': "In progress",
+            'ERROR': "Sorry, an error occurred."
+        });
+        yt.setMsg({
+            'BAD_RESPONSE': "Bad response from server.",
+            'UNABLE_TO_CONTACT_SERVER': "Oops! Unable to contact server."
+        });
+		yt.setMsg({
+            'ERROR_WHILE_PROCESSING': "Error while processing your request.",
+            'UNKNOWN_ERROR': "An error occured while performing this operation.",
+            'POSTING_COMMENT': "Adding comment...",
+            'CONFIRM_NAVIGATE_AWAY': "Are you sure you wish to continue?",
+            'CONFIRM_UNSAVED_CHANGES': "You have unsaved changes. If you continue, your changes will not be saved.",
+            'FLAG_DEFAULT': "Select a Reason",
+            'SRSLY_GTFO': "This will remove the selected user.  Are you sure you wish to continue?",
+            'THEME_LIMIT': "You have reached your channel customization limit.",
+            'CONFIRM_UNSAVED_CHANGES_ARRANGER': "You have unsaved changes. Are you sure you wish to continue?"
+        });
+
+		yt.setConfig('request_uri', '\/user\/{{profile.displayname}}');
+		yt.setConfig('http_referer', '');
+		window.username = "{{profile.displayname}}";
+		var max_playlists = 3;
+		window.isLoggedIn = true;
+
+        var watchUsername = '{{profile.displayname}}';
+        window.subscribeaxc = '';
+        yt.setConfig('SUBSCRIBE_AXC', window.subscribeaxc);
+
+		window.History.initialize();
+		window.History.addListener(playnav.handleLocationHashUpdate);
+	</script>
+    {%endif%}
+{%endblock%}
+
+{%block wrapperClass%}{%endblock%}
+
+{%block main%}
+    {%include "nouveau/" ~ profile.channel_version ~ "/" ~ page ~ ".html"%}
+    {%block footer%}{%endblock%}
+    {%if owner%}
+    <script src="/js/profile.js"></script>
+    {%endif%}
+{%endblock%}

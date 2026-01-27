@@ -9,7 +9,6 @@ header("Content-Type: application/json", true);
 if (!$_USER->logged_in)               { exit(); }
 if (!$_USER->Is_Activated)          { exit(); }
 if (!isset($_POST["vl_comment"]))     { exit(); }
-if (!isset($_SESSION["deto"]))      { exit(); }
 
 
 $_GUMP->validation_rules(array(

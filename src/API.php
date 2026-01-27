@@ -105,7 +105,7 @@
             $session = $this->db("SELECT session, user, ip, remembered from sessions where session = '$cookie'");
             if($session["count"] == 1) {
                 $session = $session["data"];
-                $session["user"] = $this->db("SELECT id, username, displayname, is_admin, is_mod from users where id = ".$session["user"]);
+                $session["user"] = $this->db("SELECT id, username, displayname, is_admin, is_mod, partner from users where id = ".$session["user"]);
                 if($session["user"]["count"] == 1) $session["user"] = $session["user"]["data"];
             } else {
                 $session = ["session" => -1, "user" => ["id" => -1, "username" => "Guest", "displayname" => "Guest"]];

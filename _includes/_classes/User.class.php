@@ -36,8 +36,11 @@
                     // Automatically log in to the last remembered session.
                     $this->session["session"] = $last_remembered["session"];
                     $this->session["user"] = $this->api->db("SELECT id, username, displayname from users where id = ".$last_remembered["user"], true);
-                    if($this->session["user"]["count"] >= 1)
+                    if($this->session["user"]["count"] >= 1) {
                         $this->session["user"] = $this->session["user"]["data"][0];
+                        $this->username = $this->session["user"]["username"];
+                        $this->displayname = $this->session["user"]["displayname"];
+                    }
                     $this->logged_in = true;
                     setcookie("session", $this->session["session"], time() + (86400 * 30), "/", null, null, true);
                 }

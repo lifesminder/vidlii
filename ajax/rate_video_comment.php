@@ -8,7 +8,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/init.php";
 if (!$_USER->logged_in)                             { exit(); }
 if (!isset($_POST["id"]) || !isset($_POST["rate"])) { exit(); }
 if ($_POST["rate"] != 1 && $_POST["rate"] != 0)     { exit(); }
-if (!isset($_SESSION["deto"]))                      { exit(); }
 
 
 $ID     = (int)$_POST["id"];

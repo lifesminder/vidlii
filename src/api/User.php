@@ -2,7 +2,7 @@
 	namespace Vidlii\Vidlii\API;
 	
 	class User extends \Vidlii\Vidlii\API {
-		function index($args, $files) {
+		function index(array $args, array $files = []) {
 			$data = []; $session = $this->session($_COOKIE["session"]);
 			if(isset($args["u"]) && $args["u"] != "") {
 				$username = $args["u"];
@@ -10,6 +10,22 @@
 				if($user["count"] >= 1) {
 					if(isset($args["p"]) && $args["p"] != "") {
 						switch(strtolower($args["p"])) {
+							case "videos": {
+								if(!empty($args["sort"])) {
+									switch(strtolower(trim($args["sort"]))) {
+										case "date": $sort = "ORDER by uploaded_on desc"; break;
+										case "popularity": $sort = "ORDER by displayviews desc"; break;
+										case "rating": $sort = "ORDER by (1_star + 2_star + 3_star + 4_star + 5_star) desc"; break;
+									}
+								} else {
+									$sort = "ORDER by uploaded_on desc";
+								}
+								$videos = $this->db("SELECT url from videos where uploaded_by = :user $sort", true, [
+									"user" => $username
+								]);
+								$data = $videos;
+								break;
+							}
 							case "subscribers": {
 								$subscribers = $this->db("SELECT subscriber from subscriptions where subscription = '$username'");
 								if($subscribers["count"] > 0) {

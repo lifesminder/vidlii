@@ -1,0 +1,63 @@
+<div id="playnav-curvideo-rating">
+    <script language="javascript">
+        document.getElementById("playnav-curvideo-rating").onmouseover = function () {
+            _hidediv("defaultRatingMessage");
+            _showdiv("hoverMessage");
+        };
+        document.getElementById("playnav-curvideo-rating").onmouseout = function () {
+            _showdiv("defaultRatingMessage");
+            _hidediv("hoverMessage");
+        };
+    </script>
+    <div id="ratingWrapper">
+        <div class="floatL" onclick="yt.analytics.urchinTracker('/Events/VideoWatch/Rated');">
+        <div id="ratingMessage" class="floatL">
+            <div id="defaultRatingMessage"><span class="smallText">0 ratings</span></div>
+                {%if session.user.id == -1%}
+                <div id="hoverMessage" style="width: 100%" class="hid">
+                    <a href="/login?next=user/{{profile.displayname}}">Sign in</a>
+                    to rate
+                </div>
+                {%endif%}
+            </div>
+            <div id="ratingStars" class="floatL">
+                <button class="master-sprite ratingL ratingL-0.0" title="0.0"></button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="playnav-curvideo-title" class="inner-box-title">
+        <span style="cursor: pointer; margin-right: 7px" onclick="document.location.href='/watch?v={{video.url}}'" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+            {{video.title}}
+        </span>
+    </div>
+    <div id="playnav-curvideo-info-line">
+        From:
+        <span id="playnav-curvideo-channel-name"><a href="/user/{{video.uploaded_by}}">{{video.uploaded_by}}</a></span>&nbsp;| {{video.uploaded_on|date("M d, Y")}}&nbsp;|
+        <span id="playnav-curvideo-view-count">{{video.views}} views</span>
+    </div>
+    <div class="cb"></div>
+    <div id="playnav-curvideo-description-container">
+        <div id="playnav-curvideo-description">
+            {{video.description}}
+            <div id="playnav-curvideo-description-more-holder">
+                <div id="playnav-curvideo-description-more" class="inner-box-bg-color">
+                    ...&nbsp;
+                    <a class="channel-cmd" href="javascript:;" onclick="playnav.toggleFullVideoDescription(true)">(more info)</a>&nbsp;&nbsp;
+                </div>
+                <div class="cb"></div>
+            </div>
+            <span id="playnav-curvideo-description-less">
+                <a href="javascript:;" class="channel-cmd" onclick="playnav.toggleFullVideoDescription(false)">(less info)</a>
+            </span>
+        </div>
+    </div>
+    <a href="/watch?v={{video.url}}" id="playnav-watch-link" onclick="playnav.goToWatchPage()">View comments, related videos, and more</a>
+    <div id="playnav-curvideo-controls"></div>
+    <div class="cb"></div>
+    <script>
+        if (_gel("playnav-curvideo-description").offsetHeight > 28) {
+            _gel("playnav-curvideo-description-more-holder").style.display = "block";
+        }
+    </script>
+</div>

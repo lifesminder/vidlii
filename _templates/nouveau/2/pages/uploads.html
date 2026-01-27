@@ -1,0 +1,72 @@
+<div id="playnav-play-uploads-scrollbox" class="scrollbox-wrapper inner-box-colors">
+    <input type="hidden" id="playnav-playlist-uploads-count" value="{{video|length}}">
+    <div class="scrollbox-content playnav-playlist-non-all">
+        <div class="scrollbox-header">
+            <div class="playnav-playlist-header">
+                <div class="spacer">&nbsp;</div>
+                <div class="search-box">
+                    <input type="text" id="upload_search_query-play" class="box-outline-color" style="width:120px;border-width:1px;border-style:solid;padding: 1px" onkeypress="if (event.keyCode == 13) { playnav.searchChannel(this.id); }">
+                    &nbsp;
+                    <a class="yt-button" id="" style="" href="javascript:;" onclick="playnav.searchChannel('upload_search_query-play');return false;"><span>Search</span></a>
+                </div>
+                <div style="display:none" id="uploads-sort">date</div>
+                    <div class="sorters">
+                        <a style="" href="javascript:;" onmousedown="playnav.sort('date')">Date Added</a>
+                        |
+                        <a style="" href="javascript:;" onmousedown="playnav.sort('popularity')">Most Viewed</a>
+                        |
+                        <a style="" href="javascript:;" onmousedown="playnav.sort('rating')">Top Rated</a>
+                    </div>
+                    <div class="spacer">&nbsp;</div>
+                </div>
+                <div class="scrollbox-separator">
+                    <div class="outer-box-bg-as-border"></div>
+                </div>
+            </div>
+        </div>
+        <div class="scrollbox-body" style="height: 516px; zoom: 1;">
+            <div class="outer-scrollbox" onscroll="playnav.updateScrollbox('playnav-play-uploads-scrollbox');">
+                <div id="playnav-play-uploads-items" class="inner-scrollbox">
+                    <div class="pinned">
+                        <div class="highlightbox transparent-link-as-bg-color" style="display: none;">
+                            {#
+                            <div id="playnav-video-play-uploads-0-{{video.url}}" class="playnav-item playnav-video pinned-item">
+                                <div style="display:none" class="encryptedVideoId">{{video.url}}</div>
+                                <div id="playnav-video-play-uploads-0-{{video.url}}-selector" class="selector"></div>
+                                <div class="content">
+                                    <div class="playnav-video-thumb link-as-border-color">
+                                        <a class="video-thumb-90 no-quicklist" href="/web/20100326002621/http://youtube.com/watch?v={{video.url}}" onclick="playnav.playVideo('uploads','0','{{video.url}}');return false;"><img title="YouTube 101: Sharing Videos" src="https://web.archive.org/web/20100326002621im_/http://i1.ytimg.com/vi/{{video.url}}/default.jpg" class="vimg90 yt-uix-hovercard-target" alt="YouTube 101: Sharing Videos"><span id="video-run-time-{{video.url}}" class="video-time"><span>3:28</span></span></a>
+                                    </div>
+                                    <div class="playnav-video-info">
+                                        <a href="/web/20100326002621/http://youtube.com/watch?v={{video.url}}" class="playnav-item-title ellipsis" onclick="playnav.playVideo('uploads','0','{{video.url}}');return false;" id="playnav-video-title-play-uploads-0-{{video.url}}"><span>YouTube 101: Sharing Videos</span></a>
+                                        <div class="metadata">31,972 views  -  3 weeks ago</div>
+                                        <div style="display:none" id="playnav-video-play-uploads-0">{{video.url}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            #}
+                        </div>
+                    </div>
+                    <div id="playnav-play-uploads-page-0" class="scrollbox-page loaded{%if videos|length > 12%}  videos-rows-12{%endif%}" style="visibility: visible;">
+                        {%for i, video in videos%}
+                        <div id="playnav-video-play-uploads-{{i}}-{{video.url}}" class="playnav-item playnav-video">
+                            <div style="display:none" class="encryptedVideoId">{{video.url}}</div>
+                            <div id="playnav-video-play-uploads-{{i}}-{{video.url}}-selector" class="selector"></div>
+                            <div class="content">
+                                <div class="playnav-video-thumb link-as-border-color">
+                                    <a class="video-thumb-90 no-quicklist" href="/watch?v={{video.url}}" onclick="playnav.playVideo('uploads','{{i}}','{{video.url}}');return false;"><img title="{{video.title}}" src="/vi/{{video.url}}/default.jpg" class="vimg90 yt-uix-hovercard-target" alt="{{video.title}}"><span id="video-run-time-{{video.url}}" class="video-time"><span>{{video.duration}}</span></span></a>
+                                </div>
+                                <div class="playnav-video-info">
+                                    <a href="/watch?v={{video.url}}" class="playnav-item-title ellipsis" onclick="playnav.playVideo('uploads','{{i}}','{{video.url}}');return false;" id="playnav-video-title-play-uploads-{{i}}-{{video.url}}"><span>{{video.title}}</span></a>
+                                    <div class="metadata">{{video.views}} views  -  {{ago(video.uploaded_on)}}</div>
+                                    <div style="display:none" id="playnav-video-play-uploads-{{i}}">{{video.url}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {%endfor%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

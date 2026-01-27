@@ -1,0 +1,112 @@
+{%extends "base.html"%}
+
+{%block title%}Channels - {{config.title}}{%endblock%}
+
+{%block body%}
+    <div class="vc_l">
+        <div class="vc_cats">
+            <div>Categories</div>
+            <ul>
+                {%if category == 9%}
+                    <li style="font-weight:bold;cursor:default">Partners</li>
+                {%else%}
+                    <li><a href="/channels?c=9&o={{order}}&t={{time}}">Partners</a></li>
+                {%endif%}
+                {%for i, cat in categories%}
+                    {%if category != i%}
+                        <li><a href="/channels?c={{i}}&o={{order}}&t={{time}}">{{cat}}</a></li>
+                    {%else%}
+                        <li style="font-weight:bold;cursor:default">{{cat}}</li>
+                    {%endif%}
+                {%endfor%}
+            </ul>
+        </div>
+    </div>
+    <div class="vc_r">
+        <div class="vc_hd">
+            <ul>
+                {%for value, item in filters%}
+                    {%if value != order%}
+                    <li><a href="/channels?c={{category}}&o={{value}}&t={{time}}">{{item}}</a></li>
+                    {%else%}
+                    <li id="vc_selec">{{item}}</li>
+                    <li style="padding:0 {%if order == 'ms' or order == 'mc'%}60{%elseif order == 'mv'%}48{%else%}38{%endif%}px"></li>
+                    {%endif%}
+                {%endfor%}
+            </ul>
+        </div>
+        <div style="background:white;z-index:10;height:20px;width:700px;position:absolute"></div>
+        <div class="vc_nav">
+            <div style="float:left">
+                {%if category == 8%}
+                    in <strong>All Channels</strong>
+                {%else%}
+                    in <strong>{%if category != 9%}{{categories[category]}}{%else%}Partners{%endif%}</strong>
+                {%endif%}
+            </div>
+            <div class="vc_nav_r">
+                <ul>
+                    <li>{%if time != 1%}<a href="/channels?c={{category}}&o={{order}}&t=1">This Week</a>{%else%}<strong>This Week</strong>{%endif%}</li>
+                    <li>{%if time != 0%}<a href="/channels?c={{category}}&o={{order}}&t=0">This Month</a>{%else%}<strong>This Month</strong>{%endif%}</li>
+                    <li>{%if time != 2%}<a href="/channels?c={{category}}&o={{order}}&t=2">All Time</a>{%else%}<strong>All Time</strong>{%endif%}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="vc_channels">
+            {%if order == "mv"%}
+                {%for channel in channels%}
+                <div>
+                    <a href="/user/{{channel.displayname}}">{{channel.displayname}}</a>
+                    <a href="/user/{{channel.displayname}}">
+                        <img src="/vi/ava/{{channel.displayname}}.jpg" alt="{{channel.displayname}}" width="80" height="80" class="avt2">
+                    </a>
+                    <div>{{channel.videos}}<br>Videos<br><br>{{channel.video_views}}<br>Views</div>
+                </div>
+                {%endfor%}
+            {%elseif order == "ms"%}
+                {%for channel in channels%}
+                <div>
+                    <a href="/user/{{channel.displayname}}">{{channel.displayname}}</a>
+                    <a href="/user/{{channel.displayname}}">
+                        <img src="/vi/ava/{{channel.displayname}}.jpg" alt="{{channel.displayname}}" width="80" height="80" class="avt2">
+                    </a>
+                    <div>{{channel.videos}}<br>Videos<br><br>{{channel.subscribers}}<br>Subscribers</div>
+                </div>
+                {%endfor%}
+            {%elseif order == "ml"%}
+                {%for channel in channels%}
+                <div>
+                    <a href="/user/{{channel.displayname}}">{{channel.displayname}}</a>
+                    <a href="/user/{{channel.displayname}}">
+                        <img src="/vi/ava/{{channel.displayname}}.jpg" alt="{{channel.displayname}}" width="80" height="80" class="avt2">
+                    </a>
+                    <div>{{channel.videos}}<br>Videos<br><br><?= number_format((ceil(($Channel["sum_order"] - $Channel["sum_order2"]) / (MAX($Channel["videos"] / 4, 1))))) ?><br>Rating lvl.</div>
+                </div>
+                {%endfor%}
+            {%elseif order == "mc"%}
+                {%for channel in channels%}
+                <div>
+                    <a href="/user/{{channel.displayname}}">{{channel.displayname}}</a>
+                    <a href="/user/{{channel.displayname}}">
+                        <img src="/vi/ava/{{channel.displayname}}.jpg" alt="{{channel.displayname}}" width="80" height="80" class="avt2">
+                    </a>
+                    <div>{{channel.videos}}<br>Videos<br><br>{{channel.sum_order}}<br>Comments</div>
+                </div>
+                {%endfor%}
+            {%endif%}
+        </div>
+        <div class="cl"></div>
+        {%if pagination.total > 1%}
+        <div class="vc_pagination">
+            {%for page in 1..pagination.total%}
+            {%if page == pagination.current%}
+            <span class="h_yes">{{page}}</span>
+            {%else%}
+            <a href="/channels?c={{category}}&o={{order}}&t={{time}}&p={{page}}">{{page}}</a>
+            {%endif%}
+            {%endfor%}
+        </div>
+        {%endif%}
+    </div>
+    <div class="cl"></div>
+{%endblock%}

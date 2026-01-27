@@ -1,0 +1,39 @@
+<div id="channel-body" class="jsloaded" style="height: 891px;">
+    <div id="channel-base-div">
+        <div class="inner-box" id="global-messages" style="z-index:0;display:none"></div>
+        <!-- to-do later: user banners -->
+        <div class="outer-box" style="z-index: 0">
+            <div class="inner-box" style="font-size: 11px; padding-top: 8px; padding-bottom: 8px; margin-top: 3px; margin-bottom: 6px;">
+                <a href="/user/{{profile.displayname}}">« back to {{profile.displayname}}'s channel</a>
+            </div>
+            <div class="cb"></div>
+            <div class="inner-box" id="user_subscribers">
+                <div style="zoom:1">
+                    <div class="box-title title-text-color">Subscribers (<span name="channel-box-item-count">{{profile.subscribers}}</span>)</div>
+                    <div id="user_subscribers-messages" style="color:#333;margin:1em;padding:1em;display:none"></div>
+                    <div class="clear"></div>
+                </div>
+                <div id="user_subscribers-body">
+                    <div style="zoom:1;margin: 0 -12px">
+                        {%if subscribers.count > 0%}
+                            {%for subscriber in subscribers.data%}
+                            <div class="user-peep" style="width:10%;">
+                                <center>
+                                    <div class="user-thumb-large link-as-border-color"><div>
+                                        <a href="/user/{{subscriber.subscriber}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_image_link', '{{profile.displayname}} - {{subscriber.subscriber}}')">
+                                            <img id="" src="/vi/ava/{{subscriber.subscriber}}.jpg" alt="{{subscriber.subscriber}}">
+                                        </a>
+                                        </div>
+                                    </div>
+                                    <a href="/user/{{subscriber.subscriber}}" onmousedown="yt.analytics.trackEvent('ChannelPage', 'subscriptions_text_link', '{{profile.displayname}} - {{subscriber.subscriber}}')" title="{{subscriber.subscriber}}">{{subscriber.subscriber}}</a>
+                                </center>
+                            </div>
+                            {%endfor%}
+                            <div style="clear:both;font-height:1px"></div>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

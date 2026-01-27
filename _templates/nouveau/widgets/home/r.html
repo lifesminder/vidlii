@@ -12,7 +12,7 @@
         </div>
         {%if recommended.amount > 0%}
         <div>
-            {%if recommended.amount >= 4 and recommended.amount < 8%}
+            {%if recommended.amount > 4 and recommended.amount <= 8%}
             <div class="v_v_bx">
                 {%for x in 0..recommended.amount%}
                 <div style="margin-bottom: 8px">
@@ -46,7 +46,7 @@
                 </div>
                 {%endfor%}
             </div>
-            {%if recommended.amount > 3%}
+            {%if recommended.amount > 4%}
             <div class="v_v_bx">
                 {%for x in 4..recommended.amount - 1%}
                 <div style="margin-bottom: 8px">

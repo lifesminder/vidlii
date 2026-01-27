@@ -8,7 +8,12 @@
     $profiles_enabled = $DB->execute("SELECT value FROM settings WHERE name = 'channels'", true)["value"] ?? 1;
     if ($profiles_enabled == 0) { notification("Channels have been temporarily disabled!","/"); exit(); }
 
-    if (isset($_GET["user"])) {
+    if(isset($_GET["action_ajax"]) && (bool)$_GET["action_ajax"]) {
+        // More Profile 2-specific Ajax Translator, which fetch actual data
+        // from VidLii, and returns it in YouTube's Profile 2 AJAX handling form.
+        $translator = new \Vidlii\Vidlii\AjaxTranslator();
+        $translator->run();
+    } else if (isset($_GET["user"])) {
         $Channel_Owner = $DB->execute("SELECT username FROM users WHERE displayname = :USERNAME LIMIT 1", true, [":USERNAME" => $_GET["user"]]);
         $Exist = ($DB->RowNum > 0);
 
@@ -37,7 +42,7 @@
             }
 
             // New logic of channels: Nouveau
-            if($Profile["channel_version"] == 3 || ($Profile["nouveau"] == 1 && $Profile["channel_version"] > 3)) {
+            if($Profile["channel_version"] == 3 || ($Profile["nouveau"] == 1 && $Profile["channel_version"] >= 2)) {
                 $page = (isset($_GET["page"]) && $_GET["page"] != "") ? $_GET["page"] : "index";
 
                 $date = new DateTime($Profile["birthday"]); $now = new DateTime(); $interval = $now->diff($date);
@@ -268,6 +273,7 @@
                 }
 
                 // Make everything consistent
+                $args["handle"] = $handle;
                 if($Profile["channel_version"] == 3) {
                     switch($page) {
                         case "feed": {
@@ -299,9 +305,42 @@
                             break;
                         }
                     }
-                }
+                } else if($Profile["channel_version"] == 2) {
+                    $videoApi = new \Vidlii\Vidlii\API\Video($_SERVER["DOCUMENT_ROOT"]);
 
-                require_once "_templates/nouveau_structure.php";
+                    $args["page_type"] = "Channels";
+                    $args["favorites"] = $api->db("SELECT url from video_favorites where favorite_by = :user", true, [
+                        "user" => $Profile["displayname"]
+                    ]);
+                    if($args["favorites"]["count"] > 0) {
+                        foreach($args["favorites"]["data"] as $i => $fav) {
+                            $args["favorites"]["data"][$i] = $videoApi->index(["id" => $fav["url"]])["data"] ?? [];
+                        }
+                    }
+
+                    $subLimit = ($page == "subscribers" || $page == "subscriptions") ? "" : "LIMIT 8";
+                    $args["subscribers"] = $api->db("SELECT users.displayname as subscriber FROM subscriptions INNER JOIN users ON subscriptions.subscriber = users.username WHERE subscriptions.subscription = :OWNER $subLimit", true, [
+                        "OWNER" => $Profile["displayname"]
+                    ]);
+                    $args["subscriptions"] = $api->db("SELECT users.displayname as subscription FROM subscriptions INNER JOIN users ON subscriptions.subscription = users.username WHERE subscriptions.subscriber = :OWNER $subLimit", true, [
+                        "OWNER" => $Profile["displayname"]
+                    ]);
+                    
+                    $Background = $api->db("SELECT cover from users where username = \"$Profile[displayname]\"");
+                    if($Background["count"] == 1) {
+                        if(strlen($Background["data"]["cover"]) == 0 || $Background["data"]["cover"] == null) {
+                            $Has_Background = false;
+                        } else {
+                            $Background = "/vi/cover/".$Profile["displayname"].".jpg";
+                            $Has_Background = true;
+                        }
+                    } else $Has_Background = false;
+                    $args["has_background"] = $Has_Background;
+
+                    $engine->template("nouveau/profile.html", $args);
+                } else {
+                    require_once "_templates/nouveau_structure.php";
+                }
             } else {
 
             $Videos_Amount = new Videos($DB, $_USER);
@@ -433,7 +472,7 @@
 
                 if ($Profile["subscribers"] > 0 and $Profile["c_subscriber"] && (empty($_GET["page"]) || is_numeric($_GET["page"]) || $_GET["page"] == "subscribers")) {
                     $_PAGINATION->Total = $Profile["subscribers"];
-                    $Subscribers        = $DB->execute("SELECT users.displayname as subscriber, users.avatar FROM subscriptions INNER JOIN users ON subscriptions.subscriber = users.username WHERE subscriptions.subscription = :OWNER LIMIT $LIMIT_USERS", false, [":OWNER" => $Profile["username"]]);
+                    $Subscribers = $DB->execute("SELECT users.displayname as subscriber, users.avatar FROM subscriptions INNER JOIN users ON subscriptions.subscriber = users.username WHERE subscriptions.subscription = :OWNER LIMIT $LIMIT_USERS", false, [":OWNER" => $Profile["username"]]);
                 }
 
                 if ($Profile["subscriptions"] > 0 and $Profile["c_subscription"] && (empty($_GET["page"]) || is_numeric($_GET["page"]) || $_GET["page"] == "subscriptions")) {
@@ -2319,10 +2358,6 @@
                 } else {
                     $Avatar = "/usfi/$Folder/$Avatar.jpg";
                 }
-
-
-                require_once "_templates/profile3_structure.php";
-
 
             } else {
                 if ($Profile["banned"] == 1) {

@@ -9,7 +9,6 @@ header("Content-Type: application/json", true);
 if (!$_USER->logged_in)         { exit(); }
 if (!$_USER->Is_Activated)    { exit(); }
 if (!isset($_POST["user"]))     { exit(); }
-if (!isset($_SESSION["deto"])) { exit(); }
 
 $User = $DB->execute("SELECT username, can_friend FROM users WHERE username = :USERNAME LIMIT 1", true, [":USERNAME" => $_POST["user"]]);
 

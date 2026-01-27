@@ -6,7 +6,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/_includes/init.php";
 //- Requires ($_POST["v"]) AND ($_POST["r"])
 if (!$_USER->logged_in)                          { exit(); }
 if (!isset($_POST["v"]) || !isset($_POST["r"]))  { exit(); }
-if (!isset($_SESSION["deto"]))                   { exit(); }
 
 
 $Video = new Video($_POST["v"],$DB);
