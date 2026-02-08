@@ -75,4 +75,19 @@
         $_USER->logout();
         redirect("/"); exit();
     }
+
+    // Safeguard checks
+    // This is done in order to mitigate issues (especially happening in XAMPP)
+    $extensionsMissing = []; $parametersIncorrect = [];
+    // Safeguard for extensions
+    if(!extension_loaded("intl")) array_push($extensionsMissing, "intl");
+    if(!extension_loaded("gd")) array_push($extensionsMissing, "gd");
+    // Safeguard for options
+    if(!ini_get("short_open_tag") || !(bool)ini_get("short_open_tag"))
+        array_push($parametersIncorrect, ["option" => "short_open_tag", "must_be" => "On"]);
+
+    if(count($extensionsMissing) > 0 || count($parametersIncorrect) > 0) {
+        $engine->template("nouveau/error.html", ["extensionsMissing" => $extensionsMissing, "parametersIncorrect" => $parametersIncorrect]);
+        die;
+    }
 ?>

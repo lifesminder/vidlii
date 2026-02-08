@@ -97,6 +97,16 @@ Finally, you can call the `location` method with a `$location` argument.
    ->create();
 ```
 
+### Setting custom permissions for a temporary directory
+
+By default, the temporary directory will be created with permissions `0777`. You can customize these permissions by calling the `permission` method with an integer `$permission` argument before the `create` method.
+
+```php
+(new TemporaryDirectory())
+   ->permission(0755)
+   ->create();
+```
+
 ### Determining paths within the temporary directory
 
 You can use the `path` method to determine the full path to a file or directory in the temporary directory:

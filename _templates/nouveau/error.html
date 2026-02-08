@@ -8,6 +8,35 @@
             <img src="/img/404.jpg" style="width:344px;position:relative;top:9px">
         </div>
         <div style="float:left;width:55%">
+            {%if extensionsMissing is defined or parametersIncorrect is defined%}
+            <div style="font-size:33px;font-weight:bold;text-align:center;color:#404040">Configuration Error!</div>
+            <div style="font-size:23px;font-weight:bold;text-align:center;color:#606060">You have something incorrectly configured!</div>
+
+            <p>In order to fix the issues, you must do the following in your <code>php.ini</code> file:</p>
+            <ol>
+                {%if extensionsMissing|length > 0%}
+                <li>Enable the following extensions:</li>
+                <ul>
+                    {%for extension in extensionsMissing%}
+                    <li><code>{{extension}}</code></li>
+                    {%endfor%}
+                </ul>
+                {%endif%}
+                {%if parametersIncorrect|length > 0%}
+                <li>Set the following values:</li>
+                <ul>
+                    {%for parameter in parametersIncorrect%}
+                    <li><code>{{parameter.option}}</code>: <b><code>{{parameter.must_be}}</code></b></li>
+                    {%endfor%}
+                </ul>
+                {%endif%}
+                {%if extensionsMissing|length == 0 and parametersIncorrect|length == 0%}
+                <li>Open an <a href="https://github.com/lifesminder/vidlii/issues">issue</a> in the GitHub repository</li>
+                {%endif%}
+            </ol>
+
+            <p>After applying, or receiving necessary fixes, restart your PHP server and check if the issues were resolved</p>
+            {%else%}
             <div style="font-size:33px;font-weight:bold;text-align:center;color:#404040">404 - Page Not Found</div>
             <div style="font-size:23px;font-weight:bold;text-align:center;color:#606060">Sorry about that. :(</div>
 
@@ -33,6 +62,7 @@
                     </div>
                 </div>
             </div>
+            {%endif%}
             {%endif%}
         </div>
     </div>

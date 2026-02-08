@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\Config\Definition;
 
+use Symfony\Component\Config\Loader\ParamConfigurator;
+
 /**
  * @author Alexandre Daubois <alex.daubois@gmail.com>
  */
@@ -24,7 +26,7 @@ final class ArrayShapeGenerator
     private static function doGeneratePhpDoc(NodeInterface $node, int $nestingLevel = 1): string
     {
         if (!$node instanceof ArrayNode) {
-            return match (true) {
+            $typeString = match (true) {
                 $node instanceof BooleanNode => $node->hasDefaultValue() && null === $node->getDefaultValue() ? 'bool|null' : 'bool',
                 $node instanceof StringNode => 'string',
                 $node instanceof NumericNode => self::handleNumericNode($node),
@@ -32,6 +34,16 @@ final class ArrayShapeGenerator
                 $node instanceof ScalarNode => 'scalar|null',
                 default => 'mixed',
             };
+
+            if ('mixed' === $typeString) {
+                return $typeString;
+            }
+
+            if (str_ends_with($typeString, '|null')) {
+                return substr_replace($typeString, '|\\'.ParamConfigurator::class, -5, 0);
+            }
+
+            return $typeString.'|\\'.ParamConfigurator::class;
         }
 
         if ($node instanceof PrototypedArrayNode) {

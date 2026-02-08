@@ -113,7 +113,8 @@
             $path = "_templates";
             $loader = new \Twig\Loader\FilesystemLoader("$path/");
             $twig = new \Twig\Environment($loader);
-            $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
+            if(extension_loaded("intl"))
+                $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());
             $twig->addFilter($filter);
             $twig->addFunction($ago);
             $twig->addFunction($helpArticle);
